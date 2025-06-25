@@ -46,9 +46,12 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- 문제 영역 -->
             <main class="lg:col-span-2 bg-black/20 p-6 rounded-lg shadow-lg border border-gray-800 overflow-y-auto" style="height: 85vh;">
-                <div class="border-b border-gray-700 pb-4 mb-8">
-                    <h1 class="text-2xl font-bold text-white">초등 3학년 문해력 진단평가</h1>
-                    <p class="text-gray-400">총 15문항 | 제한 시간 25분</p>
+                <div class="border-b border-gray-700 pb-4 mb-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">초등 3학년 문해력 진단평가</h1>
+                        <p class="text-gray-400">총 15문항 | 제한 시간 25분</p>
+                    </div>
+                    <div id="timer" class="text-3xl font-bold text-amber-400 font-playfair" style="min-width: 100px; text-align: right;">25:00</div>
                 </div>
                 <div id="questions-container" class="space-y-12"></div>
             </main>
@@ -145,9 +148,37 @@
         const showResultModalBtn = document.getElementById('show-result-modal-btn');
         const modalOverlay = document.getElementById('result-modal-overlay');
         const closeModalBtn = document.getElementById('close-modal-btn');
+        const timerDisplay = document.getElementById('timer');
         
         let userAnswers = new Array(quizData.totalQuestions).fill(null);
         let resultChartInstance = null;
+        let timerInterval = null;
+
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+
+            timerInterval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                timerDisplay.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = "시간 종료";
+                    gradeButton.disabled = true;
+                    gradeButton.textContent = '시간 종료';
+                    gradeButton.classList.add('bg-gray-500', 'cursor-not-allowed');
+                }
+            }, 1000);
+        }
 
         function initializeQuiz() {
             let questionCounter = 0;
@@ -179,6 +210,7 @@
                 sectionHtml += `</div></section>`;
                 questionsContainer.innerHTML += sectionHtml;
             });
+            startTimer(25 * 60); // 25분 타이머 시작
         }
         
         function createRadarChart(userScores, avgScores) {
@@ -212,6 +244,7 @@
         }
         
         function gradeQuiz() {
+            clearInterval(timerInterval); // 채점 시 타이머 중지
             let scores = { info: 0, inference: 0, vocabulary: 0 };
             let totals = { info: 0, inference: 0, vocabulary: 0 };
             let totalCorrect = 0;
