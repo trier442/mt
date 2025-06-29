@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- 메인 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/index.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- 학년 선택 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/selection.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- 초등 3학년 진단 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/grade3.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 초등 4학년 진단 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/grade4.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 초등 5학년 진단 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/grade5.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 초등 6학년 진단 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/grade6.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 중학교 1학년 진단 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/grade7.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 중학교 2학년 진단 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/grade8.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 중학교 3학년 진단 페이지 -->
+  <url>
+    <loc>https://www.rhoduss.com/grade9.html</loc>
+    <lastmod>2024-06-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+</urlset>
