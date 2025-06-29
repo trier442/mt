@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+  <title>대치 소피의 세계 - 문해력 진단평가</title>
+  <link>https://www.rhoduss.com</link>
+  <description>학년별 맞춤 문해력 진단 솔루션, 대치 소피의 세계입니다. 당신의 잠재된 사고력을 깨워보세요.</description>
+  <language>ko</language>
+  <lastBuildDate>Mon, 30 Jun 2025 03:48:00 +0900</lastBuildDate>
+  
+  <item>
+    <title>메인 페이지: 대치 소피의 세계</title>
+    <link>https://www.rhoduss.com/index.html</link>
+    <description>생각의 깊이가 달라지는 문해력의 세계, 대치 소피의 세계에 오신 것을 환영합니다. 학년별 맞춤 진단을 통해 당신의 잠재력을 확인하세요.</description>
+    <pubDate>Mon, 30 Jun 2025 03:48:00 +0900</pubDate>
+    <guid>https://www.rhoduss.com/index.html</guid>
+  </item>
+  
+  <item>
+    <title>학년 선택: 진단평가를 시작할 학년을 선택하세요</title>
+    <link>https://www.rhoduss.com/selection.html</link>
+    <description>초등 3학년부터 중학교 3학년까지, 당신의 학년에 맞는 평가지를 선택하여 문해력 진단을 시작할 수 있습니다.</description>
+    <pubDate>Mon, 30 Jun 2025 03:48:00 +0900</pubDate>
+    <guid>https://www.rhoduss.com/selection.html</guid>
+  </item>
+
+  <item>
+    <title>중학교 3학년 문해력 진단평가</title>
+    <link>https://www.rhoduss.com/grade9.html</link>
+    <description>철학, 경제, 역사 등 고등학교 과정과 연계되는 심화 주제를 통해 중학교 과정을 마무리하는 종합적인 문해력을 진단합니다.</description>
+    <pubDate>Mon, 30 Jun 2025 03:48:00 +0900</pubDate>
+    <guid>https://www.rhoduss.com/grade9.html</guid>
+  </item>
+
+  <item>
+    <title>중학교 2학년 문해력 진단평가</title>
+    <link>https://www.rhoduss.com/grade8.html</link>
+    <description>복합적이고 비판적인 사고 능력을 심도 있게 측정하는 중학교 2학년 맞춤 문해력 진단평가입니다.</description>
+    <pubDate>Mon, 30 Jun 2025 03:48:00 +0900</pubDate>
+    <guid>https://www.rhoduss.com/grade8.html</guid>
+  </item>
+
+  <!-- 다른 학년 페이지들도 위와 같은 형식으로 추가할 수 있습니다. -->
+
+</channel>
+</rss>
