@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5341216668095254"
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5341216668095254"
      crossorigin="anonymous"></script>
-   <meta name="google-adsense-account" content="ca-pub-5341216668095254">
+    <meta name="google-adsense-account" content="ca-pub-5341216668095254">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>학년 선택 - 대치 소피의 세계</title>
+    <title>문해력 진단 - 대치 소피의 세계</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -20,8 +28,30 @@
         .font-playfair {
             font-family: 'Playfair Display', serif;
         }
+        .hero-bg {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
         .page-bg {
             background: radial-gradient(ellipse at center, #1b2735 0%, #090a0f 100%);
+        }
+        .glow-button {
+            box-shadow: 0 0 5px #c0a060, 0 0 15px #c0a060, 0 0 25px #c0a060, 0 0 35px #c0a060;
+            transition: all 0.3s ease-in-out;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 10px #d4b070, 0 0 25px #d4b070, 0 0 45px #d4b070, 0 0 65px #d4b070;
+            transform: scale(1.05);
+        }
+        .feature-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .grade-card {
             background-color: rgba(255, 255, 255, 0.05);
@@ -36,12 +66,17 @@
             border: 1px solid #c0a060;
             box-shadow: 0 0 25px rgba(192, 160, 96, 0.3);
         }
-        .fade-in-up {
+        .fade-in, .fade-in-up {
             opacity: 0;
-            transform: translateY(30px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-        .fade-in-up.visible {
+        .fade-in {
+            transform: translateY(20px);
+        }
+        .fade-in-up {
+             transform: translateY(30px);
+        }
+        .fade-in.visible, .fade-in-up.visible {
             opacity: 1;
             transform: translateY(0);
         }
@@ -50,25 +85,28 @@
 <body class="overflow-x-hidden">
 
     <!-- Header -->
-    <header class="fixed w-full z-30 bg-gray-900/50 backdrop-blur-sm shadow-lg">
+    <header class="fixed w-full z-30 transition-all duration-300" id="header">
         <nav class="container mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold font-playfair text-white">
+            <a href="index.html" class="text-2xl font-bold font-playfair text-white">
                 SOPHIE'S WORLD
-            </div>
-            <a href="index.html" class="bg-amber-500 text-gray-900 font-bold px-5 py-2 rounded-full hover:bg-amber-400 transition text-sm">
-                홈으로
             </a>
+            <div class="flex items-center space-x-6">
+                <a href="index.html" class="text-gray-300 hover:text-white transition text-sm font-medium">홈으로</a>
+                <a href="#" class="text-gray-300 hover:text-white transition text-sm font-medium">입시 뉴스</a>
+                <a href="#selection" class="bg-amber-500 text-gray-900 font-bold px-4 py-2 rounded-full hover:bg-amber-400 transition text-sm">진단 시작</a>
+            </div>
         </nav>
     </header>
- <main>
+
+    <main>
         <!-- Hero Section -->
         <section class="hero-bg min-h-screen flex items-center pt-20 relative overflow-hidden">
             <div class="absolute inset-0 bg-grid-white/[0.05]"></div>
             <div class="container mx-auto max-w-7xl px-6 text-center z-10">
-                <h1 class="text-4xl md:text-6xl font-extrabold text-white font-playfair leading-tight">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white font-playfair leading-tight fade-in">
                     <span class="text-amber-400">생각의 깊이</span>가 달라지는 문해력의 세계
                 </h1>
-                <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+                <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto fade-in" style="transition-delay: 100ms;">
                     대치 소피의 세계는 단순한 글 읽기를 넘어, 학생의 잠재된 사고력을 깨우는<br class="hidden sm:block">
                     학년별 맞춤 문해력 진단 솔루션을 제공합니다.
                 </p>
@@ -76,9 +114,9 @@
         </section>
 
         <!-- Introduction Section -->
-        <section id="intro" class="py-20 md:py-32">
+        <section id="intro" class="py-16 md:py-24">
             <div class="container mx-auto max-w-7xl px-6">
-                <div class="text-center mb-16 fade-in">
+                <div class="text-center mb-12 fade-in">
                     <h2 class="text-3xl md:text-4xl font-bold text-white">왜 <span class="font-playfair text-amber-400">소피의 세계</span>인가?</h2>
                     <p class="mt-4 text-gray-400">문해력은 모든 학습의 기초이자, 세상을 이해하는 창입니다.</p>
                 </div>
@@ -115,9 +153,9 @@
         </section>
 
         <!-- Features Section -->
-        <section id="features" class="py-20 md:py-32 bg-gray-900/50">
+        <section id="features" class="py-16 md:py-24 bg-gray-900/50">
             <div class="container mx-auto max-w-7xl px-6">
-                <div class="text-center mb-16 fade-in">
+                <div class="text-center mb-12 fade-in">
                     <h2 class="text-3xl md:text-4xl font-bold text-white">문해력의 <span class="font-playfair text-amber-400">핵심 역량</span>을 키우다</h2>
                     <p class="mt-4 text-gray-400">세 가지 핵심 역량의 균형 잡힌 성장이 진짜 문해력입니다.</p>
                 </div>
@@ -139,9 +177,9 @@
         </section>
 
         <!-- How It Works Section -->
-        <section id="how-it-works" class="py-20 md:py-32">
+        <section id="how-it-works" class="py-16 md:py-24">
             <div class="container mx-auto max-w-7xl px-6">
-                <div class="text-center mb-16 fade-in">
+                <div class="text-center mb-12 fade-in">
                     <h2 class="text-3xl md:text-4xl font-bold text-white">진단은 <span class="font-playfair text-amber-400">어떻게</span> 진행되나요?</h2>
                 </div>
                 <div class="relative">
@@ -172,93 +210,116 @@
                 </div>
             </div>
         </section>
-    <main class="page-bg min-h-screen flex items-center justify-center pt-24 pb-12 px-4">
-        <div class="container mx-auto max-w-5xl text-center">
-            <div class="fade-in-up">
-                <h1 class="text-4xl md:text-5xl font-bold text-white font-playfair">
-                    진단평가를 시작할 <span class="text-amber-400">학년</span>을 선택하세요
-                </h1>
-                <p class="mt-4 text-gray-400">자신의 학년에 맞는 평가지를 선택하면, 문해력 진단이 시작됩니다.</p>
-            </div>
 
-            <!-- 초등부 -->
-            <div class="mt-16 fade-in-up" style="transition-delay: 200ms;">
-                <h2 class="text-2xl font-bold text-white mb-8 border-b-2 border-amber-400/50 pb-3 inline-block">초등부</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-                    <!-- 초3 -->
-                    <a href="grade3.html" class="grade-card rounded-2xl p-6 md:p-10 group">
-                        <div class="text-amber-400 text-3xl font-bold font-playfair">G3</div>
-                        <h3 class="mt-3 text-lg font-bold text-white">초등 3학년</h3>
-                        <p class="text-xs text-gray-400 mt-1">15 문항</p>
-                    </a>
-                    <!-- 초4 -->
-                    <a href="grade4.html" class="grade-card rounded-2xl p-6 md:p-10 group">
-                        <div class="text-amber-400 text-3xl font-bold font-playfair">G4</div>
-                        <h3 class="mt-3 text-lg font-bold text-white">초등 4학년</h3>
-                         <p class="text-xs text-gray-400 mt-1">15 문항</p>
-                    </a>
-                    <!-- 초5 -->
-                    <a href="grade5.html" class="grade-card rounded-2xl p-6 md:p-10 group">
-                        <div class="text-amber-400 text-3xl font-bold font-playfair">G5</div>
-                        <h3 class="mt-3 text-lg font-bold text-white">초등 5학년</h3>
-                        <p class="text-xs text-gray-400 mt-1">20 문항</p>
-                    </a>
-                    <!-- 초6 -->
-                    <a href="grade6.html" class="grade-card rounded-2xl p-6 md:p-10 group">
-                        <div class="text-amber-400 text-3xl font-bold font-playfair">G6</div>
-                        <h3 class="mt-3 text-lg font-bold text-white">초등 6학년</h3>
-                        <p class="text-xs text-gray-400 mt-1">20 문항</p>
-                    </a>
+        <!-- Grade Selection Section -->
+        <section id="selection" class="page-bg py-16 md:py-24 px-4">
+            <div class="container mx-auto max-w-5xl text-center">
+                <div class="fade-in-up">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white font-playfair">
+                        진단평가를 시작할 <span class="text-amber-400">학년</span>을 선택하세요
+                    </h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">자신의 학년에 맞는 평가지를 선택하면, 문해력 진단이 시작됩니다.</p>
+                </div>
+    
+                <!-- Elementary School Section -->
+                <div class="mt-12 fade-in-up" style="transition-delay: 200ms;">
+                    <h3 class="text-2xl font-bold text-white mb-8 border-b-2 border-amber-400/50 pb-3 inline-block">초등부</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                        <a href="grade3.html" class="grade-card rounded-2xl p-6 md:p-10 group">
+                            <div class="text-amber-400 text-3xl font-bold font-playfair">G3</div>
+                            <h4 class="mt-3 text-lg font-bold text-white">초등 3학년</h4>
+                            <p class="text-xs text-gray-400 mt-1">15 문항</p>
+                        </a>
+                        <a href="grade4.html" class="grade-card rounded-2xl p-6 md:p-10 group">
+                            <div class="text-amber-400 text-3xl font-bold font-playfair">G4</div>
+                            <h4 class="mt-3 text-lg font-bold text-white">초등 4학년</h4>
+                            <p class="text-xs text-gray-400 mt-1">15 문항</p>
+                        </a>
+                        <a href="grade5.html" class="grade-card rounded-2xl p-6 md:p-10 group">
+                            <div class="text-amber-400 text-3xl font-bold font-playfair">G5</div>
+                            <h4 class="mt-3 text-lg font-bold text-white">초등 5학년</h4>
+                            <p class="text-xs text-gray-400 mt-1">20 문항</p>
+                        </a>
+                        <a href="grade6.html" class="grade-card rounded-2xl p-6 md:p-10 group">
+                            <div class="text-amber-400 text-3xl font-bold font-playfair">G6</div>
+                            <h4 class="mt-3 text-lg font-bold text-white">초등 6학년</h4>
+                            <p class="text-xs text-gray-400 mt-1">20 문항</p>
+                        </a>
+                    </div>
+                </div>
+    
+                <!-- Middle School Section -->
+                <div class="mt-12 fade-in-up" style="transition-delay: 400ms;">
+                    <h3 class="text-2xl font-bold text-white mb-8 border-b-2 border-amber-400/50 pb-3 inline-block">중등부</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
+                        <a href="grade7.html" class="grade-card rounded-2xl p-6 md:p-10 group">
+                            <div class="text-amber-400 text-3xl font-bold font-playfair">G7</div>
+                            <h4 class="mt-3 text-lg font-bold text-white">중등 1학년</h4>
+                            <p class="text-xs text-gray-400 mt-1">25 문항</p>
+                        </a>
+                        <a href="grade8.html" class="grade-card rounded-2xl p-6 md:p-10 group">
+                            <div class="text-amber-400 text-3xl font-bold font-playfair">G8</div>
+                            <h4 class="mt-3 text-lg font-bold text-white">중등 2학년</h4>
+                            <p class="text-xs text-gray-400 mt-1">25 문항</p>
+                        </a>
+                        <a href="grade9.html" class="grade-card rounded-2xl p-6 md:p-10 group">
+                            <div class="text-amber-400 text-3xl font-bold font-playfair">G9</div>
+                            <h4 class="mt-3 text-lg font-bold text-white">중등 3학년</h4>
+                            <p class="text-xs text-gray-400 mt-1">25 문항</p>
+                        </a>
+                    </div>
                 </div>
             </div>
-
-            <!-- 중등부 -->
-             <div class="mt-16 fade-in-up" style="transition-delay: 400ms;">
-                <h2 class="text-2xl font-bold text-white mb-8 border-b-2 border-amber-400/50 pb-3 inline-block">중등부</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
-                    <!-- 중1 -->
-                    <a href="grade7.html" class="grade-card rounded-2xl p-6 md:p-10 group">
-                        <div class="text-amber-400 text-3xl font-bold font-playfair">G7</div>
-                        <h3 class="mt-3 text-lg font-bold text-white">중등 1학년</h3>
-                        <p class="text-xs text-gray-400 mt-1">25 문항</p>
-                    </a>
-                    <!-- 중2 -->
-                    <a href="grade8.html" class="grade-card rounded-2xl p-6 md:p-10 group">
-                        <div class="text-amber-400 text-3xl font-bold font-playfair">G8</div>
-                        <h3 class="mt-3 text-lg font-bold text-white">중등 2학년</h3>
-                        <p class="text-xs text-gray-400 mt-1">25 문항</p>
-                    </a>
-                    <!-- 중3 -->
-                    <a href="grade9.html" class="grade-card rounded-2xl p-6 md:p-10 group">
-                        <div class="text-amber-400 text-3xl font-bold font-playfair">G9</div>
-                        <h3 class="mt-3 text-lg font-bold text-white">중등 3학년</h3>
-                        <p class="text-xs text-gray-400 mt-1">25 문항</p>
-                    </a>
-                </div>
-            </div>
-        </div>
+        </section>
     </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900/50 border-t border-gray-800">
+        <div class="container mx-auto max-w-7xl px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-lg font-playfair text-white">SOPHIE'S WORLD</div>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                     <a href="#" class="text-gray-400 hover:text-white transition text-sm">이용약관</a>
+                     <a href="#" class="text-gray-400 hover:text-white transition text-sm">개인정보처리방침</a>
+                </div>
+            </div>
+            <p class="text-center text-xs text-gray-500 mt-8">&copy; 2024 Sophie's World. All Rights Reserved. 본 페이지는 실제 서비스가 아닌 데모용으로 제작되었습니다.</p>
+        </div>
+    </footer>
+
 
     <script>
-        // Fade-in animation on scroll/load
-        const faders = document.querySelectorAll('.fade-in-up');
-        const appearOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px"
-        };
-        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    return;
-                } else {
-                    entry.target.classList.add('visible');
-                    appearOnScroll.unobserve(entry.target);
-                }
-            });
-        }, appearOptions);
+        // Header background change on scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+            } else {
+                header.classList.remove('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+            }
+        });
 
-        faders.forEach(fader => {
-            appearOnScroll.observe(fader);
+        // Fade-in animation on scroll/load
+        document.addEventListener('DOMContentLoaded', () => {
+            const faders = document.querySelectorAll('.fade-in, .fade-in-up');
+            const appearOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('visible');
+                        appearOnScroll.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
         });
     </script>
 </body>
