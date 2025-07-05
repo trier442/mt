@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 전사고 선택 네비게이터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Scholarly Neutrals -->
+    <!-- Application Structure Plan: 사용자가 '나에게 맞는 학교 찾기'라는 명확한 목표를 가지고 앱을 사용하도록 유도하는 단계별 네비게이터 구조를 채택했습니다. [1단계: 목표 설정]에서 진학 방향을 선택하면, [2단계: 학교 탐색]에서 해당 목표에 맞는 학교들이 필터링되어 시각적으로 비교(카드, 차트)됩니다. [3단계: 최종 점검]에서는 자기 성찰 체크리스트를 통해 전략적 선택을 재확인하도록 합니다. 이 흐름은 복잡한 정보를 개인화된 여정으로 변환하여, 사용자가 능동적으로 자신에게 최적화된 결론에 도달하도록 설계되었습니다. -->
+    <!-- Visualization & Content Choices: 1) 목표 필터링(목표: 개인화, 방식: 인터랙티브 버튼, 상호작용: 클릭 시 학교 카드 및 차트 동적 업데이트, 근거: 사용자에게 맞춤형 정보를 제공하여 몰입도 증가). 2) 학교 비교 레이더 차트(목표: 다차원 비교, 방식: Chart.js 레이더 차트, 상호작용: 학교 카드 클릭 시 차트에 해당 학교 데이터 추가/제거, 근거: 수시/정시/의대 등 여러 특성을 한눈에 비교하여 직관적 이해를 도움). 3) 내신 등급별 카드 분류(목표: 지원 가능성 제시, 방식: 아이콘 기반 정보 카드, 근거: '올A 필수'와 'B등급 가능'을 시각적으로 구분하여 정보 접근성 강화). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            max-height: 50vh;
+            margin: auto;
+        }
+        @media (max-width: 768px) { .chart-container { height: 300px; } }
+        .filter-btn.active {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .school-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .school-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .school-card.selected {
+            box-shadow: 0 0 0 3px #2563eb;
+            transform: translateY(-2px);
+        }
+        html { scroll-behavior: smooth; }
+        .section-title {
+            background: linear-gradient(to top, #dbeafe 40%, transparent 40%);
+            padding: 0 0.25rem;
+            display: inline;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900">🎓 2025 전사고 선택 네비게이터</h1>
+            <a href="#final-check" class="text-sm bg-blue-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-blue-700 transition-colors">최종 체크리스트</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 md:py-12">
+
+        <section id="intro" class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">전사고, <span class="text-blue-600">성적</span>이 아닌 <span class="text-blue-600">전략</span>으로 가는 시대</h2>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600">
+                단순히 성적이 좋다고 전사고에 가는 시대는 끝났습니다.<br>나의 대입 목표와 학습 성향에 꼭 맞는 학교를 찾는 여정, 지금 바로 시작해보세요.
+            </p>
+        </section>
+
+        <!-- Step 1: Goal Setting -->
+        <section id="step1" class="mb-16">
+            <h3 class="text-2xl font-bold text-center mb-3">
+                <span class="section-title">Step 1. 나의 가장 중요한 대입 목표는?</span>
+            </h3>
+            <p class="text-center text-slate-500 mb-8">목표를 선택하면 그에 맞는 학교들을 추천해 드립니다.</p>
+            <div id="filter-container" class="flex flex-wrap justify-center gap-3 md:gap-4">
+                <button data-filter="all" class="filter-btn active text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">전체보기</button>
+                <button data-filter="susi" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">🎯 수시 중심</button>
+                <button data-filter="jungsi" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">✍️ 정시 중심</button>
+                <button data-filter="medical" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">⚕️ 의대 진학</button>
+                <button data-filter="international" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">🌍 해외 대학</button>
+            </div>
+        </section>
+
+        <!-- Step 2: School Exploration -->
+        <section id="step2" class="mb-16">
+             <h3 class="text-2xl font-bold text-center mb-3">
+                <span class="section-title">Step 2. 학교별 특징 비교 및 탐색</span>
+            </h3>
+            <p class="text-center text-slate-500 mb-8">관심 있는 학교 카드를 클릭하여 아래 차트에서 상세 특징을 비교해보세요. (최대 3개)</p>
+            
+            <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg mb-12">
+                 <div class="chart-container">
+                    <canvas id="schoolRadarChart"></canvas>
+                </div>
+            </div>
+
+            <div id="school-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- School cards will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <!-- Step 3: Final Check -->
+        <section id="final-check" class="scroll-mt-20">
+            <h3 class="text-2xl font-bold text-center mb-3">
+                <span class="section-title">Step 3. 전사고 지원, 최종 점검하기</span>
+            </h3>
+            <p class="text-center text-slate-500 mb-8">전략적인 선택을 위해 아래 4가지 질문에 대해 스스로 답해보세요.</p>
+            <div class="max-w-2xl mx-auto space-y-4">
+                <div class="bg-white p-5 rounded-lg shadow flex items-start space-x-4">
+                    <span class="text-2xl">1️⃣</span>
+                    <div>
+                        <h4 class="font-bold text-lg">나의 대입 전략은 명확한가?</h4>
+                        <p class="text-slate-600 text-sm">수시, 정시, 해외대 등 나의 주력 전형과 목표 대학 라인을 구체적으로 그려보았나요?</p>
+                    </div>
+                </div>
+                 <div class="bg-white p-5 rounded-lg shadow flex items-start space-x-4">
+                    <span class="text-2xl">2️⃣</span>
+                    <div>
+                        <h4 class="font-bold text-lg">나의 의대 진학 목표는 현실적인가?</h4>
+                        <p class="text-slate-600 text-sm">단순한 희망을 넘어, 의대 진학을 위해 치열한 내신 경쟁 또는 정시 준비를 감당할 수 있나요?</p>
+                    </div>
+                </div>
+                 <div class="bg-white p-5 rounded-lg shadow flex items-start space-x-4">
+                    <span class="text-2xl">3️⃣</span>
+                    <div>
+                        <h4 class="font-bold text-lg">나의 성적과 성향은 학교와 맞는가?</h4>
+                        <p class="text-slate-600 text-sm">지원하려는 학교의 내신 커트라인은 물론, 학습 분위기와 문화가 나의 성향과 잘 맞을까요?</p>
+                    </div>
+                </div>
+                 <div class="bg-white p-5 rounded-lg shadow flex items-start space-x-4">
+                    <span class="text-2xl">4️⃣</span>
+                    <div>
+                        <h4 class="font-bold text-lg">나는 기숙사 생활에 적합한 사람인가?</h4>
+                        <p class="text-slate-600 text-sm">엄격한 규율과 통제된 환경 속에서 사교육 없이 자기주도적으로 학습을 이끌어갈 수 있나요?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-6 bg-slate-100 mt-12 border-t">
+        <p class="text-sm text-slate-500">&copy; 2024 전사고 선택 네비게이터. 제공된 정보를 바탕으로 제작된 인터랙티브 요약본입니다.</p>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const schoolData = [
+        { id: 'minsa', name: '민사고', tags: ['susi', 'international'], grades: 'A', tutoring: '불가', dorm: '월 1회', susi: 5, jungsi: 2, medical: 3, international: 5, autonomy: 5 },
+        { id: 'hana', name: '하나고', tags: ['susi'], grades: 'A', tutoring: '불가', dorm: '월 1회', susi: 5, jungsi: 1, medical: 2, international: 2, autonomy: 4 },
+        { id: 'sangsan', name: '상산고', tags: ['jungsi', 'medical'], grades: 'A-B', tutoring: '가능', dorm: '격주', susi: 2, jungsi: 5, medical: 5, international: 1, autonomy: 3 },
+        { id: 'oedae', name: '외대부고', tags: ['susi', 'jungsi', 'international'], grades: 'A', tutoring: '필수', dorm: '매주', susi: 4, jungsi: 4, medical: 3, international: 4, autonomy: 2 },
+        { id: 'pocheol', name: '포철고', tags: ['susi', 'jungsi'], grades: 'A-B', tutoring: '가능', dorm: '자유', susi: 4, jungsi: 3, medical: 3, international: 1, autonomy: 4 },
+        { id: 'cheongun', name: '청운고', tags: ['susi', 'jungsi', 'medical'], grades: 'A-B', tutoring: '가능', dorm: '월 1회', susi: 4, jungsi: 3, medical: 4, international: 1, autonomy: 3 },
+        { id: 'gimcheon', name: '김천고', tags: ['susi', 'medical'], grades: 'B', tutoring: '불가', dorm: '월 1회', susi: 3, jungsi: 2, medical: 4, international: 1, autonomy: 5 },
+        { id: 'bugil', name: '북일고', tags: ['susi'], grades: 'B', tutoring: '가능', dorm: '자유', susi: 3, jungsi: 2, medical: 2, international: 1, autonomy: 4 },
+        { id: 'gwangyang', name: '광양제철고', tags: ['susi'], grades: 'A-B', tutoring: '가능', dorm: '자유', susi: 4, jungsi: 2, medical: 2, international: 1, autonomy: 4 },
+    ];
+
+    const schoolGrid = document.getElementById('school-grid');
+    const filterContainer = document.getElementById('filter-container');
+    const radarCtx = document.getElementById('schoolRadarChart').getContext('2d');
+    let radarChart;
+    let selectedSchools = new Set();
+    const tagToKor = {
+        'susi': '수시 중심', 'jungsi': '정시 중심', 'medical': '의대 목표', 'international': '해외대 목표'
+    };
+
+    function renderSchoolCards(filter = 'all') {
+        schoolGrid.innerHTML = '';
+        const filteredSchools = filter === 'all' ? schoolData : schoolData.filter(s => s.tags.includes(filter));
+        
+        filteredSchools.forEach(school => {
+            const gradeInfo = school.grades === 'A' 
+                ? `<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">올 A 필수</span>`
+                : `<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">B등급 가능</span>`;
+
+            const tutoringInfo = school.tutoring === '불가'
+                ? `<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">사교육 불가</span>`
+                : `<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">사교육 가능</span>`;
+
+            const card = `
+                <div id="card-${school.id}" class="school-card bg-white p-5 rounded-lg shadow-md" data-id="${school.id}">
+                    <h4 class="font-bold text-xl mb-2">${school.name}</h4>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        ${school.tags.map(tag => `<span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">${tagToKor[tag]}</span>`).join('')}
+                    </div>
+                    <div class="flex justify-between items-center text-sm text-slate-600 pt-3 border-t">
+                        <div>${gradeInfo}</div>
+                        <div>${tutoringInfo}</div>
+                    </div>
+                </div>`;
+            schoolGrid.innerHTML += card;
+        });
+        
+        document.querySelectorAll('.school-card').forEach(card => {
+            card.addEventListener('click', () => toggleSchoolSelection(card.dataset.id));
+            if(selectedSchools.has(card.dataset.id)){
+                card.classList.add('selected');
+            }
+        });
+    }
+
+    function createOrUpdateRadarChart() {
+        const datasets = [];
+        const colors = ['rgba(37, 99, 235, 0.4)', 'rgba(219, 39, 119, 0.4)', 'rgba(234, 179, 8, 0.4)'];
+        
+        let i = 0;
+        selectedSchools.forEach(schoolId => {
+            const school = schoolData.find(s => s.id === schoolId);
+            if (school) {
+                datasets.push({
+                    label: school.name,
+                    data: [school.susi, school.jungsi, school.medical, school.international, school.autonomy],
+                    backgroundColor: colors[i],
+                    borderColor: colors[i].replace('0.4', '1'),
+                    pointBackgroundColor: colors[i].replace('0.4', '1'),
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: colors[i].replace('0.4', '1'),
+                });
+                i++;
+            }
+        });
+
+        if (radarChart) {
+            radarChart.data.datasets = datasets;
+            radarChart.update();
+        } else {
+            radarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['수시 역량', '정시 역량', '의대 특화', '해외대', '자율성/학종'],
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 2 } },
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 5,
+                            pointLabels: { font: { size: 12 } },
+                            ticks: { display: false, stepSize: 1 }
+                        }
+                    },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+        }
+    }
+
+    function toggleSchoolSelection(schoolId) {
+        if (selectedSchools.has(schoolId)) {
+            selectedSchools.delete(schoolId);
+        } else {
+            if (selectedSchools.size < 3) {
+                selectedSchools.add(schoolId);
+            } else {
+                // Optionally show a message that max 3 can be selected
+                return;
+            }
+        }
+        document.getElementById(`card-${schoolId}`).classList.toggle('selected');
+        createOrUpdateRadarChart();
+    }
+
+    filterContainer.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            const filter = e.target.dataset.filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            renderSchoolCards(filter);
+        }
+    });
+
+    renderSchoolCards();
+    createOrUpdateRadarChart();
+});
+</script>
+
+</body>
+</html>
