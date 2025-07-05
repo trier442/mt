@@ -131,10 +131,10 @@
             </div>
         </section>
         
-        <!-- Admin Section: Add News Article -->
-        <section id="admin-panel" class="py-16 md:py-20 bg-gray-900/50">
+        <!-- Admin Section: Add News Article (Hidden by default) -->
+        <section id="admin-panel" class="hidden py-16 md:py-20 bg-gray-900/50">
             <div class="container mx-auto max-w-2xl px-6">
-                <h2 class="text-2xl font-bold text-center text-white mb-8">새 뉴스 기사 추가</h2>
+                <h2 class="text-2xl font-bold text-center text-white mb-8">새 뉴스 기사 추가 (관리자)</h2>
                 <form id="add-news-form" class="space-y-4">
                     <input type="text" id="news-title" placeholder="뉴스 제목" class="w-full form-input" required>
                     <textarea id="news-content" placeholder="뉴스 내용" rows="4" class="w-full form-input" required></textarea>
@@ -155,7 +155,7 @@
         // Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, orderBy as firestoreOrderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase 설정 (환경 변수에서 가져옴)
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
@@ -184,6 +184,11 @@
             const newsGrid = document.getElementById('news-grid');
             newsGrid.innerHTML = ''; // 기존 콘텐츠 초기화
             
+            if (articles.length === 0) {
+                newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-400">게시된 뉴스가 없습니다. 관리자 모드에서 새 뉴스를 추가해주세요.</p>`;
+                return;
+            }
+
             const categoryColors = {
                 college: 'bg-red-500/20 text-red-300',
                 high: 'bg-blue-500/20 text-blue-300',
@@ -228,7 +233,7 @@
         async function listenForNews() {
             await authenticateUser();
             const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
-            const q = query(newsCollectionRef, orderBy('createdAt', 'desc'));
+            const q = query(newsCollectionRef, firestoreOrderBy('createdAt', 'desc'));
 
             onSnapshot(q, (querySnapshot) => {
                 const articles = [];
@@ -236,8 +241,7 @@
                     articles.push({ id: doc.id, ...doc.data() });
                 });
                 renderNews(articles);
-                // 필터링 기능이 동적으로 로드된 아이템에도 적용되도록 함
-                setupFilter();
+                setupFilter(articles); // Pass articles to setupFilter
             }, (error) => {
                 console.error("Error fetching news:", error);
             });
@@ -261,15 +265,16 @@
                     createdAt: serverTimestamp()
                 });
                 e.target.reset(); // 폼 초기화
+                alert('뉴스가 성공적으로 게시되었습니다.');
             } catch (error) {
                 console.error("Error adding document: ", error);
+                alert('뉴스 게시에 실패했습니다.');
             }
         });
 
         // 필터링 기능 설정
-        function setupFilter() {
+        function setupFilter(articles) {
             const filterButtons = document.querySelectorAll('.tab-button');
-            const newsItems = document.querySelectorAll('.news-item');
 
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -277,20 +282,31 @@
                     button.classList.add('active');
 
                     const filter = button.dataset.filter;
+                    let filteredArticles;
 
-                    newsItems.forEach(item => {
-                        if (filter === 'all' || item.dataset.category === filter) {
-                            item.style.display = 'block';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
+                    if (filter === 'all') {
+                        filteredArticles = articles;
+                    } else {
+                        filteredArticles = articles.filter(article => article.category === filter);
+                    }
+                    renderNews(filteredArticles);
                 });
             });
+        }
+        
+        // 관리자 패널 표시 로직
+        function checkAdminMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isAdmin = urlParams.get('admin') === 'true';
+            const adminPanel = document.getElementById('admin-panel');
+            if (isAdmin) {
+                adminPanel.classList.remove('hidden');
+            }
         }
 
         // 페이지 로드 시 실행
         document.addEventListener('DOMContentLoaded', () => {
+            checkAdminMode();
             listenForNews();
 
             // 스크롤에 따른 헤더 스타일 변경
