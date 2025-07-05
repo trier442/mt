@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <!-- Google AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5341216668095254"
-     crossorigin="anonymous"></script>
-    <meta name="google-adsense-account" content="ca-pub-5341216668095254">
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>입시 뉴스 - 대치 소피의 세계</title>
+    <title>뉴스 상세 - 대치 소피의 세계</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,214 +17,83 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #0a0a1a;
-            color: #e0e0e0;
+            background-color: #f3f4f6; /* 옅은 회색 배경 */
+            color: #1f2937; /* 어두운 텍스트 색상 */
         }
         .font-playfair {
             font-family: 'Playfair Display', serif;
         }
         .page-bg {
-            background: #0a0a1a;
+            background: #f3f4f6;
         }
-        .news-card {
-            background-color: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            overflow: hidden;
+        /* Tailwind CSS의 Typography 플러그인 스타일을 기본으로 사용 */
+        .prose {
+            color: #374151;
         }
-        .news-card:hover {
-            transform: translateY(-5px);
-            background-color: rgba(255, 255, 255, 0.07);
-            border-color: rgba(192, 160, 96, 0.5);
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+            color: #111827;
         }
-        .news-card img {
-            transition: transform 0.4s ease;
+        .prose a {
+            color: #c0a060;
         }
-        .news-card:hover img {
-            transform: scale(1.05);
-        }
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .fade-in-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .tab-button {
-            transition: all 0.2s ease-in-out;
-        }
-        .tab-button.active {
-            color: #0a0a1a;
-            background-color: #c0a060;
-            font-weight: 700;
-        }
-        .form-input {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            color: #e0e0e0;
-            transition: border-color 0.2s, background-color 0.2s;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: #c0a060;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-          20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        .shake {
-          animation: shake 0.5s ease-in-out;
+        .prose strong {
+            color: #111827;
         }
     </style>
 </head>
 <body class="overflow-x-hidden">
 
     <!-- Header -->
-    <header class="fixed w-full z-30 transition-all duration-300 bg-gray-900/80 backdrop-blur-sm shadow-lg" id="header">
+    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-md" id="header">
         <nav class="container mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold font-playfair text-white">
+            <a href="index.html" class="text-2xl font-bold font-playfair text-gray-900">
                 SOPHIE'S WORLD
             </a>
             <div id="desktop-menu" class="hidden md:flex items-center space-x-6">
-                <a href="index.html" class="text-gray-300 hover:text-white transition text-sm font-medium">홈으로</a>
-                <a href="navigator.html" class="text-gray-300 hover:text-white transition text-sm font-medium">진로 네비게이터</a>
-                <a href="#" class="text-amber-400 hover:text-white transition text-sm font-bold">입시 뉴스</a>
-                <a href="selection.html" class="text-gray-300 hover:text-white transition text-sm font-medium">문해력 진단평가</a>
+                <a href="index.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">홈으로</a>
+                <a href="navigator.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">진로 네비게이터</a>
+                <a href="news.html" class="text-amber-600 hover:text-gray-900 transition text-sm font-bold">입시 뉴스</a>
+                <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단평가</a>
             </div>
-             <button id="mobile-menu-button" class="md:hidden text-white">
+             <button id="mobile-menu-button" class="md:hidden text-gray-800">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
         </nav>
     </header>
-    
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden fixed inset-0 bg-gray-900/95 z-50 p-6">
-        <div class="flex justify-end mb-8">
-            <button id="mobile-menu-close-button" class="text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-        </div>
-        <div class="flex flex-col items-center space-y-6 text-xl">
-            <a href="index.html" class="text-gray-300 hover:text-white transition">홈으로</a>
-            <a href="navigator.html" class="text-gray-300 hover:text-white transition">진로 네비게이터</a>
-            <a href="#" class="text-amber-400 hover:text-white transition font-bold">입시 뉴스</a>
-            <a href="selection.html" class="text-gray-300 hover:text-white transition">문해력 진단평가</a>
-        </div>
-    </div>
-
 
     <main class="page-bg">
-        <!-- Title Section -->
-        <section class="pt-28 md:pt-32 pb-16 bg-gradient-to-b from-[#1b2735] to-[#0a0a1a]">
-            <div class="container mx-auto max-w-7xl px-6">
-                <div class="fade-in-up">
-                    <h1 class="mt-4 text-4xl md:text-5xl font-bold text-white font-playfair">
-                        입시 <span class="text-amber-400">뉴스</span>
-                    </h1>
-                    <p class="mt-4 text-gray-300 max-w-2xl">빠르게 변화하는 입시 정보, 소피의 세계가 핵심만 모아 제공합니다.</p>
+        <!-- Article Detail Section -->
+        <section class="pt-28 md:pt-32 pb-16">
+            <div class="container mx-auto max-w-4xl px-6" id="article-container">
+                <!-- 기사 내용이 여기에 동적으로 로드됩니다. -->
+                <div class="text-center py-20">
+                    <p class="text-gray-500">기사를 불러오는 중입니다...</p>
                 </div>
             </div>
         </section>
-
-        <!-- Main Content: News List Section -->
-        <section id="news-list" class="py-16 md:py-20">
-            <div class="container mx-auto max-w-7xl px-6">
-                <!-- Filter Tabs -->
-                <div class="flex flex-wrap justify-center gap-2 mb-12 fade-in-up">
-                    <button class="tab-button active px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="all">전체</button>
-                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="middle">중등</button>
-                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="high">고입</button>
-                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="college">대입</button>
-                </div>
-
-                <!-- News Grid -->
-                <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- 뉴스 아이템이 여기에 동적으로 추가됩니다. -->
-                </div>
-            </div>
-        </section>
-        
-        <!-- Admin Section: Add News Article (Hidden by default) -->
-        <section id="admin-panel" class="hidden py-16 md:py-20 bg-gray-900/50">
-            <div class="container mx-auto max-w-2xl px-6">
-                <h2 class="text-2xl font-bold text-center text-white mb-8">새 뉴스 기사 추가 (관리자)</h2>
-                <form id="add-news-form" class="space-y-4">
-                    <input type="text" id="news-title" placeholder="뉴스 제목" class="w-full form-input" required>
-                    <textarea id="news-content" placeholder="뉴스 내용 (HTML 사용 가능)" rows="10" class="w-full form-input" required></textarea>
-                    <input type="url" id="news-image" placeholder="대표 이미지 URL (예: https://...)" class="w-full form-input">
-                    <select id="news-category" class="w-full form-input" required>
-                        <option value="middle">중등</option>
-                        <option value="high">고입</option>
-                        <option value="college">대입</option>
-                    </select>
-                    <button type="submit" class="w-full bg-amber-500 text-gray-900 font-bold px-5 py-3 rounded-lg hover:bg-amber-400 transition">게시하기</button>
-                </form>
-            </div>
-        </section>
-
     </main>
-    
-    <!-- Admin Login Button -->
-    <div class="fixed bottom-0 left-0 p-4 z-40">
-        <button id="admin-login-button" class="bg-gray-700/50 text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-amber-500 hover:text-gray-900 transition backdrop-blur-sm">
-            관리자
-        </button>
-    </div>
-
-    <!-- Password Modal -->
-    <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[51]">
-        <div class="bg-gray-800 p-8 rounded-lg shadow-xl text-center w-80">
-            <h3 class="text-xl font-bold text-white mb-4">관리자 비밀번호</h3>
-            <input type="password" id="password-input" class="form-input w-full mb-4" placeholder="비밀번호를 입력하세요">
-            <button id="password-submit" class="w-full bg-amber-500 text-gray-900 font-bold px-5 py-3 rounded-lg hover:bg-amber-400 transition">로그인</button>
-            <button id="password-cancel" class="mt-2 text-gray-400 text-sm hover:text-white">취소</button>
-        </div>
-    </div>
-
-    <!-- Notification Modal -->
-    <div id="notification-modal" class="hidden fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl z-50 transition-transform duration-300 translate-x-[120%]">
-        <p id="notification-message"></p>
-    </div>
-
 
     <script type="module">
         // Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, orderBy as firestoreOrderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-
-        // --- Global State ---
-        let allArticles = [];
-        let currentFilter = 'all';
-        let db; // Module-level db instance
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- UI Rendering ---
-        function renderNews(articles) {
-            const newsGrid = document.getElementById('news-grid');
-            if (!newsGrid) return;
-            newsGrid.innerHTML = '';
-            
-            if (articles.length === 0 && !db) { // Firebase가 초기화되지 않았을 때
-                 newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-400">데이터베이스 설정을 확인해주세요.</p>`;
-                 return;
-            }
-            
-            if (articles.length === 0) {
-                newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-400">게시된 뉴스가 없습니다. 관리자 모드에서 새 뉴스를 추가해주세요.</p>`;
+        function renderArticle(article) {
+            const container = document.getElementById('article-container');
+            if (!container) return;
+            document.title = article ? `${article.title} - 대치 소피의 세계` : '기사를 찾을 수 없음 - 대치 소피의 세계';
+
+            if (!article) {
+                container.innerHTML = `<div class="text-center py-20"><h1 class="text-2xl font-bold text-gray-900">기사를 찾을 수 없습니다.</h1><p class="mt-4 text-gray-600">URL을 확인하거나 목록으로 돌아가세요.</p><a href="news.html" class="mt-6 inline-block bg-amber-500 text-gray-900 font-bold px-5 py-2 rounded-full hover:bg-amber-400 transition">뉴스 목록으로</a></div>`;
                 return;
             }
-
+            
             const categoryColors = {
-                college: 'bg-red-500/20 text-red-300',
-                high: 'bg-blue-500/20 text-blue-300',
-                middle: 'bg-green-500/20 text-green-300'
+                college: 'bg-red-100 text-red-800',
+                high: 'bg-blue-100 text-blue-800',
+                middle: 'bg-green-100 text-green-800'
             };
             const categoryNames = {
                 college: '대입',
@@ -237,169 +101,26 @@
                 middle: '중등'
             };
 
-            articles.forEach(article => {
-                const articleEl = document.createElement('div');
-                articleEl.className = 'news-item fade-in-up';
-                articleEl.dataset.category = article.category;
+            const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
+            const imageUrl = article.imageUrl || `https://placehold.co/1200x600/e5e7eb/374151?text=${encodeURIComponent(article.title)}`;
 
-                const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
-                const imageUrl = article.imageUrl || `https://placehold.co/600x400/1b2735/c0a060?text=${encodeURIComponent(article.title)}`;
-                
-                // HTML 태그를 제거하고 텍스트 요약 생성
-                const summary = article.content.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...';
-
-                articleEl.innerHTML = `
-                    <a href="news-detail.html?id=${article.id}" class="block news-card rounded-2xl h-full">
-                        <img src="${imageUrl}" alt="뉴스 이미지" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1b2735/c0a060?text=Image+Error';">
-                        <div class="p-6">
-                            <span class="inline-block ${categoryColors[article.category] || ''} text-xs font-semibold px-2 py-1 rounded-full mb-3">${categoryNames[article.category] || ''}</span>
-                            <h2 class="text-xl font-bold text-white">${article.title}</h2>
-                            <p class="mt-3 text-gray-400 text-sm">${summary}</p>
-                            <p class="text-xs text-gray-500 mt-4">${date}</p>
-                        </div>
-                    </a>
-                `;
-                newsGrid.appendChild(articleEl);
-            });
-            
-            const faders = newsGrid.querySelectorAll('.fade-in-up');
-            faders.forEach((fader, index) => {
-                setTimeout(() => fader.classList.add('visible'), index * 100);
-            });
-        }
-
-        function applyCurrentFilter() {
-            let filteredArticles;
-            if (currentFilter === 'all') {
-                filteredArticles = allArticles;
-            } else {
-                filteredArticles = allArticles.filter(article => article.category === currentFilter);
-            }
-            renderNews(filteredArticles);
+            container.innerHTML = `
+                <div class="prose max-w-none">
+                    <p class="text-sm">
+                        <a href="news.html" class="hover:text-gray-900">뉴스 목록</a> &gt; 
+                        <span class="font-semibold">${article.title}</span>
+                    </p>
+                    <span class="inline-block ${categoryColors[article.category] || ''} text-xs font-semibold px-2 py-1 rounded-full mt-4">${categoryNames[article.category] || ''}</span>
+                    <h1 class="font-playfair text-4xl md:text-5xl mt-2 mb-4">${article.title}</h1>
+                    <p class="text-gray-500 text-sm">게시일: ${date}</p>
+                    <img src="${imageUrl}" alt="${article.title}" class="w-full rounded-lg my-8" onerror="this.style.display='none'">
+                    <div class="text-lg leading-relaxed">${article.content}</div>
+                </div>
+            `;
         }
         
-        function showNotification(message, isSuccess = true) {
-            const notificationModal = document.getElementById('notification-modal');
-            const notificationMessage = document.getElementById('notification-message');
-
-            if (!notificationModal || !notificationMessage) return;
-
-            notificationMessage.textContent = message;
-            notificationModal.style.backgroundColor = isSuccess ? '#22c55e' : '#ef4444';
-            notificationModal.classList.remove('hidden');
-            setTimeout(() => {
-                notificationModal.classList.remove('translate-x-[120%]');
-            }, 10);
-            
-            setTimeout(() => {
-                notificationModal.classList.add('translate-x-[120%]');
-                setTimeout(() => {
-                    notificationModal.classList.add('hidden');
-                }, 300);
-            }, 3000);
-        }
-
-        // --- Event Listeners and Setup ---
-        function setupEventListeners() {
-            // Header Scroll
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
-                } else {
-                    header.classList.remove('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
-                }
-            });
-
-            // Mobile Menu
-            const mobileMenuBtn = document.getElementById('mobile-menu-button');
-            const mobileMenuCloseBtn = document.getElementById('mobile-menu-close-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenuBtn && mobileMenu && mobileMenuCloseBtn) {
-                mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
-                mobileMenuCloseBtn.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-            }
-
-            // Admin Login
-            const adminLoginBtn = document.getElementById('admin-login-button');
-            const passwordModal = document.getElementById('password-modal');
-            const passwordInput = document.getElementById('password-input');
-            const passwordSubmit = document.getElementById('password-submit');
-            const passwordCancel = document.getElementById('password-cancel');
-            const adminPanel = document.getElementById('admin-panel');
-            if (adminLoginBtn && passwordModal && passwordInput && passwordSubmit && passwordCancel && adminPanel) {
-                adminLoginBtn.addEventListener('click', () => {
-                    passwordModal.classList.remove('hidden');
-                    passwordInput.focus();
-                });
-                passwordCancel.addEventListener('click', () => {
-                    passwordModal.classList.add('hidden');
-                    passwordInput.value = '';
-                });
-                const handleLogin = () => {
-                    if (passwordInput.value === '524607') {
-                        passwordModal.classList.add('hidden');
-                        adminPanel.classList.remove('hidden');
-                        passwordInput.value = '';
-                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-                    } else {
-                        const modalContent = passwordModal.querySelector('.bg-gray-800');
-                        if (modalContent) {
-                            modalContent.classList.add('shake');
-                            setTimeout(() => modalContent.classList.remove('shake'), 500);
-                        }
-                        passwordInput.value = '';
-                    }
-                };
-                passwordSubmit.addEventListener('click', handleLogin);
-                passwordInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') handleLogin();
-                });
-            }
-
-            // News Form Submission
-            const addNewsForm = document.getElementById('add-news-form');
-            if (addNewsForm) {
-                addNewsForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    
-                    if (!db) {
-                        console.error("Firestore is not initialized.");
-                        showNotification('데이터베이스 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', false);
-                        return;
-                    }
-
-                    const title = document.getElementById('news-title').value;
-                    const content = document.getElementById('news-content').value;
-                    const imageUrl = document.getElementById('news-image').value;
-                    const category = document.getElementById('news-category').value;
-                    
-                    try {
-                        const newsCollectionRef = collection(db, 'news');
-                        await addDoc(newsCollectionRef, { title, content, imageUrl, category, createdAt: serverTimestamp() });
-                        e.target.reset();
-                        showNotification('뉴스가 성공적으로 게시되었습니다.');
-                    } catch (error) {
-                        console.error("Error adding document: ", error);
-                        showNotification('뉴스 게시에 실패했습니다. Firestore 보안 규칙을 확인해주세요.', false);
-                    }
-                });
-            }
-
-            // Filter Tabs
-            const filterButtons = document.querySelectorAll('.tab-button');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    currentFilter = button.dataset.filter;
-                    applyCurrentFilter();
-                });
-            });
-        }
-
-        // --- Firebase Initialization ---
-        async function initializeFirebase() {
+        // --- Firebase Initialization and Data Fetching ---
+        async function initializeAndFetch() {
             const firebaseConfig = {
               apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
               authDomain: "news-6271f.firebaseapp.com",
@@ -413,40 +134,37 @@
             try {
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
-                db = getFirestore(app);
-                getAnalytics(app);
+                const db = getFirestore(app);
                 
                 await signInAnonymously(auth);
 
-                const newsCollectionRef = collection(db, 'news');
-                const q = query(newsCollectionRef, firestoreOrderBy('createdAt', 'desc'));
-                onSnapshot(q, (querySnapshot) => {
-                    allArticles = [];
-                    querySnapshot.forEach((doc) => {
-                        allArticles.push({ id: doc.id, ...doc.data() });
-                    });
-                    applyCurrentFilter();
-                }, (error) => {
-                    console.error("Error fetching news:", error);
-                    showNotification("뉴스 로딩 실패: Firestore 보안 규칙을 확인해주세요.", false);
-                    renderNews([]);
-                });
+                const urlParams = new URLSearchParams(window.location.search);
+                const articleId = urlParams.get('id');
+
+                if (!articleId) {
+                    renderArticle(null);
+                    return;
+                }
+
+                const docRef = doc(db, "news", articleId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    renderArticle({ id: docSnap.id, ...docSnap.data() });
+                } else {
+                    console.log("No such document!");
+                    renderArticle(null);
+                }
 
             } catch (error) {
-                console.error("Firebase initialization failed:", error);
-                if (error.code === 'auth/configuration-not-found') {
-                    showNotification("인증 설정 오류: Firebase 콘솔에서 '익명 로그인'을 활성화해주세요.", false);
-                } else {
-                    showNotification("데이터베이스 연결에 실패했습니다. Firebase 설정을 확인해주세요.", false);
-                }
-                renderNews([]);
+                console.error("Error fetching document:", error);
+                renderArticle(null);
             }
         }
 
         // --- Initial Execution ---
         document.addEventListener('DOMContentLoaded', () => {
-            setupEventListeners();
-            initializeFirebase();
+            initializeAndFetch();
         });
     </script>
 </body>
