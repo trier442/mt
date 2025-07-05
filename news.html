@@ -163,6 +163,9 @@
                 <form id="add-news-form" class="space-y-4">
                     <input type="text" id="news-title" placeholder="뉴스 제목" class="w-full form-input" required>
                     <textarea id="news-content" placeholder="뉴스 내용 (HTML 사용 가능)" rows="10" class="w-full form-input" required></textarea>
+                    <div class="text-xs text-gray-500">
+                        <p>💡 차트 삽입 Tip: 본문에 <code>&lt;iframe src="chart-example.html" class="w-full h-96 border-0"&gt;&lt;/iframe&gt;</code> 코드를 추가하여 인터랙티브 차트를 삽입할 수 있습니다.</p>
+                    </div>
                     <input type="file" id="news-image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200" accept="image/*">
                     <select id="news-category" class="w-full form-input" required>
                         <option value="middle">중등</option>
@@ -286,8 +289,8 @@
 
             if (!notificationModal || !notificationMessage) return;
 
-            notificationMessage.textContent = message;
             notificationModal.className = `fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-xl z-50 transition-transform duration-300 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`;
+            notificationMessage.textContent = message;
             
             setTimeout(() => {
                 notificationModal.classList.remove('translate-x-[120%]');
