@@ -418,20 +418,28 @@
                 
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 // !! 중요: 이 코드가 작동하려면 Firebase 콘솔에서 두 가지를 설정해야 합니다.      !!
-                // !! 1. Authentication > Sign-in method 탭에서 '익명' 로그인을 활성화해주세요.   !!
-                // !! 2. Firestore Database > 규칙 탭에서 아래 규칙으로 업데이트해주세요.         !!
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                //
-                // rules_version = '2';
-                // service cloud.firestore {
-                //   match /databases/{database}/documents {
-                //     match /news/{documentId} {
-                //       allow read: if true;
-                //       allow write: if request.auth != null;
-                //     }
-                //   }
-                // }
-                //
+                // !!                                                                           !!
+                // !! [1단계: 익명 로그인 활성화]                                                 !!
+                // !! 1. Firebase 콘솔(https://console.firebase.google.com/)로 이동             !!
+                // !! 2. 본인의 프로젝트(news-6271f) 선택                                       !!
+                // !! 3. 왼쪽 메뉴에서 'Authentication' 클릭                                    !!
+                // !! 4. 'Sign-in method' 탭 클릭                                               !!
+                // !! 5. 제공업체 목록에서 '익명'을 찾아 클릭 후 활성화(Enable) 스위치를 켭니다.      !!
+                // !!                                                                           !!
+                // !! [2단계: Firestore 보안 규칙 업데이트]                                       !!
+                // !! 1. 왼쪽 메뉴에서 'Firestore Database' 클릭                                !!
+                // !! 2. '규칙(Rules)' 탭 클릭                                                  !!
+                // !! 3. 기존 내용을 모두 지우고 아래 규칙으로 교체 후 '게시(Publish)' 버튼 클릭     !!
+                // !!                                                                           !!
+                // !! rules_version = '2';                                                      !!
+                // !! service cloud.firestore {                                                !!
+                // !!   match /databases/{database}/documents {                                !!
+                // !!     match /news/{documentId} {                                           !!
+                // !!       allow read: if true;                                               !!
+                // !!       allow write: if request.auth != null;                               !!
+                // !!     }                                                                    !!
+                // !!   }                                                                      !!
+                // !! }                                                                        !!
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 await signInAnonymously(auth);
 
