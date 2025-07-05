@@ -96,17 +96,33 @@
             <a href="index.html" class="text-2xl font-bold font-playfair text-white">
                 SOPHIE'S WORLD
             </a>
-            <div class="hidden md:flex items-center space-x-6">
+            <div id="desktop-menu" class="hidden md:flex items-center space-x-6">
                 <a href="index.html" class="text-gray-300 hover:text-white transition text-sm font-medium">홈으로</a>
                 <a href="navigator.html" class="text-gray-300 hover:text-white transition text-sm font-medium">진로 네비게이터</a>
                 <a href="#" class="text-amber-400 hover:text-white transition text-sm font-bold">입시 뉴스</a>
                 <a href="selection.html" class="text-gray-300 hover:text-white transition text-sm font-medium">문해력 진단평가</a>
             </div>
-             <button class="md:hidden text-white">
+             <button id="mobile-menu-button" class="md:hidden text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
         </nav>
     </header>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-gray-900/95 z-50 p-6">
+        <div class="flex justify-end mb-8">
+            <button id="mobile-menu-close-button" class="text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="flex flex-col items-center space-y-6 text-xl">
+            <a href="index.html" class="text-gray-300 hover:text-white transition">홈으로</a>
+            <a href="navigator.html" class="text-gray-300 hover:text-white transition">진로 네비게이터</a>
+            <a href="#" class="text-amber-400 hover:text-white transition font-bold">입시 뉴스</a>
+            <a href="selection.html" class="text-gray-300 hover:text-white transition">문해력 진단평가</a>
+        </div>
+    </div>
+
 
     <main class="page-bg">
         <!-- Title Section -->
@@ -160,14 +176,14 @@
     </main>
     
     <!-- Admin Login Button -->
-    <footer class="fixed bottom-0 left-0 p-4 z-40">
+    <div class="fixed bottom-0 left-0 p-4 z-40">
         <button id="admin-login-button" class="bg-gray-700/50 text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-amber-500 hover:text-gray-900 transition backdrop-blur-sm">
             관리자
         </button>
-    </footer>
+    </div>
 
     <!-- Password Modal -->
-    <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-51">
         <div class="bg-gray-800 p-8 rounded-lg shadow-xl text-center w-80">
             <h3 class="text-xl font-bold text-white mb-4">관리자 비밀번호</h3>
             <input type="password" id="password-input" class="form-input w-full mb-4" placeholder="비밀번호를 입력하세요">
@@ -307,6 +323,8 @@
             const notificationModal = document.getElementById('notification-modal');
             const notificationMessage = document.getElementById('notification-message');
 
+            if (!notificationModal || !notificationMessage) return;
+
             notificationMessage.textContent = message;
             notificationModal.style.backgroundColor = isSuccess ? '#22c55e' : '#ef4444';
             notificationModal.classList.remove('hidden');
@@ -323,29 +341,32 @@
         }
 
         // 뉴스 추가 폼 제출 처리
-        document.getElementById('add-news-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('news-title').value;
-            const content = document.getElementById('news-content').value;
-            const imageUrl = document.getElementById('news-image').value;
-            const category = document.getElementById('news-category').value;
+        const addNewsForm = document.getElementById('add-news-form');
+        if (addNewsForm) {
+            addNewsForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('news-title').value;
+                const content = document.getElementById('news-content').value;
+                const imageUrl = document.getElementById('news-image').value;
+                const category = document.getElementById('news-category').value;
 
-            try {
-                const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
-                await addDoc(newsCollectionRef, {
-                    title,
-                    content,
-                    imageUrl,
-                    category,
-                    createdAt: serverTimestamp()
-                });
-                e.target.reset();
-                showNotification('뉴스가 성공적으로 게시되었습니다.');
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                showNotification('뉴스 게시에 실패했습니다.', false);
-            }
-        });
+                try {
+                    const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
+                    await addDoc(newsCollectionRef, {
+                        title,
+                        content,
+                        imageUrl,
+                        category,
+                        createdAt: serverTimestamp()
+                    });
+                    e.target.reset();
+                    showNotification('뉴스가 성공적으로 게시되었습니다.');
+                } catch (error) {
+                    console.error("Error adding document: ", error);
+                    showNotification('뉴스 게시에 실패했습니다.', false);
+                }
+            });
+        }
         
         // 관리자 로그인 로직
         function setupAdminLogin() {
@@ -355,6 +376,11 @@
             const passwordSubmit = document.getElementById('password-submit');
             const passwordCancel = document.getElementById('password-cancel');
             const adminPanel = document.getElementById('admin-panel');
+
+            if (!adminLoginBtn || !passwordModal || !passwordInput || !passwordSubmit || !passwordCancel || !adminPanel) {
+                console.error("One or more admin elements are missing from the DOM.");
+                return;
+            }
 
             adminLoginBtn.addEventListener('click', () => {
                 passwordModal.classList.remove('hidden');
@@ -373,11 +399,12 @@
                     passwordInput.value = '';
                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 } else {
-                    passwordModal.querySelector('.bg-gray-800').classList.add('shake');
+                    const modalContent = passwordModal.querySelector('.bg-gray-800');
+                    if (modalContent) {
+                        modalContent.classList.add('shake');
+                        setTimeout(() => modalContent.classList.remove('shake'), 500);
+                    }
                     passwordInput.value = '';
-                    setTimeout(() => {
-                        passwordModal.querySelector('.bg-gray-800').classList.remove('shake');
-                    }, 500);
                 }
             };
 
@@ -388,12 +415,29 @@
                 }
             });
         }
+        
+        // 모바일 메뉴 로직
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const mobileMenuCloseBtn = document.getElementById('mobile-menu-close-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuBtn && mobileMenu && mobileMenuCloseBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.remove('hidden');
+                });
+                mobileMenuCloseBtn.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            }
+        }
 
         // 페이지 로드 시 실행
         document.addEventListener('DOMContentLoaded', () => {
             setupAdminLogin();
             listenForNews();
             setupFilter();
+            setupMobileMenu();
 
             // 스크롤에 따른 헤더 스타일 변경
             const header = document.getElementById('header');
