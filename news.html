@@ -183,7 +183,7 @@
     </div>
 
     <!-- Password Modal -->
-    <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-51">
+    <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[51]">
         <div class="bg-gray-800 p-8 rounded-lg shadow-xl text-center w-80">
             <h3 class="text-xl font-bold text-white mb-4">관리자 비밀번호</h3>
             <input type="password" id="password-input" class="form-input w-full mb-4" placeholder="비밀번호를 입력하세요">
@@ -204,32 +204,15 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, orderBy as firestoreOrderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase 설정 (환경 변수에서 가져옴)
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // --- Global State ---
+        let allArticles = [];
+        let currentFilter = 'all';
 
-        // Firebase 앱 초기화
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // 사용자 인증
-        async function authenticateUser() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Authentication failed:", error);
-            }
-        }
-
-        // 뉴스 데이터 렌더링 함수
+        // --- UI Rendering ---
         function renderNews(articles) {
             const newsGrid = document.getElementById('news-grid');
-            newsGrid.innerHTML = ''; // 기존 콘텐츠 초기화
+            if (!newsGrid) return;
+            newsGrid.innerHTML = '';
             
             if (articles.length === 0) {
                 newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-400">게시된 뉴스가 없습니다. 관리자 모드에서 새 뉴스를 추가해주세요.</p>`;
@@ -275,50 +258,16 @@
             });
         }
 
-        // Firestore에서 뉴스 데이터 실시간 수신
-        let allArticles = [];
-        async function listenForNews() {
-            await authenticateUser();
-            const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
-            const q = query(newsCollectionRef, firestoreOrderBy('createdAt', 'desc'));
-
-            onSnapshot(q, (querySnapshot) => {
-                allArticles = [];
-                querySnapshot.forEach((doc) => {
-                    allArticles.push({ id: doc.id, ...doc.data() });
-                });
-                const currentFilter = document.querySelector('.tab-button.active').dataset.filter;
-                applyFilter(currentFilter);
-            }, (error) => {
-                console.error("Error fetching news:", error);
-            });
-        }
-        
-        // 필터 적용 함수
-        function applyFilter(filter) {
+        function applyCurrentFilter() {
             let filteredArticles;
-            if (filter === 'all') {
+            if (currentFilter === 'all') {
                 filteredArticles = allArticles;
             } else {
-                filteredArticles = allArticles.filter(article => article.category === filter);
+                filteredArticles = allArticles.filter(article => article.category === currentFilter);
             }
             renderNews(filteredArticles);
         }
-
-        // 필터링 기능 설정
-        function setupFilter() {
-            const filterButtons = document.querySelectorAll('.tab-button');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    const filter = button.dataset.filter;
-                    applyFilter(filter);
-                });
-            });
-        }
         
-        // 알림 메시지 표시 함수
         function showNotification(message, isSuccess = true) {
             const notificationModal = document.getElementById('notification-modal');
             const notificationMessage = document.getElementById('notification-message');
@@ -340,106 +289,9 @@
             }, 3000);
         }
 
-        // 뉴스 추가 폼 제출 처리
-        const addNewsForm = document.getElementById('add-news-form');
-        if (addNewsForm) {
-            addNewsForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const title = document.getElementById('news-title').value;
-                const content = document.getElementById('news-content').value;
-                const imageUrl = document.getElementById('news-image').value;
-                const category = document.getElementById('news-category').value;
-
-                try {
-                    const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
-                    await addDoc(newsCollectionRef, {
-                        title,
-                        content,
-                        imageUrl,
-                        category,
-                        createdAt: serverTimestamp()
-                    });
-                    e.target.reset();
-                    showNotification('뉴스가 성공적으로 게시되었습니다.');
-                } catch (error) {
-                    console.error("Error adding document: ", error);
-                    showNotification('뉴스 게시에 실패했습니다.', false);
-                }
-            });
-        }
-        
-        // 관리자 로그인 로직
-        function setupAdminLogin() {
-            const adminLoginBtn = document.getElementById('admin-login-button');
-            const passwordModal = document.getElementById('password-modal');
-            const passwordInput = document.getElementById('password-input');
-            const passwordSubmit = document.getElementById('password-submit');
-            const passwordCancel = document.getElementById('password-cancel');
-            const adminPanel = document.getElementById('admin-panel');
-
-            if (!adminLoginBtn || !passwordModal || !passwordInput || !passwordSubmit || !passwordCancel || !adminPanel) {
-                console.error("One or more admin elements are missing from the DOM.");
-                return;
-            }
-
-            adminLoginBtn.addEventListener('click', () => {
-                passwordModal.classList.remove('hidden');
-                passwordInput.focus();
-            });
-
-            passwordCancel.addEventListener('click', () => {
-                passwordModal.classList.add('hidden');
-                passwordInput.value = '';
-            });
-
-            const handleLogin = () => {
-                if (passwordInput.value === '524607') {
-                    passwordModal.classList.add('hidden');
-                    adminPanel.classList.remove('hidden');
-                    passwordInput.value = '';
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-                } else {
-                    const modalContent = passwordModal.querySelector('.bg-gray-800');
-                    if (modalContent) {
-                        modalContent.classList.add('shake');
-                        setTimeout(() => modalContent.classList.remove('shake'), 500);
-                    }
-                    passwordInput.value = '';
-                }
-            };
-
-            passwordSubmit.addEventListener('click', handleLogin);
-            passwordInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    handleLogin();
-                }
-            });
-        }
-        
-        // 모바일 메뉴 로직
-        function setupMobileMenu() {
-            const mobileMenuBtn = document.getElementById('mobile-menu-button');
-            const mobileMenuCloseBtn = document.getElementById('mobile-menu-close-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            if (mobileMenuBtn && mobileMenu && mobileMenuCloseBtn) {
-                mobileMenuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.remove('hidden');
-                });
-                mobileMenuCloseBtn.addEventListener('click', () => {
-                    mobileMenu.classList.add('hidden');
-                });
-            }
-        }
-
-        // 페이지 로드 시 실행
-        document.addEventListener('DOMContentLoaded', () => {
-            setupAdminLogin();
-            listenForNews();
-            setupFilter();
-            setupMobileMenu();
-
-            // 스크롤에 따른 헤더 스타일 변경
+        // --- Event Listeners and Setup ---
+        function setupEventListeners() {
+            // Header Scroll
             const header = document.getElementById('header');
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
@@ -448,6 +300,132 @@
                     header.classList.remove('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
                 }
             });
+
+            // Mobile Menu
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const mobileMenuCloseBtn = document.getElementById('mobile-menu-close-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuBtn && mobileMenu && mobileMenuCloseBtn) {
+                mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
+                mobileMenuCloseBtn.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            }
+
+            // Admin Login
+            const adminLoginBtn = document.getElementById('admin-login-button');
+            const passwordModal = document.getElementById('password-modal');
+            const passwordInput = document.getElementById('password-input');
+            const passwordSubmit = document.getElementById('password-submit');
+            const passwordCancel = document.getElementById('password-cancel');
+            const adminPanel = document.getElementById('admin-panel');
+            if (adminLoginBtn && passwordModal && passwordInput && passwordSubmit && passwordCancel && adminPanel) {
+                adminLoginBtn.addEventListener('click', () => {
+                    passwordModal.classList.remove('hidden');
+                    passwordInput.focus();
+                });
+                passwordCancel.addEventListener('click', () => {
+                    passwordModal.classList.add('hidden');
+                    passwordInput.value = '';
+                });
+                const handleLogin = () => {
+                    if (passwordInput.value === '524607') {
+                        passwordModal.classList.add('hidden');
+                        adminPanel.classList.remove('hidden');
+                        passwordInput.value = '';
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    } else {
+                        const modalContent = passwordModal.querySelector('.bg-gray-800');
+                        if (modalContent) {
+                            modalContent.classList.add('shake');
+                            setTimeout(() => modalContent.classList.remove('shake'), 500);
+                        }
+                        passwordInput.value = '';
+                    }
+                };
+                passwordSubmit.addEventListener('click', handleLogin);
+                passwordInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') handleLogin();
+                });
+            }
+
+            // News Form Submission
+            const addNewsForm = document.getElementById('add-news-form');
+            if (addNewsForm) {
+                addNewsForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('news-title').value;
+                    const content = document.getElementById('news-content').value;
+                    const imageUrl = document.getElementById('news-image').value;
+                    const category = document.getElementById('news-category').value;
+                    try {
+                        const newsCollectionRef = collection(getFirestore(), `artifacts/${appId}/public/data/news`);
+                        await addDoc(newsCollectionRef, { title, content, imageUrl, category, createdAt: serverTimestamp() });
+                        e.target.reset();
+                        showNotification('뉴스가 성공적으로 게시되었습니다.');
+                    } catch (error) {
+                        console.error("Error adding document: ", error);
+                        showNotification('뉴스 게시에 실패했습니다.', false);
+                    }
+                });
+            }
+
+            // Filter Tabs
+            const filterButtons = document.querySelectorAll('.tab-button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentFilter = button.dataset.filter;
+                    applyCurrentFilter();
+                });
+            });
+        }
+
+        // --- Firebase Initialization ---
+        async function initializeFirebase() {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+            if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) {
+                console.warn("Firebase config is missing. Real-time features will be disabled.");
+                renderNews([]);
+                return;
+            }
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                const db = getFirestore(app);
+                
+                // Authenticate and listen for news
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
+                const q = query(newsCollectionRef, firestoreOrderBy('createdAt', 'desc'));
+                onSnapshot(q, (querySnapshot) => {
+                    allArticles = [];
+                    querySnapshot.forEach((doc) => {
+                        allArticles.push({ id: doc.id, ...doc.data() });
+                    });
+                    applyCurrentFilter();
+                }, (error) => {
+                    console.error("Error fetching news:", error);
+                    renderNews([]);
+                });
+
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                renderNews([]);
+            }
+        }
+
+        // --- Initial Execution ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            initializeFirebase();
         });
     </script>
 </body>
