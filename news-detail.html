@@ -5,121 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>뉴스 상세 - 대치 소피의 세계</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     
-    <!-- Custom Styles -->
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f3f4f6; /* 옅은 회색 배경 */
-            color: #1f2937; /* 어두운 텍스트 색상 */
-        }
-        .font-playfair {
-            font-family: 'Playfair Display', serif;
-        }
-        .page-bg {
-            background: #f3f4f6;
-        }
-        /* Tailwind CSS의 Typography 플러그인 스타일을 기본으로 사용 */
-        .prose {
-            color: #374151;
-        }
-        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-            color: #111827;
-        }
-        .prose a {
-            color: #c0a060;
-        }
-        .prose strong {
-            color: #111827;
-        }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f3f4f6; color: #1f2937; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .prose { color: #374151; }
+        .prose h1, .prose h2, .prose h3 { color: #111827; }
+        .prose a { color: #f59e0b; }
+        .prose strong { color: #111827; }
+        .chart-container { background-color: white; padding: 1rem; height: 100%; display: flex; flex-direction: column; }
+        .year-button { transition: all 0.2s ease-in-out; border: 1px solid #d1d5db; }
+        .year-button.active { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .chart-area { flex-grow: 1; }
     </style>
 </head>
 <body class="overflow-x-hidden">
 
-    <!-- Header -->
-    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-md" id="header">
+    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-md">
         <nav class="container mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold font-playfair text-gray-900">
-                SOPHIE'S WORLD
-            </a>
-            <div id="desktop-menu" class="hidden md:flex items-center space-x-6">
+            <a href="index.html" class="text-2xl font-bold font-playfair text-gray-900">SOPHIE'S WORLD</a>
+            <div class="hidden md:flex items-center space-x-6">
                 <a href="index.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">홈으로</a>
                 <a href="navigator.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">진로 네비게이터</a>
                 <a href="news.html" class="text-amber-600 hover:text-gray-900 transition text-sm font-bold">입시 뉴스</a>
                 <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단평가</a>
             </div>
-             <button id="mobile-menu-button" class="md:hidden text-gray-800">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            </button>
         </nav>
     </header>
 
-    <main class="page-bg">
-        <!-- Article Detail Section -->
-        <section class="pt-28 md:pt-32 pb-16">
-            <div class="container mx-auto max-w-4xl px-6" id="article-container">
-                <!-- 기사 내용이 여기에 동적으로 로드됩니다. -->
-                <div class="text-center py-20">
-                    <p class="text-gray-500">기사를 불러오는 중입니다...</p>
-                </div>
-            </div>
-        </section>
+    <main class="pt-28 md:pt-32 pb-16">
+        <div class="container mx-auto max-w-4xl px-6" id="article-container">
+            <div class="text-center py-20"><p class="text-gray-500">기사를 불러오는 중입니다...</p></div>
+        </div>
     </main>
 
     <script type="module">
-        // Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- UI Rendering ---
         function renderArticle(article) {
             const container = document.getElementById('article-container');
             if (!container) return;
-            document.title = article ? `${article.title} - 대치 소피의 세계` : '기사를 찾을 수 없음 - 대치 소피의 세계';
+            document.title = article ? `${article.title} - 대치 소피의 세계` : '기사를 찾을 수 없음';
 
             if (!article) {
-                container.innerHTML = `<div class="text-center py-20"><h1 class="text-2xl font-bold text-gray-900">기사를 찾을 수 없습니다.</h1><p class="mt-4 text-gray-600">URL을 확인하거나 목록으로 돌아가세요.</p><a href="news.html" class="mt-6 inline-block bg-amber-500 text-gray-900 font-bold px-5 py-2 rounded-full hover:bg-amber-400 transition">뉴스 목록으로</a></div>`;
+                container.innerHTML = `<div class="text-center py-20"><h1 class="text-2xl font-bold">기사를 찾을 수 없습니다.</h1><a href="news.html" class="mt-6 inline-block bg-amber-500 text-gray-900 font-bold px-5 py-2 rounded-full">뉴스 목록으로</a></div>`;
                 return;
             }
             
-            const categoryColors = {
-                college: 'bg-red-100 text-red-800',
-                high: 'bg-blue-100 text-blue-800',
-                middle: 'bg-green-100 text-green-800'
-            };
-            const categoryNames = {
-                college: '대입',
-                high: '고입',
-                middle: '중등'
-            };
-
+            const categoryColors = { college: 'bg-red-100 text-red-800', high: 'bg-blue-100 text-blue-800', middle: 'bg-green-100 text-green-800' };
+            const categoryNames = { college: '대입', high: '고입', middle: '중등' };
             const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
             const imageUrl = article.imageUrl || `https://placehold.co/1200x600/e5e7eb/374151?text=${encodeURIComponent(article.title)}`;
+            
+            const contentHtml = article.content.replace(/\[INTERACTIVE_CHART\]/g, '<div id="chart-placeholder" class="not-prose"></div>');
 
             container.innerHTML = `
                 <div class="prose max-w-none">
-                    <p class="text-sm">
-                        <a href="news.html" class="hover:text-gray-900">뉴스 목록</a> &gt; 
-                        <span class="font-semibold">${article.title}</span>
-                    </p>
+                    <p class="text-sm"><a href="news.html" class="hover:text-gray-900">뉴스 목록</a> &gt; <span class="font-semibold">${article.title}</span></p>
                     <span class="inline-block ${categoryColors[article.category] || ''} text-xs font-semibold px-2 py-1 rounded-full mt-4">${categoryNames[article.category] || ''}</span>
                     <h1 class="font-playfair text-4xl md:text-5xl mt-2 mb-4">${article.title}</h1>
                     <p class="text-gray-500 text-sm">게시일: ${date}</p>
                     <img src="${imageUrl}" alt="${article.title}" class="w-full rounded-lg my-8" onerror="this.style.display='none'">
-                    <div class="text-lg leading-relaxed">${article.content}</div>
-                </div>
-            `;
+                    <div>${contentHtml}</div>
+                </div>`;
+                
+            if (article.content.includes('[INTERACTIVE_CHART]')) {
+                drawCharts();
+            }
         }
         
-        // --- Firebase Initialization and Data Fetching ---
+        function drawCharts() {
+            const chartPlaceholder = document.getElementById('chart-placeholder');
+            if (!chartPlaceholder) return;
+            
+            chartPlaceholder.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-96">
+                    <div class="chart-container rounded-lg">
+                        <h2 class="text-lg font-bold text-gray-800">사례 분석: 수도권 대학의 '기회의 축소'</h2>
+                        <p class="text-xs text-gray-500 mt-1">가천대 의대 전형 인원 변화</p>
+                        <div id="chart1" class="chart-area mt-4"></div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <button class="year-button text-xs px-3 py-1 rounded-md font-bold" data-year="2023" style="background-color: #d1d5db; color: #374151;">2023년</button>
+                            <button class="year-button text-xs px-3 py-1 rounded-md font-bold" data-year="2024" style="background-color: #fcd34d; color: #92400e;">2024년</button>
+                            <button class="year-button text-xs px-3 py-1 rounded-md font-bold" data-year="2025" style="background-color: #ef4444; color: #ffffff;">2025년</button>
+                        </div>
+                    </div>
+                    <div class="chart-container rounded-lg">
+                        <h2 class="text-lg font-bold text-gray-800">구조 분석: '지역인재'라는 복병</h2>
+                        <p class="text-xs text-gray-500 mt-1">지방 의대 정원 비율</p>
+                        <div id="chart2" class="chart-area mt-4"></div>
+                        <p class="text-center font-bold text-sm mt-2">증원 전, 수도권 학생은 약 <span class="text-blue-600">45%</span>에 지원 가능</p>
+                    </div>
+                </div>`;
+
+            // Chart 1
+            const data1 = { '2023': [{ type: '교과', value: 20 }, { type: '종합', value: 20 }], '2024': [{ type: '교과', value: 35 }, { type: '종합', value: 40 }], '2025': [{ type: '교과', value: 15 }, { type: '종합', value: 15 }] };
+            const chart1Div = document.getElementById('chart1');
+            const margin1 = { top: 20, right: 20, bottom: 30, left: 30 };
+            const width1 = chart1Div.clientWidth - margin1.left - margin1.right;
+            const height1 = chart1Div.clientHeight - margin1.top - margin1.bottom;
+            const svg1 = d3.select("#chart1").append("svg").attr("width", "100%").attr("height", "100%").attr("viewBox", `0 0 ${chart1Div.clientWidth} ${chart1Div.clientHeight}`).append("g").attr("transform", `translate(${margin1.left},${margin1.top})`);
+            const x1 = d3.scaleBand().range([0, width1]).padding(0.5);
+            const y1 = d3.scaleLinear().range([height1, 0]);
+            const xAxis1 = svg1.append("g").attr("transform", `translate(0,${height1})`);
+            const yAxis1 = svg1.append("g");
+            function updateChart1(year) {
+                const yearData = data1[year];
+                x1.domain(yearData.map(d => d.type));
+                y1.domain([0, d3.max(data1['2024'], d => d.value) + 5]);
+                xAxis1.transition().duration(500).call(d3.axisBottom(x1));
+                yAxis1.transition().duration(500).call(d3.axisLeft(y1).ticks(5));
+                const bars = svg1.selectAll(".bar").data(yearData, d => d.type);
+                bars.enter().append("rect").attr("class", "bar").attr("x", d => x1(d.type)).attr("width", x1.bandwidth()).attr("y", y1(0)).attr("height", 0).attr("fill", "#f59e0b").merge(bars).transition().duration(750).attr("y", d => y1(d.value)).attr("height", d => height1 - y1(d.value));
+                bars.exit().transition().duration(750).attr("y", y1(0)).attr("height", 0).remove();
+                d3.selectAll('.year-button').classed('active', false);
+                d3.select(`.year-button[data-year='${year}']`).classed('active', true);
+            }
+            d3.selectAll('.year-button').on('click', function() { updateChart1(d3.select(this).attr('data-year')); });
+            updateChart1('2023');
+
+            // Chart 2
+            const data2 = [{ label: '지역인재', value: 55, color: '#f59e0b' }, { label: '수도권 학생 가능', value: 45, color: '#d1d5db' }];
+            const chart2Div = document.getElementById('chart2');
+            const width2 = chart2Div.clientWidth;
+            const height2 = chart2Div.clientHeight;
+            const radius2 = Math.min(width2, height2) / 2 - 10;
+            const svg2 = d3.select("#chart2").append("svg").attr("width", width2).attr("height", height2).append("g").attr("transform", `translate(${width2 / 2},${height2 / 2})`);
+            const pie = d3.pie().value(d => d.value).sort(null);
+            const arc = d3.arc().innerRadius(radius2 * 0.6).outerRadius(radius2);
+            svg2.selectAll('path').data(pie(data2)).enter().append('path').attr('d', arc).attr('fill', d => d.data.color).attr('stroke', '#ffffff').style('stroke-width', '3px');
+            svg2.append('text').attr('text-anchor', 'middle').attr('dy', '-0.5em').style('font-size', '1.5rem').style('font-weight', 'bold').text('55%');
+            svg2.append('text').attr('text-anchor', 'middle').attr('dy', '1.2em').style('font-size', '0.8rem').style('fill', '#6b7280').text('지역인재');
+        }
+
         async function initializeAndFetch() {
             const firebaseConfig = {
               apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
@@ -130,42 +153,28 @@
               appId: "1:1020040382944:web:26d4eef3678528b57c8385",
               measurementId: "G-R6MG0F9M7Q"
             };
-
             try {
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
                 const db = getFirestore(app);
-                
                 await signInAnonymously(auth);
-
                 const urlParams = new URLSearchParams(window.location.search);
                 const articleId = urlParams.get('id');
-
-                if (!articleId) {
-                    renderArticle(null);
-                    return;
-                }
-
+                if (!articleId) { renderArticle(null); return; }
                 const docRef = doc(db, "news", articleId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     renderArticle({ id: docSnap.id, ...docSnap.data() });
                 } else {
-                    console.log("No such document!");
                     renderArticle(null);
                 }
-
             } catch (error) {
                 console.error("Error fetching document:", error);
                 renderArticle(null);
             }
         }
 
-        // --- Initial Execution ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeAndFetch();
-        });
+        document.addEventListener('DOMContentLoaded', initializeAndFetch);
     </script>
 </body>
 </html>
