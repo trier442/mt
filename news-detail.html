@@ -17,44 +17,45 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #0a0a1a;
-            color: #e0e0e0;
+            background-color: #f3f4f6; /* 옅은 회색 배경 */
+            color: #1f2937; /* 어두운 텍스트 색상 */
         }
         .font-playfair {
             font-family: 'Playfair Display', serif;
         }
         .page-bg {
-            background: #0a0a1a;
+            background: #f3f4f6;
         }
+        /* Tailwind CSS의 Typography 플러그인 스타일을 기본으로 사용 */
         .prose {
-            color: #e0e0e0;
+            color: #374151;
         }
         .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-            color: #fff;
+            color: #111827;
         }
         .prose a {
             color: #c0a060;
         }
         .prose strong {
-            color: #fff;
+            color: #111827;
         }
     </style>
 </head>
 <body class="overflow-x-hidden">
 
     <!-- Header -->
-    <header class="fixed w-full z-30 transition-all duration-300 bg-gray-900/80 backdrop-blur-sm shadow-lg" id="header">
+    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-md" id="header">
         <nav class="container mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold font-playfair text-white">
+            <a href="index.html" class="text-2xl font-bold font-playfair text-gray-900">
                 SOPHIE'S WORLD
             </a>
             <div id="desktop-menu" class="hidden md:flex items-center space-x-6">
-                <a href="index.html" class="text-gray-300 hover:text-white transition text-sm font-medium">홈으로</a>
-                <a href="navigator.html" class="text-gray-300 hover:text-white transition text-sm font-medium">진로 네비게이터</a>
-                <a href="news.html" class="text-amber-400 hover:text-white transition text-sm font-bold">입시 뉴스</a>
-                <a href="selection.html" class="text-gray-300 hover:text-white transition text-sm font-medium">문해력 진단평가</a>
+                <a href="index.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">홈으로</a>
+                <a href="navigator.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">진로 네비게이터</a>
+                <a href="news.html" class="text-amber-600 hover:text-gray-900 transition text-sm font-bold">입시 뉴스</a>
+                <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단평가</a>
             </div>
-             <button id="mobile-menu-button" class="md:hidden text-white">
+             <button id="mobile-menu-button" class="md:hidden text-gray-800">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
         </nav>
@@ -66,7 +67,7 @@
             <div class="container mx-auto max-w-4xl px-6" id="article-container">
                 <!-- 기사 내용이 여기에 동적으로 로드됩니다. -->
                 <div class="text-center py-20">
-                    <p class="text-gray-400">기사를 불러오는 중입니다...</p>
+                    <p class="text-gray-500">기사를 불러오는 중입니다...</p>
                 </div>
             </div>
         </section>
@@ -82,16 +83,17 @@
         function renderArticle(article) {
             const container = document.getElementById('article-container');
             if (!container) return;
+            document.title = article ? `${article.title} - 대치 소피의 세계` : '기사를 찾을 수 없음 - 대치 소피의 세계';
 
             if (!article) {
-                container.innerHTML = `<div class="text-center py-20"><h1 class="text-2xl font-bold text-white">기사를 찾을 수 없습니다.</h1><p class="mt-4 text-gray-400">URL을 확인하거나 목록으로 돌아가세요.</p><a href="news.html" class="mt-6 inline-block bg-amber-500 text-gray-900 font-bold px-5 py-2 rounded-full hover:bg-amber-400 transition">뉴스 목록으로</a></div>`;
+                container.innerHTML = `<div class="text-center py-20"><h1 class="text-2xl font-bold text-gray-900">기사를 찾을 수 없습니다.</h1><p class="mt-4 text-gray-600">URL을 확인하거나 목록으로 돌아가세요.</p><a href="news.html" class="mt-6 inline-block bg-amber-500 text-gray-900 font-bold px-5 py-2 rounded-full hover:bg-amber-400 transition">뉴스 목록으로</a></div>`;
                 return;
             }
             
             const categoryColors = {
-                college: 'bg-red-500/20 text-red-300',
-                high: 'bg-blue-500/20 text-blue-300',
-                middle: 'bg-green-500/20 text-green-300'
+                college: 'bg-red-100 text-red-800',
+                high: 'bg-blue-100 text-blue-800',
+                middle: 'bg-green-100 text-green-800'
             };
             const categoryNames = {
                 college: '대입',
@@ -100,19 +102,19 @@
             };
 
             const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
-            const imageUrl = article.imageUrl || `https://placehold.co/1200x600/1b2735/c0a060?text=${encodeURIComponent(article.title)}`;
+            const imageUrl = article.imageUrl || `https://placehold.co/1200x600/e5e7eb/374151?text=${encodeURIComponent(article.title)}`;
 
             container.innerHTML = `
-                <div class="prose prose-invert max-w-none">
+                <div class="prose max-w-none">
                     <p class="text-sm">
-                        <a href="news.html" class="hover:text-white">뉴스 목록</a> &gt; 
+                        <a href="news.html" class="hover:text-gray-900">뉴스 목록</a> &gt; 
                         <span class="font-semibold">${article.title}</span>
                     </p>
                     <span class="inline-block ${categoryColors[article.category] || ''} text-xs font-semibold px-2 py-1 rounded-full mt-4">${categoryNames[article.category] || ''}</span>
                     <h1 class="font-playfair text-4xl md:text-5xl mt-2 mb-4">${article.title}</h1>
-                    <p class="text-gray-400 text-sm">게시일: ${date}</p>
+                    <p class="text-gray-500 text-sm">게시일: ${date}</p>
                     <img src="${imageUrl}" alt="${article.title}" class="w-full rounded-lg my-8" onerror="this.style.display='none'">
-                    <div class="text-lg leading-relaxed">${article.content.replace(/\n/g, '<br>')}</div>
+                    <div class="text-lg leading-relaxed">${article.content}</div>
                 </div>
             `;
         }
