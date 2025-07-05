@@ -65,6 +65,19 @@
             background-color: #c0a060;
             font-weight: 700;
         }
+        .form-input {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: #e0e0e0;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #c0a060;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -104,7 +117,7 @@
         <section id="news-list" class="py-16 md:py-20">
             <div class="container mx-auto max-w-7xl px-6">
                 <!-- Filter Tabs -->
-                <div class="flex flex-wrap justify-center gap-2 mb-12 fade-in-up" data-wow-delay="0.1s">
+                <div class="flex flex-wrap justify-center gap-2 mb-12 fade-in-up">
                     <button class="tab-button active px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="all">전체</button>
                     <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="middle">중등</button>
                     <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="high">고입</button>
@@ -112,133 +125,159 @@
                 </div>
 
                 <!-- News Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- News Item 1 (대입) -->
-                    <div class="news-item fade-in-up" data-category="college" style="transition-delay: 100ms;">
-                        <a href="#" class="block news-card rounded-2xl h-full">
-                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+1" alt="뉴스 이미지" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <span class="inline-block bg-red-500/20 text-red-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">대입</span>
-                                <h2 class="text-xl font-bold text-white">2026학년도 대입, 무전공 선발 확대의 영향과 대비 전략</h2>
-                                <p class="mt-3 text-gray-400 text-sm">주요 대학들의 무전공 선발 확대가 입시 판도에 미칠 영향과 수험생들의 지원 전략을 분석합니다.</p>
-                                <p class="text-xs text-gray-500 mt-4">2025년 7월 5일</p>
-                            </div>
-                        </a>
-                    </div>
-                    <!-- News Item 2 (고입) -->
-                    <div class="news-item fade-in-up" data-category="high" style="transition-delay: 200ms;">
-                        <a href="#" class="block news-card rounded-2xl h-full">
-                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+2" alt="뉴스 이미지" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <span class="inline-block bg-blue-500/20 text-blue-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">고입</span>
-                                <h2 class="text-xl font-bold text-white">의대 정원 확대, 자사고·과학고 입시 경쟁률 상승으로 이어지나</h2>
-                                <p class="mt-3 text-gray-400 text-sm">의대 정원 확대 이슈가 고교 입시에 미치는 연쇄 효과와 지원자들의 준비 사항을 점검합니다.</p>
-                                <p class="text-xs text-gray-500 mt-4">2025년 7월 4일</p>
-                            </div>
-                        </a>
-                    </div>
-                    <!-- News Item 3 (중등) -->
-                    <div class="news-item fade-in-up" data-category="middle" style="transition-delay: 300ms;">
-                        <a href="#" class="block news-card rounded-2xl h-full">
-                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+3" alt="뉴스 이미지" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <span class="inline-block bg-green-500/20 text-green-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">중등</span>
-                                <h2 class="text-xl font-bold text-white">디지털 교과서 도입, 중학교 학습 환경의 변화와 대비책</h2>
-                                <p class="mt-3 text-gray-400 text-sm">2025년부터 순차적으로 도입되는 AI 디지털 교과서가 중학교 교육에 가져올 변화를 예측해봅니다.</p>
-                                <p class="text-xs text-gray-500 mt-4">2025년 7월 3일</p>
-                            </div>
-                        </a>
-                    </div>
-                     <!-- News Item 4 (대입) -->
-                    <div class="news-item fade-in-up" data-category="college" style="transition-delay: 400ms;">
-                        <a href="#" class="block news-card rounded-2xl h-full">
-                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+4" alt="뉴스 이미지" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <span class="inline-block bg-red-500/20 text-red-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">대입</span>
-                                <h2 class="text-xl font-bold text-white">학생부종합전형, 자기소개서 폐지 후 평가 요소 변화는?</h2>
-                                <p class="mt-3 text-gray-400 text-sm">자소서 폐지 이후 변화된 학생부 평가 기준과 세특, 창체활동의 중요성에 대해 알아봅니다.</p>
-                                <p class="text-xs text-gray-500 mt-4">2025년 7월 2일</p>
-                            </div>
-                        </a>
-                    </div>
-                    <!-- News Item 5 (고입) -->
-                    <div class="news-item fade-in-up" data-category="high" style="transition-delay: 500ms;">
-                        <a href="#" class="block news-card rounded-2xl h-full">
-                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+5" alt="뉴스 이미지" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <span class="inline-block bg-blue-500/20 text-blue-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">고입</span>
-                                <h2 class="text-xl font-bold text-white">2025학년도 영재학교 입시, 2단계 지필평가 문항 분석</h2>
-                                <p class="mt-3 text-gray-400 text-sm">최근 치러진 영재학교 2단계 지필평가의 출제 경향을 분석하고 내년 입시를 전망합니다.</p>
-                                <p class="text-xs text-gray-500 mt-4">2025년 7월 1일</p>
-                            </div>
-                        </a>
-                    </div>
-                     <!-- News Item 6 (대입) -->
-                    <div class="news-item fade-in-up" data-category="college" style="transition-delay: 600ms;">
-                        <a href="#" class="block news-card rounded-2xl h-full">
-                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+6" alt="뉴스 이미지" class="w-full h-48 object-cover">
-                            <div class="p-6">
-                                <span class="inline-block bg-red-500/20 text-red-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">대입</span>
-                                <h2 class="text-xl font-bold text-white">논술 전형, 약술형 논술 도입 대학 증가.. 준비 방법은?</h2>
-                                <p class="mt-3 text-gray-400 text-sm">수도권 일부 대학을 중심으로 확산되는 약술형 논술의 특징과 효과적인 대비 전략을 소개합니다.</p>
-                                <p class="text-xs text-gray-500 mt-4">2025년 6월 28일</p>
-                            </div>
-                        </a>
-                    </div>
+                <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 뉴스 아이템이 여기에 동적으로 추가됩니다. -->
                 </div>
             </div>
         </section>
+        
+        <!-- Admin Section: Add News Article -->
+        <section id="admin-panel" class="py-16 md:py-20 bg-gray-900/50">
+            <div class="container mx-auto max-w-2xl px-6">
+                <h2 class="text-2xl font-bold text-center text-white mb-8">새 뉴스 기사 추가</h2>
+                <form id="add-news-form" class="space-y-4">
+                    <input type="text" id="news-title" placeholder="뉴스 제목" class="w-full form-input" required>
+                    <textarea id="news-content" placeholder="뉴스 내용" rows="4" class="w-full form-input" required></textarea>
+                    <input type="url" id="news-image" placeholder="이미지 URL (예: https://...)" class="w-full form-input">
+                    <select id="news-category" class="w-full form-input" required>
+                        <option value="middle">중등</option>
+                        <option value="high">고입</option>
+                        <option value="college">대입</option>
+                    </select>
+                    <button type="submit" class="w-full bg-amber-500 text-gray-900 font-bold px-5 py-3 rounded-lg hover:bg-amber-400 transition">게시하기</button>
+                </form>
+            </div>
+        </section>
+
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Header background change on scroll
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
-            }
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+    <script type="module">
+        // Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase 설정 (환경 변수에서 가져옴)
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Firebase 앱 초기화
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // 사용자 인증
+        async function authenticateUser() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
-                    header.classList.remove('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+                    await signInAnonymously(auth);
                 }
-            });
+            } catch (error) {
+                console.error("Authentication failed:", error);
+            }
+        }
 
-            // Fade-in animation on scroll/load
-            const faders = document.querySelectorAll('.fade-in-up');
-            const appearOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
+        // 뉴스 데이터 렌더링 함수
+        function renderNews(articles) {
+            const newsGrid = document.getElementById('news-grid');
+            newsGrid.innerHTML = ''; // 기존 콘텐츠 초기화
+            
+            const categoryColors = {
+                college: 'bg-red-500/20 text-red-300',
+                high: 'bg-blue-500/20 text-blue-300',
+                middle: 'bg-green-500/20 text-green-300'
             };
-            const appearOnScroll = new IntersectionObserver(function(entries, observer) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    } else {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, appearOptions);
+            const categoryNames = {
+                college: '대입',
+                high: '고입',
+                middle: '중등'
+            };
 
-            faders.forEach(fader => {
-                appearOnScroll.observe(fader);
+            articles.forEach(article => {
+                const articleEl = document.createElement('div');
+                articleEl.className = 'news-item fade-in-up';
+                articleEl.dataset.category = article.category;
+
+                const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
+                const imageUrl = article.imageUrl || `https://placehold.co/600x400/1b2735/c0a060?text=${encodeURIComponent(article.title)}`;
+                
+                articleEl.innerHTML = `
+                    <a href="#" class="block news-card rounded-2xl h-full">
+                        <img src="${imageUrl}" alt="뉴스 이미지" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1b2735/c0a060?text=Image+Error';">
+                        <div class="p-6">
+                            <span class="inline-block ${categoryColors[article.category] || ''} text-xs font-semibold px-2 py-1 rounded-full mb-3">${categoryNames[article.category] || ''}</span>
+                            <h2 class="text-xl font-bold text-white">${article.title}</h2>
+                            <p class="mt-3 text-gray-400 text-sm">${article.content}</p>
+                            <p class="text-xs text-gray-500 mt-4">${date}</p>
+                        </div>
+                    </a>
+                `;
+                newsGrid.appendChild(articleEl);
             });
+            
+            // Fade-in 애니메이션 재적용
+            const faders = newsGrid.querySelectorAll('.fade-in-up');
+            faders.forEach((fader, index) => {
+                setTimeout(() => fader.classList.add('visible'), index * 100);
+            });
+        }
 
-            // News filter functionality
+        // Firestore에서 뉴스 데이터 실시간 수신
+        async function listenForNews() {
+            await authenticateUser();
+            const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
+            const q = query(newsCollectionRef, orderBy('createdAt', 'desc'));
+
+            onSnapshot(q, (querySnapshot) => {
+                const articles = [];
+                querySnapshot.forEach((doc) => {
+                    articles.push({ id: doc.id, ...doc.data() });
+                });
+                renderNews(articles);
+                // 필터링 기능이 동적으로 로드된 아이템에도 적용되도록 함
+                setupFilter();
+            }, (error) => {
+                console.error("Error fetching news:", error);
+            });
+        }
+
+        // 뉴스 추가 폼 제출 처리
+        document.getElementById('add-news-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('news-title').value;
+            const content = document.getElementById('news-content').value;
+            const imageUrl = document.getElementById('news-image').value;
+            const category = document.getElementById('news-category').value;
+
+            try {
+                const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
+                await addDoc(newsCollectionRef, {
+                    title,
+                    content,
+                    imageUrl,
+                    category,
+                    createdAt: serverTimestamp()
+                });
+                e.target.reset(); // 폼 초기화
+            } catch (error) {
+                console.error("Error adding document: ", error);
+            }
+        });
+
+        // 필터링 기능 설정
+        function setupFilter() {
             const filterButtons = document.querySelectorAll('.tab-button');
             const newsItems = document.querySelectorAll('.news-item');
 
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    // Update active button
                     filterButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
 
                     const filter = button.dataset.filter;
 
-                    // Filter news items
                     newsItems.forEach(item => {
                         if (filter === 'all' || item.dataset.category === filter) {
                             item.style.display = 'block';
@@ -247,6 +286,21 @@
                         }
                     });
                 });
+            });
+        }
+
+        // 페이지 로드 시 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            listenForNews();
+
+            // 스크롤에 따른 헤더 스타일 변경
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+                } else {
+                    header.classList.remove('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+                }
             });
         });
     </script>
