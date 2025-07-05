@@ -416,12 +416,10 @@
                 db = getFirestore(app); // 전역 변수에 db 인스턴스 할당
                 getAnalytics(app); // 애널리틱스 초기화
                 
-                // 중요: Firebase 콘솔 > Authentication > Sign-in method에서 '익명' 로그인을 활성화해야 합니다.
-                await signInAnonymously(auth);
-
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // !! 중요: Firebase 프로젝트의 Firestore 데이터베이스 > 규칙(Rules) 탭에서       !!
-                // !! 아래 내용을 복사하여 붙여넣고 '게시' 버튼을 눌러야 데이터 읽기/쓰기가 가능합니다. !!
+                // !! 중요: 이 코드가 작동하려면 Firebase 콘솔에서 두 가지를 설정해야 합니다.      !!
+                // !! 1. Authentication > Sign-in method 탭에서 '익명' 로그인을 활성화해주세요.   !!
+                // !! 2. Firestore Database > 규칙 탭에서 아래 규칙으로 업데이트해주세요.         !!
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 //
                 // rules_version = '2';
@@ -435,6 +433,8 @@
                 // }
                 //
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                await signInAnonymously(auth);
+
                 const newsCollectionRef = collection(db, 'news');
                 const q = query(newsCollectionRef, firestoreOrderBy('createdAt', 'desc'));
                 onSnapshot(q, (querySnapshot) => {
@@ -451,7 +451,11 @@
 
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                showNotification("데이터베이스 연결에 실패했습니다. Firebase 설정을 확인해주세요.", false);
+                if (error.code === 'auth/configuration-not-found') {
+                    showNotification("인증 설정 오류: Firebase 콘솔에서 '익명 로그인'을 활성화해주세요.", false);
+                } else {
+                    showNotification("데이터베이스 연결에 실패했습니다. Firebase 설정을 확인해주세요.", false);
+                }
                 renderNews([]); // Render empty state
             }
         }
