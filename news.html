@@ -161,8 +161,8 @@
                 <h2 class="text-2xl font-bold text-center text-white mb-8">새 뉴스 기사 추가 (관리자)</h2>
                 <form id="add-news-form" class="space-y-4">
                     <input type="text" id="news-title" placeholder="뉴스 제목" class="w-full form-input" required>
-                    <textarea id="news-content" placeholder="뉴스 내용" rows="4" class="w-full form-input" required></textarea>
-                    <input type="url" id="news-image" placeholder="이미지 URL (예: https://...)" class="w-full form-input">
+                    <textarea id="news-content" placeholder="뉴스 내용 (HTML 사용 가능)" rows="10" class="w-full form-input" required></textarea>
+                    <input type="url" id="news-image" placeholder="대표 이미지 URL (예: https://...)" class="w-full form-input">
                     <select id="news-category" class="w-full form-input" required>
                         <option value="middle">중등</option>
                         <option value="high">고입</option>
@@ -245,13 +245,16 @@
                 const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
                 const imageUrl = article.imageUrl || `https://placehold.co/600x400/1b2735/c0a060?text=${encodeURIComponent(article.title)}`;
                 
+                // HTML 태그를 제거하고 텍스트 요약 생성
+                const summary = article.content.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...';
+
                 articleEl.innerHTML = `
                     <a href="news-detail.html?id=${article.id}" class="block news-card rounded-2xl h-full">
                         <img src="${imageUrl}" alt="뉴스 이미지" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1b2735/c0a060?text=Image+Error';">
                         <div class="p-6">
                             <span class="inline-block ${categoryColors[article.category] || ''} text-xs font-semibold px-2 py-1 rounded-full mb-3">${categoryNames[article.category] || ''}</span>
                             <h2 class="text-xl font-bold text-white">${article.title}</h2>
-                            <p class="mt-3 text-gray-400 text-sm">${article.content}</p>
+                            <p class="mt-3 text-gray-400 text-sm">${summary}</p>
                             <p class="text-xs text-gray-500 mt-4">${date}</p>
                         </div>
                     </a>
@@ -397,9 +400,6 @@
 
         // --- Firebase Initialization ---
         async function initializeFirebase() {
-            // =================================================================================
-            // 제공해주신 Firebase 설정 정보입니다.
-            // =================================================================================
             const firebaseConfig = {
               apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
               authDomain: "news-6271f.firebaseapp.com",
@@ -413,34 +413,9 @@
             try {
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
-                db = getFirestore(app); // 전역 변수에 db 인스턴스 할당
-                getAnalytics(app); // 애널리틱스 초기화
+                db = getFirestore(app);
+                getAnalytics(app);
                 
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // !! 중요: 이 코드가 작동하려면 Firebase 콘솔에서 두 가지를 설정해야 합니다.      !!
-                // !!                                                                           !!
-                // !! [1단계: 익명 로그인 활성화]                                                 !!
-                // !! 1. Firebase 콘솔(https://console.firebase.google.com/)로 이동             !!
-                // !! 2. 본인의 프로젝트(news-6271f) 선택                                       !!
-                // !! 3. 왼쪽 메뉴에서 'Authentication' 클릭                                    !!
-                // !! 4. 'Sign-in method' 탭 클릭                                               !!
-                // !! 5. 제공업체 목록에서 '익명'을 찾아 클릭 후 활성화(Enable) 스위치를 켭니다.      !!
-                // !!                                                                           !!
-                // !! [2단계: Firestore 보안 규칙 업데이트]                                       !!
-                // !! 1. 왼쪽 메뉴에서 'Firestore Database' 클릭                                !!
-                // !! 2. '규칙(Rules)' 탭 클릭                                                  !!
-                // !! 3. 기존 내용을 모두 지우고 아래 규칙으로 교체 후 '게시(Publish)' 버튼 클릭     !!
-                // !!                                                                           !!
-                // !! rules_version = '2';                                                      !!
-                // !! service cloud.firestore {                                                !!
-                // !!   match /databases/{database}/documents {                                !!
-                // !!     match /news/{documentId} {                                           !!
-                // !!       allow read: if true;                                               !!
-                // !!       allow write: if request.auth != null;                               !!
-                // !!     }                                                                    !!
-                // !!   }                                                                      !!
-                // !! }                                                                        !!
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 await signInAnonymously(auth);
 
                 const newsCollectionRef = collection(db, 'news');
@@ -464,7 +439,7 @@
                 } else {
                     showNotification("데이터베이스 연결에 실패했습니다. Firebase 설정을 확인해주세요.", false);
                 }
-                renderNews([]); // Render empty state
+                renderNews([]);
             }
         }
 
