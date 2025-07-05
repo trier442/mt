@@ -163,8 +163,10 @@
                 <form id="add-news-form" class="space-y-4">
                     <input type="text" id="news-title" placeholder="뉴스 제목" class="w-full form-input" required>
                     <textarea id="news-content" placeholder="뉴스 내용 (HTML 사용 가능)" rows="10" class="w-full form-input" required></textarea>
-                    <div class="text-xs text-gray-500">
-                        <p>💡 차트 삽입 Tip: 본문에 <code>&lt;iframe src="chart-example.html" class="w-full h-96 border-0"&gt;&lt;/iframe&gt;</code> 코드를 추가하여 인터랙티브 차트를 삽입할 수 있습니다.</p>
+                    <div class="text-xs text-gray-500 flex justify-start items-center gap-2">
+                        <span>💡 본문에 인터랙티브 차트를 추가하려면</span>
+                        <button type="button" id="insert-chart-tag" class="text-amber-600 font-bold bg-amber-100 px-2 py-1 rounded-md hover:bg-amber-200">[차트 삽입]</button>
+                         <span>버튼을 누르세요.</span>
                     </div>
                     <input type="file" id="news-image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200" accept="image/*">
                     <select id="news-category" class="w-full form-input" required>
@@ -203,209 +205,121 @@
 
 
     <script type="module">
-        // Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, orderBy as firestoreOrderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
-        // --- Global State ---
-        let allArticles = [];
-        let currentFilter = 'all';
-        let db; // Module-level db instance
+        let allArticles = [], currentFilter = 'all', db;
 
-        // --- UI Rendering ---
         function renderNews(articles) {
             const newsGrid = document.getElementById('news-grid');
             if (!newsGrid) return;
             newsGrid.innerHTML = '';
             
-            if (articles.length === 0 && !db) {
-                 newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-500">데이터베이스 설정을 확인해주세요.</p>`;
-                 return;
-            }
-            
             if (articles.length === 0) {
-                newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-500">게시된 뉴스가 없습니다. 관리자 모드에서 새 뉴스를 추가해주세요.</p>`;
+                newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-500">게시된 뉴스가 없습니다.</p>`;
                 return;
             }
 
-            const categoryColors = {
-                college: 'bg-red-100 text-red-800',
-                high: 'bg-blue-100 text-blue-800',
-                middle: 'bg-green-100 text-green-800'
-            };
-            const categoryNames = {
-                college: '대입',
-                high: '고입',
-                middle: '중등'
-            };
+            const categoryColors = { college: 'bg-red-100 text-red-800', high: 'bg-blue-100 text-blue-800', middle: 'bg-green-100 text-green-800' };
+            const categoryNames = { college: '대입', high: '고입', middle: '중등' };
 
             articles.forEach(article => {
                 const articleEl = document.createElement('div');
                 articleEl.className = 'news-item fade-in-up';
                 articleEl.dataset.category = article.category;
-
                 const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
                 const imageUrl = article.imageUrl || `https://placehold.co/600x400/e5e7eb/4b5563?text=${encodeURIComponent(article.title)}`;
-                
-                const summary = article.content.replace(/<[^>]*>?/gm, '').substring(0, 80) + '...';
+                const summary = article.content.replace(/<[^>]*>?/gm, '').replace('[INTERACTIVE_CHART]', '').substring(0, 80) + '...';
 
                 articleEl.innerHTML = `
                     <a href="news-detail.html?id=${article.id}" class="block news-card rounded-2xl h-full">
-                        <div class="h-48 overflow-hidden">
-                           <img src="${imageUrl}" alt="${article.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e5e7eb/4b5563?text=Image+Error';">
-                        </div>
+                        <div class="h-48 overflow-hidden"><img src="${imageUrl}" alt="${article.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e5e7eb/4b5563?text=Image+Error';"></div>
                         <div class="p-6">
                             <span class="inline-block ${categoryColors[article.category] || ''} text-xs font-semibold px-2 py-1 rounded-full mb-3">${categoryNames[article.category] || ''}</span>
                             <h2 class="text-xl font-bold text-gray-900">${article.title}</h2>
                             <p class="mt-3 text-gray-600 text-sm">${summary}</p>
                             <p class="text-xs text-gray-500 mt-4">${date}</p>
                         </div>
-                    </a>
-                `;
+                    </a>`;
                 newsGrid.appendChild(articleEl);
             });
             
-            const faders = newsGrid.querySelectorAll('.fade-in-up');
-            faders.forEach((fader, index) => {
-                setTimeout(() => fader.classList.add('visible'), index * 100);
-            });
+            document.querySelectorAll('.fade-in-up').forEach((fader, index) => setTimeout(() => fader.classList.add('visible'), index * 50));
         }
 
         function applyCurrentFilter() {
-            let filteredArticles;
-            if (currentFilter === 'all') {
-                filteredArticles = allArticles;
-            } else {
-                filteredArticles = allArticles.filter(article => article.category === currentFilter);
-            }
-            renderNews(filteredArticles);
+            renderNews(currentFilter === 'all' ? allArticles : allArticles.filter(a => a.category === currentFilter));
         }
         
         function showNotification(message, isSuccess = true) {
-            const notificationModal = document.getElementById('notification-modal');
-            const notificationMessage = document.getElementById('notification-message');
-
-            if (!notificationModal || !notificationMessage) return;
-
-            notificationModal.className = `fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-xl z-50 transition-transform duration-300 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`;
-            notificationMessage.textContent = message;
-            
-            setTimeout(() => {
-                notificationModal.classList.remove('translate-x-[120%]');
-            }, 10);
-            
-            setTimeout(() => {
-                notificationModal.classList.add('translate-x-[120%]');
-            }, 3000);
+            const el = document.getElementById('notification-modal');
+            const msgEl = document.getElementById('notification-message');
+            if (!el || !msgEl) return;
+            msgEl.textContent = message;
+            el.className = `fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-xl z-50 transition-transform duration-300 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`;
+            setTimeout(() => el.classList.remove('translate-x-[120%]'), 10);
+            setTimeout(() => el.classList.add('translate-x-[120%]'), 3000);
         }
 
-        // --- Event Listeners and Setup ---
         function setupEventListeners() {
-            // Header Scroll
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('shadow-md');
-                } else {
-                    header.classList.remove('shadow-md');
-                }
-            });
+            window.addEventListener('scroll', () => document.getElementById('header').classList.toggle('shadow-md', window.scrollY > 50));
+            document.getElementById('mobile-menu-button')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('hidden'));
+            document.getElementById('mobile-menu-close-button')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
 
-            // Mobile Menu
-            const mobileMenuBtn = document.getElementById('mobile-menu-button');
-            const mobileMenuCloseBtn = document.getElementById('mobile-menu-close-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenuBtn && mobileMenu && mobileMenuCloseBtn) {
-                mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
-                mobileMenuCloseBtn.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-            }
-
-            // Admin Login
             const adminLoginBtn = document.getElementById('admin-login-button');
             const passwordModal = document.getElementById('password-modal');
             const passwordInput = document.getElementById('password-input');
-            const passwordSubmit = document.getElementById('password-submit');
-            const passwordCancel = document.getElementById('password-cancel');
-            const adminPanel = document.getElementById('admin-panel');
-            if (adminLoginBtn && passwordModal && passwordInput && passwordSubmit && passwordCancel && adminPanel) {
-                adminLoginBtn.addEventListener('click', () => {
-                    passwordModal.classList.remove('hidden');
-                    passwordInput.focus();
-                });
-                passwordCancel.addEventListener('click', () => {
-                    passwordModal.classList.add('hidden');
-                    passwordInput.value = '';
-                });
+            if (adminLoginBtn && passwordModal) {
+                adminLoginBtn.addEventListener('click', () => { passwordModal.classList.remove('hidden'); passwordInput.focus(); });
+                document.getElementById('password-cancel').addEventListener('click', () => { passwordModal.classList.add('hidden'); passwordInput.value = ''; });
                 const handleLogin = () => {
                     if (passwordInput.value === '524607') {
                         passwordModal.classList.add('hidden');
-                        adminPanel.classList.remove('hidden');
+                        document.getElementById('admin-panel').classList.remove('hidden');
                         passwordInput.value = '';
                         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                     } else {
-                        const modalContent = passwordModal.querySelector('.bg-white');
-                        if (modalContent) {
-                            modalContent.classList.add('shake');
-                            setTimeout(() => modalContent.classList.remove('shake'), 500);
-                        }
+                        passwordModal.querySelector('div > div').classList.add('shake');
+                        setTimeout(() => passwordModal.querySelector('div > div').classList.remove('shake'), 500);
                         passwordInput.value = '';
                     }
                 };
-                passwordSubmit.addEventListener('click', handleLogin);
-                passwordInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') handleLogin();
-                });
+                document.getElementById('password-submit').addEventListener('click', handleLogin);
+                passwordInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
             }
 
-            // News Form Submission
-            const addNewsForm = document.getElementById('add-news-form');
-            if (addNewsForm) {
-                addNewsForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    
-                    if (!db) {
-                        showNotification('데이터베이스 연결에 실패했습니다.', false);
-                        return;
-                    }
+            document.getElementById('add-news-form')?.addEventListener('submit', async e => {
+                e.preventDefault();
+                if (!db) { showNotification('DB 연결 실패.', false); return; }
+                const title = document.getElementById('news-title').value;
+                const content = document.getElementById('news-content').value;
+                const imageFile = document.getElementById('news-image').files[0];
+                const category = document.getElementById('news-category').value;
+                let imageUrl = '';
+                if(imageFile) { try { imageUrl = await toBase64(imageFile); } catch (error) { showNotification('이미지 변환 실패.', false); return; } }
+                try {
+                    await addDoc(collection(db, 'news'), { title, content, imageUrl, category, createdAt: serverTimestamp() });
+                    e.target.reset();
+                    showNotification('뉴스가 성공적으로 게시되었습니다.');
+                } catch (error) { showNotification('뉴스 게시에 실패했습니다. 보안 규칙을 확인해주세요.', false); }
+            });
 
-                    const title = document.getElementById('news-title').value;
-                    const content = document.getElementById('news-content').value;
-                    const imageFile = document.getElementById('news-image').files[0];
-                    const category = document.getElementById('news-category').value;
-                    let imageUrl = '';
-                    
-                    if(imageFile) {
-                        try {
-                            imageUrl = await toBase64(imageFile);
-                        } catch (error) {
-                            showNotification('이미지 변환에 실패했습니다.', false);
-                            return;
-                        }
-                    }
-                    
-                    try {
-                        const newsCollectionRef = collection(db, 'news');
-                        await addDoc(newsCollectionRef, { title, content, imageUrl, category, createdAt: serverTimestamp() });
-                        e.target.reset();
-                        showNotification('뉴스가 성공적으로 게시되었습니다.');
-                    } catch (error) {
-                        console.error("Error adding document: ", error);
-                        showNotification('뉴스 게시에 실패했습니다. Firestore 보안 규칙을 확인해주세요.', false);
-                    }
-                });
-            }
-
-            // Filter Tabs
-            const filterButtons = document.querySelectorAll('.tab-button');
-            filterButtons.forEach(button => {
+            document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
                     currentFilter = button.dataset.filter;
                     applyCurrentFilter();
                 });
+            });
+
+            document.getElementById('insert-chart-tag')?.addEventListener('click', () => {
+                const textarea = document.getElementById('news-content');
+                const chartTag = '\n<div class="my-8 h-96">[INTERACTIVE_CHART]</div>\n';
+                textarea.value += chartTag;
+                textarea.focus();
             });
         }
         
@@ -416,7 +330,6 @@
             reader.onerror = error => reject(error);
         });
 
-        // --- Firebase Initialization ---
         async function initializeFirebase() {
             const firebaseConfig = {
               apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
@@ -427,41 +340,24 @@
               appId: "1:1020040382944:web:26d4eef3678528b57c8385",
               measurementId: "G-R6MG0F9M7Q"
             };
-
             try {
                 const app = initializeApp(firebaseConfig);
-                const auth = getAuth(app);
                 db = getFirestore(app);
                 getAnalytics(app);
-                
-                await signInAnonymously(auth);
-
-                const newsCollectionRef = collection(db, 'news');
-                const q = query(newsCollectionRef, firestoreOrderBy('createdAt', 'desc'));
-                onSnapshot(q, (querySnapshot) => {
-                    allArticles = [];
-                    querySnapshot.forEach((doc) => {
-                        allArticles.push({ id: doc.id, ...doc.data() });
-                    });
+                await signInAnonymously(getAuth(app));
+                onSnapshot(query(collection(db, 'news'), firestoreOrderBy('createdAt', 'desc')), (snapshot) => {
+                    allArticles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     applyCurrentFilter();
                 }, (error) => {
-                    console.error("Error fetching news:", error);
+                    console.error("뉴스 로딩 실패:", error);
                     showNotification("뉴스 로딩 실패: Firestore 보안 규칙을 확인해주세요.", false);
-                    renderNews([]);
                 });
-
             } catch (error) {
-                console.error("Firebase initialization failed:", error);
-                if (error.code === 'auth/configuration-not-found') {
-                    showNotification("인증 설정 오류: Firebase 콘솔에서 '익명 로그인'을 활성화해주세요.", false);
-                } else {
-                    showNotification("데이터베이스 연결에 실패했습니다. Firebase 설정을 확인해주세요.", false);
-                }
-                renderNews([]);
+                console.error("Firebase 초기화 실패:", error);
+                showNotification("DB 연결 실패: Firebase 설정을 확인해주세요.", false);
             }
         }
 
-        // --- Initial Execution ---
         document.addEventListener('DOMContentLoaded', () => {
             setupEventListeners();
             initializeFirebase();
