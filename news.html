@@ -201,20 +201,25 @@
     <script type="module">
         // Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, orderBy as firestoreOrderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
         // --- Global State ---
         let allArticles = [];
         let currentFilter = 'all';
         let db; // Module-level db instance
-        let appId; // Module-level appId
 
         // --- UI Rendering ---
         function renderNews(articles) {
             const newsGrid = document.getElementById('news-grid');
             if (!newsGrid) return;
             newsGrid.innerHTML = '';
+            
+            if (articles.length === 0 && !db) { // Firebase가 초기화되지 않았을 때
+                 newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-400">데이터베이스 설정을 확인해주세요.</p>`;
+                 return;
+            }
             
             if (articles.length === 0) {
                 newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-400">게시된 뉴스가 없습니다. 관리자 모드에서 새 뉴스를 추가해주세요.</p>`;
@@ -367,13 +372,13 @@
                     const category = document.getElementById('news-category').value;
                     
                     try {
-                        const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
+                        const newsCollectionRef = collection(db, 'news');
                         await addDoc(newsCollectionRef, { title, content, imageUrl, category, createdAt: serverTimestamp() });
                         e.target.reset();
                         showNotification('뉴스가 성공적으로 게시되었습니다.');
                     } catch (error) {
                         console.error("Error adding document: ", error);
-                        showNotification('뉴스 게시에 실패했습니다.', false);
+                        showNotification('뉴스 게시에 실패했습니다. Firestore 보안 규칙을 확인해주세요.', false);
                     }
                 });
             }
@@ -392,29 +397,45 @@
 
         // --- Firebase Initialization ---
         async function initializeFirebase() {
-            try {
-                const firebaseConfig = {
-  apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
-  authDomain: "news-6271f.firebaseapp.com",
-  projectId: "news-6271f",
-  storageBucket: "news-6271f.firebasestorage.app",
-  messagingSenderId: "1020040382944",
-  appId: "1:1020040382944:web:26d4eef3678528b57c8385",
-  measurementId: "G-R6MG0F9M7Q"
-};
+            // =================================================================================
+            // 제공해주신 Firebase 설정 정보입니다.
+            // =================================================================================
+            const firebaseConfig = {
+              apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
+              authDomain: "news-6271f.firebaseapp.com",
+              projectId: "news-6271f",
+              storageBucket: "news-6271f.appspot.com",
+              messagingSenderId: "1020040382944",
+              appId: "1:1020040382944:web:26d4eef3678528b57c8385",
+              measurementId: "G-R6MG0F9M7Q"
+            };
 
+            try {
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
-                db = getFirestore(app); // Assign to module-level db
+                db = getFirestore(app); // 전역 변수에 db 인스턴스 할당
+                getAnalytics(app); // 애널리틱스 초기화
                 
-                // Authenticate and listen for news
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // 중요: Firebase 콘솔 > Authentication > Sign-in method에서 '익명' 로그인을 활성화해야 합니다.
+                await signInAnonymously(auth);
 
-                const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // !! 중요: Firebase 프로젝트의 Firestore 데이터베이스 > 규칙(Rules) 탭에서       !!
+                // !! 아래 내용을 복사하여 붙여넣고 '게시' 버튼을 눌러야 데이터 읽기/쓰기가 가능합니다. !!
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //
+                // rules_version = '2';
+                // service cloud.firestore {
+                //   match /databases/{database}/documents {
+                //     match /news/{documentId} {
+                //       allow read: if true;
+                //       allow write: if request.auth != null;
+                //     }
+                //   }
+                // }
+                //
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                const newsCollectionRef = collection(db, 'news');
                 const q = query(newsCollectionRef, firestoreOrderBy('createdAt', 'desc'));
                 onSnapshot(q, (querySnapshot) => {
                     allArticles = [];
@@ -424,12 +445,13 @@
                     applyCurrentFilter();
                 }, (error) => {
                     console.error("Error fetching news:", error);
+                    showNotification("뉴스 로딩 실패: Firestore 보안 규칙을 확인해주세요.", false);
                     renderNews([]);
                 });
 
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                showNotification("데이터베이스 연결에 실패했습니다.", false);
+                showNotification("데이터베이스 연결에 실패했습니다. Firebase 설정을 확인해주세요.", false);
                 renderNews([]); // Render empty state
             }
         }
