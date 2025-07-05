@@ -207,6 +207,8 @@
         // --- Global State ---
         let allArticles = [];
         let currentFilter = 'all';
+        let db; // Module-level db instance
+        let appId; // Module-level appId
 
         // --- UI Rendering ---
         function renderNews(articles) {
@@ -352,12 +354,20 @@
             if (addNewsForm) {
                 addNewsForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
+                    
+                    if (!db) {
+                        console.error("Firestore is not initialized.");
+                        showNotification('데이터베이스 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', false);
+                        return;
+                    }
+
                     const title = document.getElementById('news-title').value;
                     const content = document.getElementById('news-content').value;
                     const imageUrl = document.getElementById('news-image').value;
                     const category = document.getElementById('news-category').value;
+                    
                     try {
-                        const newsCollectionRef = collection(getFirestore(), `artifacts/${appId}/public/data/news`);
+                        const newsCollectionRef = collection(db, `artifacts/${appId}/public/data/news`);
                         await addDoc(newsCollectionRef, { title, content, imageUrl, category, createdAt: serverTimestamp() });
                         e.target.reset();
                         showNotification('뉴스가 성공적으로 게시되었습니다.');
@@ -382,19 +392,20 @@
 
         // --- Firebase Initialization ---
         async function initializeFirebase() {
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-            if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) {
-                console.warn("Firebase config is missing. Real-time features will be disabled.");
-                renderNews([]);
-                return;
-            }
-
             try {
+                const firebaseConfig = {
+  apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
+  authDomain: "news-6271f.firebaseapp.com",
+  projectId: "news-6271f",
+  storageBucket: "news-6271f.firebasestorage.app",
+  messagingSenderId: "1020040382944",
+  appId: "1:1020040382944:web:26d4eef3678528b57c8385",
+  measurementId: "G-R6MG0F9M7Q"
+};
+
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
-                const db = getFirestore(app);
+                db = getFirestore(app); // Assign to module-level db
                 
                 // Authenticate and listen for news
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -418,7 +429,8 @@
 
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                renderNews([]);
+                showNotification("데이터베이스 연결에 실패했습니다.", false);
+                renderNews([]); // Render empty state
             }
         }
 
