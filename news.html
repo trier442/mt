@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5341216668095254"
+     crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-5341216668095254">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>입시 뉴스 - 대치 소피의 세계</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #0a0a1a;
+            color: #e0e0e0;
+        }
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        .page-bg {
+            background: #0a0a1a;
+        }
+        .news-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+            background-color: rgba(255, 255, 255, 0.07);
+            border-color: rgba(192, 160, 96, 0.5);
+        }
+        .news-card img {
+            transition: transform 0.4s ease;
+        }
+        .news-card:hover img {
+            transform: scale(1.05);
+        }
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tab-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .tab-button.active {
+            color: #0a0a1a;
+            background-color: #c0a060;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="fixed w-full z-30 transition-all duration-300 bg-gray-900/80 backdrop-blur-sm shadow-lg" id="header">
+        <nav class="container mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold font-playfair text-white">
+                SOPHIE'S WORLD
+            </a>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="index.html" class="text-gray-300 hover:text-white transition text-sm font-medium">홈으로</a>
+                <a href="navigator.html" class="text-gray-300 hover:text-white transition text-sm font-medium">진로 네비게이터</a>
+                <a href="#" class="text-amber-400 hover:text-white transition text-sm font-bold">입시 뉴스</a>
+                <a href="selection.html" class="text-gray-300 hover:text-white transition text-sm font-medium">문해력 진단평가</a>
+            </div>
+             <button class="md:hidden text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </nav>
+    </header>
+
+    <main class="page-bg">
+        <!-- Title Section -->
+        <section class="pt-28 md:pt-32 pb-16 bg-gradient-to-b from-[#1b2735] to-[#0a0a1a]">
+            <div class="container mx-auto max-w-7xl px-6">
+                <div class="fade-in-up">
+                    <h1 class="mt-4 text-4xl md:text-5xl font-bold text-white font-playfair">
+                        입시 <span class="text-amber-400">뉴스</span>
+                    </h1>
+                    <p class="mt-4 text-gray-300 max-w-2xl">빠르게 변화하는 입시 정보, 소피의 세계가 핵심만 모아 제공합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content: News List Section -->
+        <section id="news-list" class="py-16 md:py-20">
+            <div class="container mx-auto max-w-7xl px-6">
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap justify-center gap-2 mb-12 fade-in-up" data-wow-delay="0.1s">
+                    <button class="tab-button active px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="all">전체</button>
+                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="middle">중등</button>
+                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="high">고입</button>
+                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-gray-300" data-filter="college">대입</button>
+                </div>
+
+                <!-- News Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- News Item 1 (대입) -->
+                    <div class="news-item fade-in-up" data-category="college" style="transition-delay: 100ms;">
+                        <a href="#" class="block news-card rounded-2xl h-full">
+                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+1" alt="뉴스 이미지" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <span class="inline-block bg-red-500/20 text-red-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">대입</span>
+                                <h2 class="text-xl font-bold text-white">2026학년도 대입, 무전공 선발 확대의 영향과 대비 전략</h2>
+                                <p class="mt-3 text-gray-400 text-sm">주요 대학들의 무전공 선발 확대가 입시 판도에 미칠 영향과 수험생들의 지원 전략을 분석합니다.</p>
+                                <p class="text-xs text-gray-500 mt-4">2025년 7월 5일</p>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- News Item 2 (고입) -->
+                    <div class="news-item fade-in-up" data-category="high" style="transition-delay: 200ms;">
+                        <a href="#" class="block news-card rounded-2xl h-full">
+                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+2" alt="뉴스 이미지" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <span class="inline-block bg-blue-500/20 text-blue-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">고입</span>
+                                <h2 class="text-xl font-bold text-white">의대 정원 확대, 자사고·과학고 입시 경쟁률 상승으로 이어지나</h2>
+                                <p class="mt-3 text-gray-400 text-sm">의대 정원 확대 이슈가 고교 입시에 미치는 연쇄 효과와 지원자들의 준비 사항을 점검합니다.</p>
+                                <p class="text-xs text-gray-500 mt-4">2025년 7월 4일</p>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- News Item 3 (중등) -->
+                    <div class="news-item fade-in-up" data-category="middle" style="transition-delay: 300ms;">
+                        <a href="#" class="block news-card rounded-2xl h-full">
+                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+3" alt="뉴스 이미지" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <span class="inline-block bg-green-500/20 text-green-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">중등</span>
+                                <h2 class="text-xl font-bold text-white">디지털 교과서 도입, 중학교 학습 환경의 변화와 대비책</h2>
+                                <p class="mt-3 text-gray-400 text-sm">2025년부터 순차적으로 도입되는 AI 디지털 교과서가 중학교 교육에 가져올 변화를 예측해봅니다.</p>
+                                <p class="text-xs text-gray-500 mt-4">2025년 7월 3일</p>
+                            </div>
+                        </a>
+                    </div>
+                     <!-- News Item 4 (대입) -->
+                    <div class="news-item fade-in-up" data-category="college" style="transition-delay: 400ms;">
+                        <a href="#" class="block news-card rounded-2xl h-full">
+                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+4" alt="뉴스 이미지" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <span class="inline-block bg-red-500/20 text-red-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">대입</span>
+                                <h2 class="text-xl font-bold text-white">학생부종합전형, 자기소개서 폐지 후 평가 요소 변화는?</h2>
+                                <p class="mt-3 text-gray-400 text-sm">자소서 폐지 이후 변화된 학생부 평가 기준과 세특, 창체활동의 중요성에 대해 알아봅니다.</p>
+                                <p class="text-xs text-gray-500 mt-4">2025년 7월 2일</p>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- News Item 5 (고입) -->
+                    <div class="news-item fade-in-up" data-category="high" style="transition-delay: 500ms;">
+                        <a href="#" class="block news-card rounded-2xl h-full">
+                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+5" alt="뉴스 이미지" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <span class="inline-block bg-blue-500/20 text-blue-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">고입</span>
+                                <h2 class="text-xl font-bold text-white">2025학년도 영재학교 입시, 2단계 지필평가 문항 분석</h2>
+                                <p class="mt-3 text-gray-400 text-sm">최근 치러진 영재학교 2단계 지필평가의 출제 경향을 분석하고 내년 입시를 전망합니다.</p>
+                                <p class="text-xs text-gray-500 mt-4">2025년 7월 1일</p>
+                            </div>
+                        </a>
+                    </div>
+                     <!-- News Item 6 (대입) -->
+                    <div class="news-item fade-in-up" data-category="college" style="transition-delay: 600ms;">
+                        <a href="#" class="block news-card rounded-2xl h-full">
+                            <img src="https://placehold.co/600x400/1b2735/c0a060?text=NEWS+6" alt="뉴스 이미지" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <span class="inline-block bg-red-500/20 text-red-300 text-xs font-semibold px-2 py-1 rounded-full mb-3">대입</span>
+                                <h2 class="text-xl font-bold text-white">논술 전형, 약술형 논술 도입 대학 증가.. 준비 방법은?</h2>
+                                <p class="mt-3 text-gray-400 text-sm">수도권 일부 대학을 중심으로 확산되는 약술형 논술의 특징과 효과적인 대비 전략을 소개합니다.</p>
+                                <p class="text-xs text-gray-500 mt-4">2025년 6월 28일</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Header background change on scroll
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+            }
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+                } else {
+                    header.classList.remove('bg-gray-900/80', 'backdrop-blur-sm', 'shadow-lg');
+                }
+            });
+
+            // Fade-in animation on scroll/load
+            const faders = document.querySelectorAll('.fade-in-up');
+            const appearOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+            const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+
+            // News filter functionality
+            const filterButtons = document.querySelectorAll('.tab-button');
+            const newsItems = document.querySelectorAll('.news-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const filter = button.dataset.filter;
+
+                    // Filter news items
+                    newsItems.forEach(item => {
+                        if (filter === 'all' || item.dataset.category === filter) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
