@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 특목고 선택 내비게이터</title>
+    <title>2025 전사고 선택 내비게이터</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Scholarly Neutrals -->
-    <!-- Application Structure Plan: '전사고 내비게이터'의 성공적인 3단계 구조(목표 설정 → 탐색 및 비교 → 최종 점검)를 특목고의 특성에 맞게 변형하여 적용했습니다. 사용자는 [1단계: 계열 선택]에서 자신의 진로 방향(인문/어학, 이공/의학 등)을 필터링합니다. [2단계: 학교 탐색]에서는 필터링된 학교들을 카드 형태로 보고, 최대 3개까지 선택하여 '계열 전문성', '탐구/연구 역량' 등 특목고에 특화된 지표를 레이더 차트로 비교할 수 있습니다. [3단계: 최종 점검]에서는 특목고 진학에 필요한 핵심 질문들을 통해 최종 결정을 돕습니다. 이 구조는 다양한 특목고 정보를 개인화된 탐색 경로로 제공하여 사용자의 전략적 선택을 지원하기 위해 설계되었습니다. -->
-    <!-- Visualization & Content Choices: 1) 계열 필터링(목표: 개인화, 방식: 인터랙티브 버튼, 상호작용: 클릭 시 학교 카드 및 차트 동적 업데이트, 근거: 사용자의 관심 분야에 맞는 학교만 제시하여 정보 탐색의 효율성을 높임). 2) 학교 비교 레이더 차트(목표: 다차원 비교, 방식: Chart.js 레이더 차트, 상호작용: 학교 카드 클릭 시 차트에 데이터 추가/제거, 근거: 계열 전문성, 탐구 역량 등 여러 특성을 한눈에 비교하여 학교 간의 차이점을 직관적으로 이해시킴). 3) 학교 유형 및 특징 태그(목표: 정보 요약, 방식: 색상 태그, 근거: 외고, 국제고, 과학고 등 학교의 정체성과 주요 특징을 시각적으로 빠르게 식별할 수 있도록 함). -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
         .chart-container {
             position: relative;
             width: 100%;
@@ -25,7 +22,7 @@
         }
         @media (max-width: 768px) { .chart-container { height: 300px; } }
         .filter-btn.active {
-            background-color: #16a34a; /* green-600 */
+            background-color: #2563eb; /* blue-600 */
             color: white;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
@@ -38,12 +35,12 @@
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
         .school-card.selected {
-            box-shadow: 0 0 0 3px #16a34a;
+            box-shadow: 0 0 0 3px #2563eb;
             transform: translateY(-2px);
         }
         html { scroll-behavior: smooth; }
         .section-title {
-            background: linear-gradient(to top, #dcfce7 40%, transparent 40%);
+            background: linear-gradient(to top, #dbeafe 40%, transparent 40%);
             padding: 0 0.25rem;
             display: inline;
         }
@@ -51,61 +48,69 @@
 </head>
 <body class="bg-slate-50 text-slate-800">
 
-    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <h1 class="text-xl md:text-2xl font-bold text-slate-900">🔬 2025 특목고 선택 내비게이터</h1>
-                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
-                    <a href="#" class="text-slate-700 hover:text-green-600 transition-colors">홈으로</a>
-                    <a href="#" class="text-slate-700 hover:text-green-600 transition-colors">진로 내비게이터</a>
-                    <a href="#" class="text-slate-700 hover:text-green-600 transition-colors">입시뉴스</a>
-                    <a href="#" class="text-slate-700 hover:text-green-600 transition-colors">문해력 진단평가</a>
-                </nav>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-slate-700 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    </button>
-                </div>
+    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm" id="header">
+        <nav class="container mx-auto max-w-7xl px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold font-playfair text-slate-900">SOPHIE'S WORLD</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">홈으로</a>
+                <a href="navigator.html" class="text-sm font-bold text-blue-600 transition-colors">진로 내비게이터</a>
+                <a href="news.html" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">입학 뉴스</a>
+                <a href="#" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">공부법</a>
+                <a href="selection.html" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">문해력 진단</a>
             </div>
-             <div id="mobile-menu" class="md:hidden hidden bg-white border-t mt-2">
-                <a href="#" class="block py-2 px-4 text-sm text-slate-700 hover:bg-slate-100">홈으로</a>
-                <a href="#" class="block py-2 px-4 text-sm text-slate-700 hover:bg-slate-100">진로 내비게이터</a>
-                <a href="#" class="block py-2 px-4 text-sm text-slate-700 hover:bg-slate-100">입시뉴스</a>
-                <a href="#" class="block py-2 px-4 text-sm text-slate-700 hover:bg-slate-100">문해력 진단평가</a>
-            </div>
-        </div>
+            <button id="mobile-menu-button" class="md:hidden text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </nav>
     </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-white/95 z-50 p-6">
+        <div class="flex justify-end mb-8">
+            <button id="mobile-menu-close-button" class="text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="flex flex-col items-center space-y-6 text-xl">
+            <a href="index.html" class="text-slate-600 hover:text-blue-600 transition">홈으로</a>
+            <a href="navigator.html" class="font-bold text-blue-600 transition">진로 내비게이터</a>
+            <a href="news.html" class="text-slate-600 hover:text-blue-600 transition">입학 뉴스</a>
+            <a href="#" class="text-slate-600 hover:text-blue-600 transition">공부법</a>
+            <a href="selection.html" class="text-slate-600 hover:text-blue-600 transition">문해력 진단</a>
+        </div>
+    </div>
+
 
     <main class="container mx-auto px-4 py-8 md:py-12">
 
         <section id="intro" class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">특목고, <span class="text-green-600">꿈</span>을 향한 <span class="text-green-600">첫 번째 전략</span></h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">전사고, <span class="text-blue-600">성적</span>이 아닌 <span class="text-blue-600">전략</span>으로 가는 시대</h2>
             <p class="max-w-3xl mx-auto text-lg text-slate-600">
-                외고, 국제고, 과학고, 영재학교... 복잡한 특목고 입시, 더 이상 고민하지 마세요.<br>나의 진로와 성향에 맞는 최고의 학교를 찾는 여정을 안내합니다.
+                단순히 성적이 좋다고 전사고에 가는 시대는 끝났습니다.<br>나의 대입 목표와 학습 성향에 꼭 맞는 학교를 찾는 여정, 지금 바로 시작해보세요.
             </p>
         </section>
 
         <!-- Step 1: Goal Setting -->
         <section id="step1" class="mb-16">
             <h3 class="text-2xl font-bold text-center mb-3">
-                <span class="section-title">Step 1. 나의 핵심 진로 계열은?</span>
+                <span class="section-title">Step 1. 나의 가장 중요한 대입 목표는?</span>
             </h3>
-            <p class="text-center text-slate-500 mb-8">나의 목표 계열을 선택하면 관련 특목고들을 추천해 드립니다.</p>
+            <p class="text-center text-slate-500 mb-8">목표를 선택하면 그에 맞는 학교들을 추천해 드립니다.</p>
             <div id="filter-container" class="flex flex-wrap justify-center gap-3 md:gap-4">
                 <button data-filter="all" class="filter-btn active text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">전체보기</button>
-                <button data-filter="humanities" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">🌍 인문/어학</button>
-                <button data-filter="stem" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">🛰️ 이공/의학</button>
-                <button data-filter="international" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">🏛️ 국제 전문</button>
-                <button data-filter="early_grad" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">🚀 조기 졸업</button>
+                <button data-filter="susi" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">🎯 수시 중심</button>
+                <button data-filter="jungsi" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">✍️ 정시 중심</button>
+                <button data-filter="medical" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">⚕️ 의대 진학</button>
+                <button data-filter="international" class="filter-btn text-slate-700 font-semibold px-5 py-2 rounded-full bg-white shadow-sm hover:bg-slate-100 transition">🌍 해외 대학</button>
             </div>
         </section>
 
         <!-- Step 2: School Exploration -->
         <section id="step2" class="mb-16">
              <h3 class="text-2xl font-bold text-center mb-3">
-                <span class="section-title">Step 2. 학교별 역량 비교 분석</span>
+                <span class="section-title">Step 2. 학교별 특징 비교 및 탐색</span>
             </h3>
-            <p class="text-center text-slate-500 mb-8">관심 있는 학교 카드를 클릭하여 아래 차트에서 상세 역량을 비교해보세요. (최대 3개)</p>
+            <p class="text-center text-slate-500 mb-8">관심 있는 학교 카드를 클릭하여 아래 차트에서 상세 특징을 비교해보세요. (최대 3개)</p>
             
             <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg mb-12">
                  <div class="chart-container">
@@ -121,36 +126,36 @@
         <!-- Step 3: Final Check -->
         <section id="final-check" class="scroll-mt-20">
             <h3 class="text-2xl font-bold text-center mb-3">
-                <span class="section-title">Step 3. 특목고 지원, 최종 점검하기</span>
+                <span class="section-title">Step 3. 전사고 지원, 최종 점검하기</span>
             </h3>
-            <p class="text-center text-slate-500 mb-8">후회 없는 선택을 위해 아래 4가지 질문에 대해 스스로 답해보세요.</p>
+            <p class="text-center text-slate-500 mb-8">전략적인 선택을 위해 아래 4가지 질문에 대해 스스로 답해보세요.</p>
             <div class="max-w-2xl mx-auto space-y-4">
                 <div class="bg-white p-5 rounded-lg shadow flex items-start space-x-4">
                     <span class="text-2xl">1️⃣</span>
                     <div>
-                        <h4 class="font-bold text-lg">나의 진로와 학교의 전문성이 일치하는가?</h4>
-                        <p class="text-slate-600 text-sm">특목고는 특정 분야에 깊이 파고드는 곳입니다. 나의 꿈과 학교의 교육 방향이 같은지 반드시 확인해야 합니다.</p>
+                        <h4 class="font-bold text-lg">나의 대입 전략은 명확한가?</h4>
+                        <p class="text-slate-600 text-sm">수시, 정시, 해외대 등 나의 주력 전형과 목표 대학 라인을 구체적으로 그려보았나요?</p>
                     </div>
                 </div>
                  <div class="bg-white p-5 rounded-lg shadow flex items-start space-x-4">
                     <span class="text-2xl">2️⃣</span>
                     <div>
-                        <h4 class="font-bold text-lg">심화 탐구/연구 활동을 즐길 수 있는가?</h4>
-                        <p class="text-slate-600 text-sm">대부분의 특목고는 일반고보다 훨씬 깊이 있는 탐구 및 연구 활동을 요구합니다. 이러한 과정을 즐길 수 있는 성향인지 고민해야 합니다.</p>
+                        <h4 class="font-bold text-lg">나의 의대 진학 목표는 현실적인가?</h4>
+                        <p class="text-slate-600 text-sm">단순한 희망을 넘어, 의대 진학을 위해 치열한 내신 경쟁 또는 정시 준비를 감당할 수 있나요?</p>
                     </div>
                 </div>
                  <div class="bg-white p-5 rounded-lg shadow flex items-start space-x-4">
                     <span class="text-2xl">3️⃣</span>
                     <div>
-                        <h4 class="font-bold text-lg">치열한 내신 경쟁을 감당할 수 있는가?</h4>
-                        <p class="text-slate-600 text-sm">전국 최상위권 학생들이 모이는 만큼, 내신 경쟁이 매우 치열합니다. 중학교 성적과 다른 결과를 받아들일 마음의 준비가 필요합니다.</p>
+                        <h4 class="font-bold text-lg">나의 성적과 성향은 학교와 맞는가?</h4>
+                        <p class="text-slate-600 text-sm">지원하려는 학교의 내신 커트라인은 물론, 학습 분위기와 문화가 나의 성향과 잘 맞을까요?</p>
                     </div>
                 </div>
                  <div class="bg-white p-5 rounded-lg shadow flex items-start space-x-4">
                     <span class="text-2xl">4️⃣</span>
                     <div>
-                        <h4 class="font-bold text-lg">나의 학습 스타일과 학교 문화가 맞는가?</h4>
-                        <p class="text-slate-600 text-sm">기숙사 생활, 동아리 활동, 선후배 문화 등 학교별로 다른 고유의 문화가 나의 성향과 맞는지 고려해야 합니다.</p>
+                        <h4 class="font-bold text-lg">나는 기숙사 생활에 적합한 사람인가?</h4>
+                        <p class="text-slate-600 text-sm">엄격한 규율과 통제된 환경 속에서 사교육 없이 자기주도적으로 학습을 이끌어갈 수 있나요?</p>
                     </div>
                 </div>
             </div>
@@ -159,27 +164,21 @@
     </main>
 
     <footer class="text-center p-6 bg-slate-100 mt-12 border-t">
-        <p class="text-sm text-slate-500">&copy; 2024 특목고 선택 내비게이터. 제공된 정보를 바탕으로 제작된 인터랙티브 요약본입니다.</p>
+        <p class="text-sm text-slate-500">&copy; 2024 전사고 선택 내비게이터. 제공된 정보를 바탕으로 제작된 인터랙티브 요약본입니다.</p>
     </footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    mobileMenuButton.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
-
     const schoolData = [
-        { id: 'daewon', name: '대원외고', type: '외고', tags: ['humanities', 'international'], competition: '매우 높음', susi: 5, jungsi: 3, specialization: 5, research: 3, internationalization: 5 },
-        { id: 'hanyoung', name: '한영외고', type: '외고', tags: ['humanities', 'international'], competition: '높음', susi: 5, jungsi: 3, specialization: 4, research: 3, internationalization: 4 },
-        { id: 'seoul-global', name: '서울국제고', type: '국제고', tags: ['humanities', 'international'], competition: '매우 높음', susi: 5, jungsi: 2, specialization: 4, research: 4, internationalization: 5 },
-        { id: 'chungshim', name: '청심국제고', type: '국제고', tags: ['humanities', 'international'], competition: '높음', susi: 5, jungsi: 2, specialization: 5, research: 4, internationalization: 5 },
-        { id: 'hansung', name: '한성과학고', type: '과학고', tags: ['stem', 'early_grad'], competition: '최상', susi: 5, jungsi: 1, specialization: 5, research: 5, internationalization: 2 },
-        { id: 'sejong', name: '세종과학고', type: '과학고', tags: ['stem', 'early_grad'], competition: '최상', susi: 5, jungsi: 1, specialization: 5, research: 5, internationalization: 2 },
-        { id: 'seoul-science', name: '서울과학고', type: '영재학교', tags: ['stem', 'early_grad'], competition: '최상', susi: 5, jungsi: 2, specialization: 5, research: 5, internationalization: 3 },
-        { id: 'gyeonggi-science', name: '경기과학고', type: '영재학교', tags: ['stem', 'early_grad'], competition: '최상', susi: 5, jungsi: 2, specialization: 5, research: 5, internationalization: 3 },
+        { id: 'minsa', name: '민사고', tags: ['susi', 'international'], grades: 'A', tutoring: '불가', dorm: '월 1회', susi: 5, jungsi: 2, medical: 3, international: 5, autonomy: 5 },
+        { id: 'hana', name: '하나고', tags: ['susi'], grades: 'A', tutoring: '불가', dorm: '월 1회', susi: 5, jungsi: 1, medical: 2, international: 2, autonomy: 4 },
+        { id: 'sangsan', name: '상산고', tags: ['jungsi', 'medical'], grades: 'A-B', tutoring: '가능', dorm: '격주', susi: 2, jungsi: 5, medical: 5, international: 1, autonomy: 3 },
+        { id: 'oedae', name: '외대부고', tags: ['susi', 'jungsi', 'international'], grades: 'A', tutoring: '필수', dorm: '매주', susi: 4, jungsi: 4, medical: 3, international: 4, autonomy: 2 },
+        { id: 'pocheol', name: '포철고', tags: ['susi', 'jungsi'], grades: 'A-B', tutoring: '가능', dorm: '자유', susi: 4, jungsi: 3, medical: 3, international: 1, autonomy: 4 },
+        { id: 'cheongun', name: '청운고', tags: ['susi', 'jungsi', 'medical'], grades: 'A-B', tutoring: '가능', dorm: '월 1회', susi: 4, jungsi: 3, medical: 4, international: 1, autonomy: 3 },
+        { id: 'gimcheon', name: '김천고', tags: ['susi', 'medical'], grades: 'B', tutoring: '불가', dorm: '월 1회', susi: 3, jungsi: 2, medical: 4, international: 1, autonomy: 5 },
+        { id: 'bugil', name: '북일고', tags: ['susi'], grades: 'B', tutoring: '가능', dorm: '자유', susi: 3, jungsi: 2, medical: 2, international: 1, autonomy: 4 },
+        { id: 'gwangyang', name: '광양제철고', tags: ['susi'], grades: 'A-B', tutoring: '가능', dorm: '자유', susi: 4, jungsi: 2, medical: 2, international: 1, autonomy: 4 },
     ];
 
     const schoolGrid = document.getElementById('school-grid');
@@ -188,13 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let radarChart;
     let selectedSchools = new Set();
     const tagToKor = {
-        'humanities': '인문/어학', 'stem': '이공/의학', 'international': '국제 전문', 'early_grad': '조기 졸업 가능'
-    };
-    const typeToColor = {
-        '외고': 'bg-sky-100 text-sky-800',
-        '국제고': 'bg-indigo-100 text-indigo-800',
-        '과학고': 'bg-amber-100 text-amber-800',
-        '영재학교': 'bg-purple-100 text-purple-800'
+        'susi': '수시 중심', 'jungsi': '정시 중심', 'medical': '의대 목표', 'international': '해외대 목표'
     };
 
     function renderSchoolCards(filter = 'all') {
@@ -202,18 +195,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const filteredSchools = filter === 'all' ? schoolData : schoolData.filter(s => s.tags.includes(filter));
         
         filteredSchools.forEach(school => {
-            const typeColor = typeToColor[school.type] || 'bg-slate-100 text-slate-800';
+            const gradeInfo = school.grades === 'A' 
+                ? `<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">올 A 필수</span>`
+                : `<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">B등급 가능</span>`;
+
+            const tutoringInfo = school.tutoring === '불가'
+                ? `<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">사교육 불가</span>`
+                : `<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">사교육 가능</span>`;
+
             const card = `
                 <div id="card-${school.id}" class="school-card bg-white p-5 rounded-lg shadow-md" data-id="${school.id}">
-                    <div class="flex justify-between items-start mb-2">
-                        <h4 class="font-bold text-xl">${school.name}</h4>
-                        <span class="${typeColor} text-xs font-bold px-2.5 py-1 rounded-full">${school.type}</span>
-                    </div>
+                    <h4 class="font-bold text-xl mb-2">${school.name}</h4>
                     <div class="flex flex-wrap gap-2 mb-3">
                         ${school.tags.map(tag => `<span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">${tagToKor[tag]}</span>`).join('')}
                     </div>
-                    <div class="text-sm text-slate-600 pt-3 border-t">
-                        <span class="font-bold">경쟁 수준:</span> <span class="text-red-600 font-semibold">${school.competition}</span>
+                    <div class="flex justify-between items-center text-sm text-slate-600 pt-3 border-t">
+                        <div>${gradeInfo}</div>
+                        <div>${tutoringInfo}</div>
                     </div>
                 </div>`;
             schoolGrid.innerHTML += card;
@@ -229,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createOrUpdateRadarChart() {
         const datasets = [];
-        const colors = ['rgba(22, 163, 74, 0.4)', 'rgba(219, 39, 119, 0.4)', 'rgba(234, 179, 8, 0.4)'];
+        const colors = ['rgba(37, 99, 235, 0.4)', 'rgba(219, 39, 119, 0.4)', 'rgba(234, 179, 8, 0.4)'];
         
         let i = 0;
         selectedSchools.forEach(schoolId => {
@@ -237,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (school) {
                 datasets.push({
                     label: school.name,
-                    data: [school.susi, school.jungsi, school.specialization, school.research, school.internationalization],
+                    data: [school.susi, school.jungsi, school.medical, school.international, school.autonomy],
                     backgroundColor: colors[i],
                     borderColor: colors[i].replace('0.4', '1'),
                     pointBackgroundColor: colors[i].replace('0.4', '1'),
@@ -256,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
             radarChart = new Chart(radarCtx, {
                 type: 'radar',
                 data: {
-                    labels: ['수시 역량', '정시 경쟁력', '계열 전문성', '탐구/연구 역량', '국제화 수준'],
+                    labels: ['수시 역량', '정시 역량', '의대 특화', '해외대', '자율성/학종'],
                     datasets: datasets
                 },
                 options: {
@@ -285,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (selectedSchools.size < 3) {
                 selectedSchools.add(schoolId);
             } else {
-                alert('최대 3개의 학교까지만 비교할 수 있습니다.');
+                // Optionally show a message that max 3 can be selected
                 return;
             }
         }
@@ -301,6 +299,19 @@ document.addEventListener('DOMContentLoaded', () => {
             renderSchoolCards(filter);
         }
     });
+    
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
+    if (mobileMenuButton && mobileMenu && mobileMenuCloseButton) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+        mobileMenuCloseButton.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+    }
 
     renderSchoolCards();
     createOrUpdateRadarChart();
