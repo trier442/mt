@@ -8,13 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Scholarly Neutrals -->
-    <!-- Application Structure Plan: 사용자가 '나에게 맞는 학교 찾기'라는 명확한 목표를 가지고 앱을 사용하도록 유도하는 단계별 내비게이터 구조를 채택했습니다. [1단계: 목표 설정]에서 진학 방향을 선택하면, [2단계: 학교 탐색]에서 해당 목표에 맞는 학교들이 필터링되어 시각적으로 비교(카드, 차트)됩니다. [3단계: 최종 점검]에서는 자기 성찰 체크리스트를 통해 전략적 선택을 재확인하도록 합니다. 이 흐름은 복잡한 정보를 개인화된 여정으로 변환하여, 사용자가 능동적으로 자신에게 최적화된 결론에 도달하도록 설계되었습니다. -->
-    <!-- Visualization & Content Choices: 1) 목표 필터링(목표: 개인화, 방식: 인터랙티브 버튼, 상호작용: 클릭 시 학교 카드 및 차트 동적 업데이트, 근거: 사용자에게 맞춤형 정보를 제공하여 몰입도 증가). 2) 학교 비교 레이더 차트(목표: 다차원 비교, 방식: Chart.js 레이더 차트, 상호작용: 학교 카드 클릭 시 차트에 해당 학교 데이터 추가/제거, 근거: 수시/정시/의대 등 여러 특성을 한눈에 비교하여 직관적 이해를 도움). 3) 내신 등급별 카드 분류(목표: 지원 가능성 제시, 방식: 아이콘 기반 정보 카드, 근거: '올A 필수'와 'B등급 가능'을 시각적으로 구분하여 정보 접근성 강화). -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
         .chart-container {
             position: relative;
             width: 100%;
@@ -51,12 +48,38 @@
 </head>
 <body class="bg-slate-50 text-slate-800">
 
-    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl md:text-2xl font-bold text-slate-900">🎓 2025 전사고 선택 내비게이터</h1>
-            <a href="#final-check" class="text-sm bg-blue-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-blue-700 transition-colors">최종 체크리스트</a>
-        </div>
+    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm" id="header">
+        <nav class="container mx-auto max-w-7xl px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold font-playfair text-slate-900">SOPHIE'S WORLD</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">홈으로</a>
+                <a href="navigator.html" class="text-sm font-bold text-blue-600 transition-colors">진로 내비게이터</a>
+                <a href="news.html" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">입학 뉴스</a>
+                <a href="#" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">공부법</a>
+                <a href="selection.html" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">문해력 진단</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </nav>
     </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-white/95 z-50 p-6">
+        <div class="flex justify-end mb-8">
+            <button id="mobile-menu-close-button" class="text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="flex flex-col items-center space-y-6 text-xl">
+            <a href="index.html" class="text-slate-600 hover:text-blue-600 transition">홈으로</a>
+            <a href="navigator.html" class="font-bold text-blue-600 transition">진로 내비게이터</a>
+            <a href="news.html" class="text-slate-600 hover:text-blue-600 transition">입학 뉴스</a>
+            <a href="#" class="text-slate-600 hover:text-blue-600 transition">공부법</a>
+            <a href="selection.html" class="text-slate-600 hover:text-blue-600 transition">문해력 진단</a>
+        </div>
+    </div>
+
 
     <main class="container mx-auto px-4 py-8 md:py-12">
 
@@ -276,6 +299,19 @@ document.addEventListener('DOMContentLoaded', () => {
             renderSchoolCards(filter);
         }
     });
+    
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
+    if (mobileMenuButton && mobileMenu && mobileMenuCloseButton) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+        mobileMenuCloseButton.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+    }
 
     renderSchoolCards();
     createOrUpdateRadarChart();
