@@ -346,34 +346,55 @@
         });
 
         async function initializeFirebase() {
-            if (typeof __firebase_config === 'undefined') {
-                showNotification("Firebase 설정이 로드되지 않았습니다.", false);
-                console.error("Firebase config is missing.");
-                return;
+            let firebaseConfig;
+
+            // Prioritize environment variables provided by the Canvas environment
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try {
+                    firebaseConfig = JSON.parse(__firebase_config);
+                } catch (error) {
+                    console.error("Error parsing __firebase_config from environment:", error);
+                    showNotification("Firebase 설정 포맷 오류.", false);
+                    return;
+                }
+            } else {
+                // Fallback for local development or if environment variables are not injected
+                console.warn("Firebase environment variables not found. Using fallback configuration for development.");
+                firebaseConfig = {
+                    apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
+                    authDomain: "news-6271f.firebaseapp.com",
+                    projectId: "news-6271f",
+                    storageBucket: "news-6271f.appspot.com",
+                    messagingSenderId: "1020040382944",
+                    appId: "1:1020040382944:web:26d4eef3678528b57c8385"
+                };
             }
+
             try {
-                const firebaseConfig = JSON.parse(__firebase_config);
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
 
+                // Prioritize custom token, then anonymous sign-in
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
                     await signInAnonymously(auth);
                 }
                 
+                // Use the correct, secure path for Firestore data
                 const newsCollection = collection(db, 'artifacts', appId, 'public/data/news');
                 onSnapshot(query(newsCollection), (snapshot) => {
                     allArticles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     applyCurrentFilter();
                 }, (error) => {
-                    console.error("뉴스 로딩 실패:", error);
-                    showNotification("뉴스 로딩 실패: Firestore 보안 규칙을 확인해주세요.", false);
+                    console.error("뉴스 로딩 실패 (Firestore onSnapshot):", error);
+                    showNotification("뉴스 데이터 로딩에 실패했습니다. 권한을 확인해주세요.", false);
                 });
+
             } catch (error) {
                 console.error("Firebase 초기화 실패:", error);
-                showNotification("DB 연결 실패: Firebase 설정을 확인해주세요.", false);
+                showNotification("DB 연결에 실패했습니다. 설정을 확인해주세요.", false);
             }
         }
 
