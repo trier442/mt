@@ -69,16 +69,33 @@
             </a>
             <div class="hidden md:flex items-center space-x-8">
                 <a href="index.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">홈으로</a>
-                <a href="jr.html" class="text-amber-600 font-bold transition text-sm">진로 네비게이터</a>
+                <a href="navigator.html" class="text-amber-600 font-bold transition text-sm">진로 네비게이터</a>
                 <a href="news.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">입학 뉴스</a>
                 <a href="#" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">공부법</a>
                 <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단</a>
             </div>
-            <button class="md:hidden text-gray-800">
+            <button id="mobile-menu-button" class="md:hidden text-gray-800">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
         </nav>
     </header>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-white/95 z-50 p-6">
+        <div class="flex justify-end mb-8">
+            <button id="mobile-menu-close-button" class="text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="flex flex-col items-center space-y-6 text-xl">
+            <a href="index.html" class="text-gray-600 hover:text-gray-900 transition">홈으로</a>
+            <a href="navigator.html" class="text-amber-600 font-bold transition">진로 네비게이터</a>
+            <a href="news.html" class="text-gray-600 hover:text-gray-900 transition">입학 뉴스</a>
+            <a href="#" class="text-gray-600 hover:text-gray-900 transition">공부법</a>
+            <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition">문해력 진단</a>
+        </div>
+    </div>
+
 
     <main class="page-bg">
         <!-- Hero Section -->
@@ -104,7 +121,7 @@
             <div class="container mx-auto max-w-5xl px-6">
                  <div class="flex flex-col gap-8">
                     <!-- Card 1: 2025 전사고 진학 플랜 -->
-                    <a href="tjn1.html" class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 100ms;">
+                    <a href="#" class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 100ms;">
                         <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         </div>
@@ -115,7 +132,7 @@
                         </div>
                     </a>
                     <!-- Card 2: 2025 특목고 진학 플랜 -->
-                    <a href="tjn2.html" class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 200ms;">
+                    <a href="#" class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 200ms;">
                         <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                         </div>
@@ -169,6 +186,22 @@
                     header.classList.remove('shadow-md');
                 }
             });
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            if(mobileMenuCloseButton && mobileMenu) {
+                mobileMenuCloseButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
 
             // Fade-in animation on scroll/load
             const faders = document.querySelectorAll('.fade-in-up');
