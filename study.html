@@ -23,17 +23,12 @@
         .font-playfair {
             font-family: 'Playfair Display', serif;
         }
-        .page-bg {
-            background: #f3f4f6;
-        }
-        .hero-bg {
-             background: #ffffff;
-        }
         .study-card {
             background-color: #ffffff;
             border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
             overflow: hidden;
+            cursor: pointer;
         }
         .study-card:hover {
             transform: translateY(-5px);
@@ -58,6 +53,16 @@
             color: #ffffff;
             background-color: #10b981; /* Emerald-500 */
             font-weight: 700;
+        }
+        #detail-view {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out, padding 0.7s ease-in-out;
+        }
+        #detail-view.open {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            max-height: 100vh; /* Viewport height */
         }
     </style>
 </head>
@@ -93,15 +98,15 @@
             <a href="index.html" class="text-gray-600 hover:text-gray-900 transition">홈으로</a>
             <a href="navigator.html" class="text-gray-600 hover:text-gray-900 transition">진로 내비게이터</a>
             <a href="news.html" class="text-gray-600 hover:text-gray-900 transition">입학 뉴스</a>
-            <a href="study.html" class="text-emerald-600 font-bold transition">공부법</a>
+            <a href="#" class="text-emerald-600 font-bold transition">공부법</a>
             <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition">문해력 진단</a>
         </div>
     </div>
 
 
-    <main class="page-bg">
+    <main class="bg-gray-50">
         <!-- Hero Section -->
-        <section class="hero-bg pt-32 pb-16 md:pt-40 md:pb-20">
+        <section class="bg-white pt-32 pb-16 md:pt-40 md:pb-20">
             <div class="container mx-auto max-w-5xl px-6">
                  <div class="fade-in-up">
                     <h1 class="mt-4 text-4xl md:text-5xl font-bold text-gray-900 font-playfair leading-tight">
@@ -128,79 +133,14 @@
 
                 <!-- Study Methods Grid -->
                 <div id="study-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Card 1 -->
-                    <a href="#" class="study-card block rounded-2xl fade-in-up" data-category="general">
-                        <div class="p-6">
-                            <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-3">일반공부법</span>
-                            <h2 class="text-xl font-bold text-gray-900">메타인지를 활용한 자기주도학습법</h2>
-                            <p class="mt-3 text-gray-600 text-sm h-20">자신이 무엇을 알고 모르는지 정확히 파악하는 '메타인지' 능력을 향상시켜 학습 계획 수립과 실행의 효율을 높입니다.</p>
-                            <div class="flex flex-wrap gap-2 mt-4 border-t pt-4">
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#메타인지</span>
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#자기주도</span>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- Card 2 -->
-                    <a href="#" class="study-card block rounded-2xl fade-in-up" data-category="reading">
-                        <div class="p-6">
-                            <span class="inline-block bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-3">독서방법</span>
-                            <h2 class="text-xl font-bold text-gray-900">비문학, 구조 독해로 시간 단축하기</h2>
-                            <p class="mt-3 text-gray-600 text-sm h-20">지문의 구조를 파악하며 핵심 정보를 빠르게 찾아내는 훈련법을 통해 문제 풀이 시간을 획기적으로 줄입니다.</p>
-                            <div class="flex flex-wrap gap-2 mt-4 border-t pt-4">
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#시간단축</span>
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#독해력</span>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- Card 3 -->
-                    <a href="#" class="study-card block rounded-2xl fade-in-up" data-category="subject">
-                        <div class="p-6">
-                            <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-3">과목공부법</span>
-                            <h2 class="text-xl font-bold text-gray-900">수학, 개념과 유형을 연결하는 공부법</h2>
-                            <p class="mt-3 text-gray-600 text-sm h-20">단순한 공식 암기를 넘어, 각 개념이 어떤 문제 유형으로 변형되는지 연결하며 학습하여 응용력을 키웁니다.</p>
-                             <div class="flex flex-wrap gap-2 mt-4 border-t pt-4">
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#수학</span>
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#응용력</span>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- Card 4 -->
-                    <a href="#" class="study-card block rounded-2xl fade-in-up" data-category="exam">
-                        <div class="p-6">
-                            <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-3">시험공부법</span>
-                            <h2 class="text-xl font-bold text-gray-900">시험 한 달 전, 과목별 최종 정리 전략</h2>
-                            <p class="mt-3 text-gray-600 text-sm h-20">새로운 내용을 학습하기보다, 기존에 공부한 내용을 복습하고 약점을 보완하는 시기별, 과목별 최종 정리법을 공개합니다.</p>
-                             <div class="flex flex-wrap gap-2 mt-4 border-t pt-4">
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#벼락치기</span>
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#복습</span>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- Card 5 -->
-                    <a href="#" class="study-card block rounded-2xl fade-in-up" data-category="general">
-                        <div class="p-6">
-                            <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-3">일반공부법</span>
-                            <h2 class="text-xl font-bold text-gray-900">킬러 문항 대비, 나만의 오답노트 작성법</h2>
-                            <p class="mt-3 text-gray-600 text-sm h-20">단순히 문제를 옮겨 적는 것이 아닌, 문제의 조건, 해결 과정, 핵심 개념을 체계적으로 정리하여 유사 유형에 완벽 대비합니다.</p>
-                             <div class="flex flex-wrap gap-2 mt-4 border-t pt-4">
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#오답노트</span>
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#심화학습</span>
-                            </div>
-                        </div>
-                    </a>
-                     <!-- Card 6 -->
-                    <a href="#" class="study-card block rounded-2xl fade-in-up" data-category="reading">
-                        <div class="p-6">
-                            <span class="inline-block bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-3">독서방법</span>
-                            <h2 class="text-xl font-bold text-gray-900">책 1권으로 10권 효과, 단권화 노트의 비밀</h2>
-                            <p class="mt-3 text-gray-600 text-sm h-20">여러 권의 책에 흩어져 있는 지식을 하나의 주제로 묶어 노트에 정리하며, 지식의 구조를 만들고 장기 기억으로 전환합니다.</p>
-                             <div class="flex flex-wrap gap-2 mt-4 border-t pt-4">
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#단권화</span>
-                               <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">#정리법</span>
-                            </div>
-                        </div>
-                    </a>
+                    <!-- Cards will be dynamically inserted here -->
                 </div>
+                
+                <!-- Detail View Section -->
+                <div id="detail-view" class="mt-8">
+                    <div id="detail-content-wrapper" class="bg-white rounded-2xl shadow-xl"></div>
+                </div>
+
             </div>
         </section>
     </main>
@@ -213,72 +153,149 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Header background change on scroll
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('shadow-md');
+            const studyData = {
+                'metacognition': {
+                    category: 'general',
+                    title: '메타인지를 활용한 자기주도학습법',
+                    summary: '자신이 무엇을 알고 모르는지 정확히 파악하는 \'메타인지\' 능력을 향상시켜 학습 계획 수립과 실행의 효율을 높입니다.',
+                    tags: ['#메타인지', '#자기주도'],
+                    color: 'bg-yellow-100 text-yellow-800',
+                    categoryName: '일반공부법',
+                    content: `<p>메타인지는 자신의 생각에 대해 생각하는 능력입니다. 내가 무엇을 알고, 무엇을 모르는지, 어떻게 하면 더 잘 배울 수 있는지 아는 것이죠. 이 능력을 키우면 맹목적으로 공부하는 것이 아니라, 전략적으로 자신의 약점을 공략할 수 있게 됩니다.</p><h3 class="text-xl font-bold mt-6 mb-2">실천 방법:</h3><ul class="list-disc list-inside space-y-2"><li><b>계획 세우기:</b> 공부 시작 전, 무엇을, 얼마나, 어떻게 공부할지 구체적으로 계획합니다.</li><li><b>중간 점검하기:</b> 공부 중간에 '내가 지금 뭘 하고 있지?', '잘 이해하고 있나?' 스스로에게 질문합니다.</li><li><b>셀프 테스트:</b> 배운 내용을 스스로에게 설명하거나, 백지에 정리해보며 모르는 부분을 확인합니다.</li></ul>`
+                },
+                'reading-comprehension': {
+                    category: 'reading',
+                    title: '비문학, 구조 독해로 시간 단축하기',
+                    summary: '지문의 구조를 파악하며 핵심 정보를 빠르게 찾아내는 훈련법을 통해 문제 풀이 시간을 획기적으로 줄입니다.',
+                    tags: ['#시간단축', '#독해력'],
+                    color: 'bg-sky-100 text-sky-800',
+                    categoryName: '독서방법',
+                    content: `<p>구조 독해는 숲을 먼저 보고 나무를 보는 방법입니다. 글 전체의 구조(서론-본론-결론, 문제-해결 등)를 파악하면, 각 문단의 역할과 핵심 내용을 더 빠르고 정확하게 이해할 수 있습니다.</p><h3 class="text-xl font-bold mt-6 mb-2">훈련법:</h3><ul class="list-disc list-inside space-y-2"><li><b>첫 문단 집중하기:</b> 글의 주제와 전개 방향을 제시하는 첫 문단을 정독합니다.</li><li><b>문단별 핵심 문장 찾기:</b> 각 문단의 중심 내용을 담고 있는 문장에 밑줄을 긋습니다.</li><li><b>접속어 주목하기:</b> '그러나', '따라서', '예를 들어' 등 글의 논리적 흐름을 보여주는 접속어에 동그라미를 치며 읽습니다.</li></ul>`
+                },
+                'math-concept': {
+                    category: 'subject',
+                    title: '수학, 개념과 유형을 연결하는 공부법',
+                    summary: '단순한 공식 암기를 넘어, 각 개념이 어떤 문제 유형으로 변형되는지 연결하며 학습하여 응용력을 키웁니다.',
+                    tags: ['#수학', '#응용력'],
+                    color: 'bg-red-100 text-red-800',
+                    categoryName: '과목공부법',
+                    content: `<p>수학 성적은 개념을 얼마나 문제에 잘 적용하는지에 달려있습니다. 개념을 공부할 때는 반드시 '이 개념이 어떤 문제에, 어떻게 쓰일까?'를 함께 고민하는 습관을 들여야 합니다.</p><h3 class="text-xl font-bold mt-6 mb-2">실천 방법:</h3><ul class="list-disc list-inside space-y-2"><li><b>개념 노트 만들기:</b> 교과서의 개념을 자신만의 언어로 풀어쓰고, 관련 예제 문제를 함께 정리합니다.</li><li><b>유형별 문제 풀이:</b> 개념 학습 후, 해당 개념이 사용되는 다양한 유형의 문제를 풀어보며 적용 훈련을 합니다.</li><li><b>오답 분석:</b> 틀린 문제의 원인이 개념 이해 부족인지, 계산 실수인지, 문제 해석 오류인지 명확히 분석하고 기록합니다.</li></ul>`
+                },
+                'exam-strategy': {
+                    category: 'exam',
+                    title: '시험 한 달 전, 과목별 최종 정리 전략',
+                    summary: '새로운 내용을 학습하기보다, 기존에 공부한 내용을 복습하고 약점을 보완하는 시기별, 과목별 최종 정리법을 공개합니다.',
+                    tags: ['#벼락치기', '#복습'],
+                    color: 'bg-indigo-100 text-indigo-800',
+                    categoryName: '시험공부법',
+                    content: `<p>시험이 임박했을 때는 새로운 것을 배우기보다, 아는 것을 틀리지 않는 것이 더 중요합니다. '단권화 노트'와 '오답 노트'를 중심으로 자신의 약점을 집중 공략하는 것이 가장 효율적입니다.</p><h3 class="text-xl font-bold mt-6 mb-2">과목별 전략:</h3><ul class="list-disc list-inside space-y-2"><li><b>국어/영어:</b> 새로운 지문을 풀기보다, 기출문제와 EBS 지문을 다시 분석하며 선지 판단의 정확성을 높입니다.</li><li><b>수학:</b> 오답노트를 반복해서 풀고, 자주 틀리는 유형의 공식과 개념을 다시 점검합니다.</li><li><b>탐구:</b> 단권화 노트를 정독하며 전체 흐름을 잡고, 헷갈리는 개념은 백지에 직접 써보며 암기합니다.</li></ul>`
+                },
+                'wrong-answer-note': {
+                    category: 'general',
+                    title: '킬러 문항 대비, 나만의 오답노트 작성법',
+                    summary: '단순히 문제를 옮겨 적는 것이 아닌, 문제의 조건, 해결 과정, 핵심 개념을 체계적으로 정리하여 유사 유형에 완벽 대비합니다.',
+                    tags: ['#오답노트', '#심화학습'],
+                    color: 'bg-yellow-100 text-yellow-800',
+                    categoryName: '일반공부법',
+                    content: `<p>최상위권의 비밀 병기는 바로 '오답노트'입니다. 오답노트는 단순히 틀린 문제를 모아두는 것이 아니라, 나의 약점을 분석하고 보완하는 가장 강력한 도구입니다.</p><h3 class="text-xl font-bold mt-6 mb-2">올바른 작성법:</h3><ul class="list-disc list-inside space-y-2"><li><b>문제 원본 붙이기:</b> 문제를 직접 쓰기보다 오려서 붙여 시간을 절약합니다.</li><li><b>나의 풀이 과정 적기:</b> 왜 틀렸는지 분석하기 위해, 맞든 틀리든 나의 풀이 과정을 그대로 적습니다.</li><li><b>정답 풀이 및 핵심 개념 정리:</b> 해설지를 참고하여 올바른 풀이법을 적고, 이 문제에 사용된 핵심 개념이나 공식을 함께 정리합니다.</li><li><b>오답 원인 분석:</b> '개념 부족', '계산 실수', '조건 누락' 등 내가 틀린 이유를 구체적으로 적고 해결책을 고민합니다.</li></ul>`
+                },
+                'single-volume-note': {
+                    category: 'reading',
+                    title: '책 1권으로 10권 효과, 단권화 노트의 비밀',
+                    summary: '여러 권의 책에 흩어져 있는 지식을 하나의 주제로 묶어 노트에 정리하며, 지식의 구조를 만들고 장기 기억으로 전환합니다.',
+                    tags: ['#단권화', '#정리법'],
+                    color: 'bg-sky-100 text-sky-800',
+                    categoryName: '독서방법',
+                    isExternal: true,
+                    url: 'https://10gwonhyogwa-hgnq5yw.gamma.site/'
+                },
+            };
+
+            const studyGrid = document.getElementById('study-grid');
+            
+            function renderCards(filter = 'all') {
+                studyGrid.innerHTML = '';
+                Object.keys(studyData).forEach(key => {
+                    const item = studyData[key];
+                    if (filter === 'all' || item.category.includes(filter)) {
+                        const cardEl = document.createElement('div');
+                        cardEl.className = 'study-card block rounded-2xl fade-in-up';
+                        cardEl.dataset.id = key;
+                        cardEl.dataset.category = item.category;
+                        
+                        cardEl.innerHTML = `
+                            <div class="p-6">
+                                <span class="inline-block ${item.color} text-xs font-semibold px-2.5 py-1 rounded-full mb-3">${item.categoryName}</span>
+                                <h2 class="text-xl font-bold text-gray-900">${item.title}</h2>
+                                <p class="mt-3 text-gray-600 text-sm h-20">${item.summary}</p>
+                                <div class="flex flex-wrap gap-2 mt-4 border-t pt-4">
+                                   ${item.tags.map(tag => `<span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded">${tag}</span>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                        studyGrid.appendChild(cardEl);
+                    }
+                });
+                document.querySelectorAll('.fade-in-up').forEach(fader => fader.classList.add('visible'));
+            }
+
+            function openDetailView(key) {
+                const item = studyData[key];
+                const detailWrapper = document.getElementById('detail-content-wrapper');
+                const detailView = document.getElementById('detail-view');
+                let contentHtml = '';
+
+                if (item.isExternal) {
+                    contentHtml = `<div class="relative w-full h-[80vh] bg-gray-200 rounded-lg overflow-hidden">
+                                       <iframe src="${item.url}" class="w-full h-full border-0" allowfullscreen></iframe>
+                                   </div>`;
                 } else {
-                    header.classList.remove('shadow-md');
+                    contentHtml = `<div class="prose max-w-none prose-lg">${item.content}</div>`;
+                }
+
+                detailWrapper.innerHTML = `
+                    <div class="p-8 md:p-12 relative">
+                        <button id="close-detail" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 z-10 bg-white/50 rounded-full p-1">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                        ${item.isExternal ? contentHtml : `<span class="inline-block ${item.color} text-sm font-semibold px-3 py-1 rounded-full mb-4">${item.categoryName}</span><h2 class="text-3xl md:text-4xl font-bold mb-4">${item.title}</h2>` + contentHtml}
+                    </div>`;
+                
+                detailView.classList.add('open');
+                detailView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                document.getElementById('close-detail').addEventListener('click', () => {
+                    detailView.classList.remove('open');
+                    setTimeout(() => { detailWrapper.innerHTML = ''; }, 700);
+                });
+            }
+
+            renderCards();
+
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    renderCards(button.dataset.filter);
+                });
+            });
+
+            studyGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.study-card');
+                if (card) {
+                    openDetailView(card.dataset.id);
                 }
             });
 
-            // Mobile menu toggle
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
             if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
             }
             if(mobileMenuCloseButton && mobileMenu) {
-                mobileMenuCloseButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
+                mobileMenuCloseButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
             }
-
-            // Filter functionality
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const studyCards = document.querySelectorAll('.study-card');
-
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    const filter = button.dataset.filter;
-
-                    studyCards.forEach(card => {
-                        if (filter === 'all' || card.dataset.category.includes(filter)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
-
-
-            // Fade-in animation on scroll/load
-            const faders = document.querySelectorAll('.fade-in-up');
-            const appearOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    } else {
-                        entry.target.classList.add('visible');
-                        appearOnScroll.unobserve(entry.target);
-                    }
-                });
-            }, appearOptions);
-
-            faders.forEach(fader => {
-                appearOnScroll.observe(fader);
-            });
         });
     </script>
 </body>
