@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>등급을 올리는 국어 오답 노트 작성법</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm & Peaceful -->
+    <!-- Application Structure Plan: The application is designed as a single-page, scrollable guide that logically follows the provided text. It starts with a Hero section (Title), moves to the "Why" (The Problem & Two Note Types), then details the "How" (The 3-Step Process), and finishes with "Utilization" and the "Final Goal." This linear structure, inspired by the user's images, uses a card-based layout to break down complex information into digestible chunks, making it easy for users to follow the methodology from start to finish. -->
+    <!-- Visualization & Content Choices: 
+        - Two Note Types: Goal: Compare. Method: Side-by-side styled HTML cards. Justification: Clearly differentiates the two core concepts as presented in the source text. NO SVG.
+        - 3-Step Process: Goal: Organize. Method: A grid of styled HTML cards for each sub-step (Source, Evidence, Reasoning, etc.), directly inspired by the user's uploaded image. Justification: This visual structure makes the abstract 3-step process concrete and easy to understand. NO SVG.
+        - Final Goal Diagram: Goal: Show Process. Method: A simple flowchart created with HTML/CSS and Unicode arrows. Justification: Visually simplifies the final objective of condensing the error note database into a single summary sheet. NO SVG.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F8F9FA; /* A very light gray */
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #4A5568, #2D3748);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto px-4 py-12 md:py-20 max-w-5xl">
+
+        <header class="text-center mb-16 md:mb-20">
+            <h1 class="text-4xl md:text-5xl font-black mb-4 text-gray-900">등급을 올리는<br>국어 오답 노트 활용법</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                3등급에서 만점까지, 성적을 반드시 올리는 체계적인 오답 노트 작성법을 소개합니다. 핵심은 <strong class="text-[#4A5568]">자신의 '사고 과정'을 교정</strong>하는 데 있습니다.
+            </p>
+        </header>
+
+        <main class="space-y-16 md:space-y-20">
+
+            <section id="why">
+                <h2 class="text-3xl font-bold text-center mb-10">왜 국어 오답 노트가 필요한가?</h2>
+                <div class="grid md:grid-cols-2 gap-8 items-stretch">
+                    <div class="bg-white p-8 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-3">문제의식</h3>
+                        <p class="text-gray-700">수많은 시험지와 문제집을 풀지만, 시험 당일 모두 가져갈 수는 없습니다. 결국 시험 직전까지 볼 수 있는, 나의 모든 약점이 응축된 단 한 권의 노트가 필요합니다.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-3">두 종류의 노트</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <strong class="text-gray-800">1. 개념 노트</strong>
+                                <p class="text-sm text-gray-600">문학 개념어, 문법 등 지식의 구멍을 메우는 노트.</p>
+                            </div>
+                            <div class="p-4 bg-[#EBF4FF] rounded-lg border border-[#A3BFFA]">
+                                <strong class="text-[#2C5282]">2. 행동 교정 노트 (핵심)</strong>
+                                <p class="text-sm text-[#2C5282]">잘못된 생각의 습관을 교정하는 노트. 이 방법의 핵심입니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="how-to">
+                <h2 class="text-3xl font-bold text-center mb-10">'행동 교정' 오답 노트 작성 3단계</h2>
+                
+                <!-- STEP 1 -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center"><span class="bg-[#A3BFFA] text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-3">1</span>나의 사고 과정 복기하기</h3>
+                    <p class="text-gray-600 mb-6 ml-11">단순히 문제와 해설을 옮겨 적는 것은 의미가 없습니다. 내가 어떤 생각으로 답을 골랐는지 솔직하게 기록하여, 똑같은 실수를 반복하지 않을 토대를 마련해야 합니다.</p>
+                    <div class="grid sm:grid-cols-2 gap-6 ml-11">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h4 class="font-bold mb-2">출처 적기</h4>
+                            <p class="text-sm text-gray-600">예: 24년 6월 모의평가 15번</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h4 class="font-bold mb-2">내가 찾은 근거 적기</h4>
+                            <p class="text-sm text-gray-600">지문의 어떤 부분을 보고 답을 골랐는지 그 내용을 적습니다.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h4 class="font-bold mb-2">헷갈렸던 선지 적기</h4>
+                            <p class="text-sm text-gray-600">내가 고민했던 매력적인 오답 선지를 적습니다.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h4 class="font-bold mb-2">나의 사고 과정 서술하기</h4>
+                            <p class="text-sm text-gray-600">'이 근거 때문에 이 선지가 맞다고 생각했다'와 같이 나의 생각 흐름을 모두 적습니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center"><span class="bg-[#A3BFFA] text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-3">2</span>오류 분석하기</h3>
+                    <p class="text-gray-600 mb-6 ml-11">해설지와 비교하며 내 생각의 어떤 부분이, 왜 잘못되었는지 정확히 찾아냅니다.</p>
+                     <div class="bg-white p-6 rounded-lg shadow-sm border ml-11">
+                        <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
+                            <li>"해설지를 보니, 나는 'A'라고 생각했지만 사실은 'B'가 핵심이었구나."</li>
+                            <li>"지문의 '핵심 주체'를 잘못 파악해서 완전히 반대로 해석했다."</li>
+                            <li>"두 단어의 미묘한 의미 차이를 놓쳤다."</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 flex items-center"><span class="bg-[#A3BFFA] text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-3">3</span>다음 시험을 위한 '행동 강령' 만들기</h3>
+                    <p class="text-gray-600 mb-6 ml-11">오류 분석에서 그치지 않고, 다음 시험에서 실수를 원천 차단할 구체적인 행동 규칙을 만듭니다. 이것이 오답 노트의 최종 목표입니다.</p>
+                    <div class="grid md:grid-cols-2 gap-6 ml-11">
+                        <div class="bg-red-50 p-6 rounded-lg border border-red-200">
+                            <h4 class="font-bold text-red-700 mb-2">(X) 나쁜 예시</h4>
+                            <p class="text-sm text-gray-600">"실수했다. 다음엔 꼼꼼히 봐야지." (추상적이라 도움이 안 됨)</p>
+                        </div>
+                        <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                             <h4 class="font-bold text-green-700 mb-2">(O) 좋은 예시</h4>
+                             <p class="text-sm text-gray-600">"인과관계 선지에서는, 지문의 원인과 결과에 각각 O, △ 표시를 해서 연결 관계를 명확히 확인하자."</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="utilization">
+                <h2 class="text-3xl font-bold text-center mb-10">오답 노트 활용법 및 최종 목표</h2>
+                <div class="bg-white p-8 rounded-xl shadow-md space-y-8">
+                    <div>
+                        <h3 class="font-bold text-xl mb-3">데이터베이스화</h3>
+                        <p class="text-gray-700">이 과정을 반복하면 내가 자주 하는 실수가 몇 가지 패턴(약 20개 내외)으로 수렴하는 것을 발견하게 됩니다. "아, 나 또 이 실수 했네"를 인지하는 것이 변화의 시작입니다.</p>
+                    </div>
+                    <hr>
+                    <div>
+                        <h3 class="font-bold text-xl mb-3">주기적인 복습</h3>
+                        <p class="text-gray-700">정리한 노트를 일주일에 한 번씩 꼭 정독하며, 나의 약점과 행동 강령을 머릿속에 각인시켜야 합니다.</p>
+                    </div>
+                     <hr>
+                    <div>
+                        <h3 class="font-bold text-xl mb-3">최종 목표</h3>
+                        <p class="text-gray-700 mb-4">시험이 다가오면, 그동안 쌓인 모든 행동 강령을 A4용지 1~2장 분량으로 최종 요약합니다. 이 요약본이야말로 시험 당일, 나를 지켜줄 가장 강력한 무기가 됩니다.</p>
+                        <div class="flex items-center justify-center bg-gray-50 p-4 rounded-lg">
+                            <div class="text-center">
+                                <div class="text-3xl">🗒️</div>
+                                <div class="text-sm font-bold">행동 교정 노트</div>
+                            </div>
+                            <div class="text-4xl text-gray-400 mx-4 font-light">&rarr;</div>
+                            <div class="text-center">
+                                <div class="text-3xl">📄</div>
+                                <div class="text-sm font-bold">최종 요약본 (1-2장)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-16 md:mt-20">
+            <div class="bg-gray-800 text-white p-8 rounded-2xl">
+                 <h4 class="text-xl md:text-2xl font-bold">이제 당신도 국어 만점에 도전할 수 있습니다.</h4>
+                 <p class="mt-2 text-gray-300">오늘부터 '행동 교정 노트' 작성을 시작해보세요.</p>
+             </div>
+        </footer>
+
+    </div>
+</body>
+</html>
