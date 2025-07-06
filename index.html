@@ -151,7 +151,7 @@
 
                 <!-- News Grid -->
                 <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- 뉴스 아이템이 여기에 동적으로 추가됩니다. -->
+                     <p class="col-span-full text-center text-gray-500">뉴스 목록을 불러오는 중...</p>
                 </div>
             </div>
         </section>
@@ -202,8 +202,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         let allArticles = [], currentFilter = 'all', db, auth;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -228,7 +228,6 @@
                 const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
                 const imageUrl = article.imageUrl || `https://placehold.co/600x400/e5e7eb/4b5563?text=${encodeURIComponent(article.title)}`;
                 
-                // A simple way to get summary from HTML content
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = article.content;
                 const summary = tempDiv.textContent.trim().substring(0, 80) + '...';
@@ -250,7 +249,6 @@
         }
 
         function applyCurrentFilter() {
-            // Sort articles by date descending before rendering
             const sortedArticles = allArticles.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
             renderNews(currentFilter === 'all' ? sortedArticles : sortedArticles.filter(a => a.category === currentFilter));
         }
@@ -299,14 +297,19 @@
             document.getElementById('add-news-form')?.addEventListener('submit', async e => {
                 e.preventDefault();
                 if (!db) { showNotification('DB 연결 실패.', false); return; }
+
+                if (!auth.currentUser) {
+                    showNotification('인증되지 않은 사용자입니다. 글을 작성할 수 없습니다.', false);
+                    console.error("User is not authenticated. Cannot write to Firestore.");
+                    return;
+                }
+
                 const title = document.getElementById('news-title').value;
                 const content = document.getElementById('news-content').value;
                 const imageFile = document.getElementById('news-image').files[0];
                 const category = document.getElementById('news-category').value;
                 let imageUrl = '';
 
-                // Note: Storing images as base64 in Firestore is not recommended for production due to 1MB document size limit.
-                // Using Firebase Storage is a better approach.
                 if(imageFile) { 
                     try { 
                         imageUrl = await toBase64(imageFile); 
@@ -323,8 +326,8 @@
                     e.target.reset();
                     showNotification('뉴스가 성공적으로 게시되었습니다.');
                 } catch (error) { 
-                    console.error("Error adding document: ", error);
-                    showNotification('뉴스 게시에 실패했습니다. Firestore 보안 규칙을 확인해주세요.', false); 
+                    console.error("Error adding document (Security Rule Violation?): ", error);
+                    showNotification('뉴스 게시에 실패했습니다. 콘솔에서 상세 오류를 확인하세요.', false); 
                 }
             });
 
@@ -346,28 +349,21 @@
         });
 
         async function initializeFirebase() {
-            let firebaseConfig;
+            // **[FIX]** More robust check for Firebase config.
+            if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                console.error("Firebase 설정이 로드되지 않았습니다. Canvas 환경 변수가 올바르게 주입되었는지 확인하세요.");
+                showNotification("Firebase 설정을 불러올 수 없습니다. 앱 환경을 확인해주세요.", false);
+                document.getElementById('news-grid').innerHTML = `<p class="col-span-full text-center text-red-500">오류: Firebase 설정을 불러올 수 없습니다.</p>`;
+                return;
+            }
 
-            // Prioritize environment variables provided by the Canvas environment
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                try {
-                    firebaseConfig = JSON.parse(__firebase_config);
-                } catch (error) {
-                    console.error("Error parsing __firebase_config from environment:", error);
-                    showNotification("Firebase 설정 포맷 오류.", false);
-                    return;
-                }
-            } else {
-                // Fallback for local development or if environment variables are not injected
-                console.warn("Firebase environment variables not found. Using fallback configuration for development.");
-                firebaseConfig = {
-                    apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
-                    authDomain: "news-6271f.firebaseapp.com",
-                    projectId: "news-6271f",
-                    storageBucket: "news-6271f.appspot.com",
-                    messagingSenderId: "1020040382944",
-                    appId: "1:1020040382944:web:26d4eef3678528b57c8385"
-                };
+            let firebaseConfig;
+            try {
+                firebaseConfig = JSON.parse(__firebase_config);
+            } catch (error) {
+                console.error("Firebase 설정 JSON 파싱 오류:", error);
+                showNotification("Firebase 설정 포맷이 올바르지 않습니다.", false);
+                return;
             }
 
             try {
@@ -375,27 +371,47 @@
                 db = getFirestore(app);
                 auth = getAuth(app);
 
-                // Prioritize custom token, then anonymous sign-in
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                
-                // Use the correct, secure path for Firestore data
-                const newsCollection = collection(db, 'artifacts', appId, 'public/data/news');
-                onSnapshot(query(newsCollection), (snapshot) => {
-                    allArticles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    applyCurrentFilter();
-                }, (error) => {
-                    console.error("뉴스 로딩 실패 (Firestore onSnapshot):", error);
-                    showNotification("뉴스 데이터 로딩에 실패했습니다. 권한을 확인해주세요.", false);
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        console.log('Firebase 인증 상태 변경: 로그인됨. User UID:', user.uid);
+                        // Once authenticated, set up the real-time listener for news.
+                        setupNewsListener();
+                    } else {
+                        console.log('Firebase 인증 상태 변경: 로그아웃됨.');
+                        // If user is logged out, attempt to sign in anonymously or with a custom token.
+                        signIn();
+                    }
                 });
 
             } catch (error) {
                 console.error("Firebase 초기화 실패:", error);
                 showNotification("DB 연결에 실패했습니다. 설정을 확인해주세요.", false);
             }
+        }
+
+        async function signIn() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error('Firebase 로그인 실패:', error);
+                showNotification('Firebase 인증에 실패했습니다.', false);
+            }
+        }
+
+        function setupNewsListener() {
+            const newsCollection = collection(db, 'artifacts', appId, 'public/data/news');
+            onSnapshot(query(newsCollection), (snapshot) => {
+                allArticles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                applyCurrentFilter();
+            }, (error) => {
+                console.error("뉴스 데이터 로딩 오류 (Firestore onSnapshot):", error);
+                showNotification("뉴스 데이터 로딩에 실패했습니다. 권한을 확인하세요.", false);
+                document.getElementById('news-grid').innerHTML = `<p class="col-span-full text-center text-red-500">뉴스 로딩 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</p>`;
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
