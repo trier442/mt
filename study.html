@@ -76,9 +76,9 @@
             </a>
             <div class="hidden md:flex items-center space-x-8">
                 <a href="index.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">홈으로</a>
-                <a href="jr.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">진로 내비게이터</a>
+                <a href="navigator.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">진로 내비게이터</a>
                 <a href="news.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">입학 뉴스</a>
-                <a href="study.html" class="text-emerald-600 font-bold transition text-sm">공부법</a>
+                <a href="#" class="text-emerald-600 font-bold transition text-sm">공부법</a>
                 <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단</a>
             </div>
             <button id="mobile-menu-button" class="md:hidden text-gray-800">
@@ -161,7 +161,8 @@
                     tags: ['#메타인지', '#자기주도'],
                     color: 'bg-yellow-100 text-yellow-800',
                     categoryName: '일반공부법',
-                    content: `<p>메타인지는 자신의 생각에 대해 생각하는 능력입니다. 내가 무엇을 알고, 무엇을 모르는지, 어떻게 하면 더 잘 배울 수 있는지 아는 것이죠. 이 능력을 키우면 맹목적으로 공부하는 것이 아니라, 전략적으로 자신의 약점을 공략할 수 있게 됩니다.</p><h3 class="text-xl font-bold mt-6 mb-2">실천 방법:</h3><ul class="list-disc list-inside space-y-2"><li><b>계획 세우기:</b> 공부 시작 전, 무엇을, 얼마나, 어떻게 공부할지 구체적으로 계획합니다.</li><li><b>중간 점검하기:</b> 공부 중간에 '내가 지금 뭘 하고 있지?', '잘 이해하고 있나?' 스스로에게 질문합니다.</li><li><b>셀프 테스트:</b> 배운 내용을 스스로에게 설명하거나, 백지에 정리해보며 모르는 부분을 확인합니다.</li></ul>`
+                    isExternal: true,
+                    url: 'study1.html'
                 },
                 'reading-comprehension': {
                     category: 'reading',
@@ -188,8 +189,7 @@
                     tags: ['#벼락치기', '#복습'],
                     color: 'bg-indigo-100 text-indigo-800',
                     categoryName: '시험공부법',
-                    isExternal: true,
-                    url: 'study1.html'
+                    content: `<p>시험이 임박했을 때는 새로운 것을 배우기보다, 아는 것을 틀리지 않는 것이 더 중요합니다. '단권화 노트'와 '오답 노트'를 중심으로 자신의 약점을 집중 공략하는 것이 가장 효율적입니다.</p><h3 class="text-xl font-bold mt-6 mb-2">과목별 전략:</h3><ul class="list-disc list-inside space-y-2"><li><b>국어/영어:</b> 새로운 지문을 풀기보다, 기출문제와 EBS 지문을 다시 분석하며 선지 판단의 정확성을 높입니다.</li><li><b>수학:</b> 오답노트를 반복해서 풀고, 자주 틀리는 유형의 공식과 개념을 다시 점검합니다.</li><li><b>탐구:</b> 단권화 노트를 정독하며 전체 흐름을 잡고, 헷갈리는 개념은 백지에 직접 써보며 암기합니다.</li></ul>`
                 },
                 'wrong-answer-note': {
                     category: 'general',
