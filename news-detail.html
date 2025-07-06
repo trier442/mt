@@ -350,29 +350,19 @@
 
         async function initializeFirebase() {
             let firebaseConfig;
-            let useTokenAuth = false; // Flag to determine auth method
-
-            // Prioritize environment variables from the Canvas environment
+            
+            // **[FIX]** More robust config loading logic
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 try {
                     firebaseConfig = JSON.parse(__firebase_config);
-                    useTokenAuth = true; // Only use token auth with the environment's config
                     console.log("Using environment-provided Firebase config.");
                 } catch (error) {
-                    console.error("Error parsing __firebase_config. Falling back to hardcoded config.", error);
-                    showNotification("Firebase 환경 설정 포맷 오류.", false);
-                    firebaseConfig = {
-                        apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
-                        authDomain: "news-6271f.firebaseapp.com",
-                        projectId: "news-6271f",
-                        storageBucket: "news-6271f.appspot.com",
-                        messagingSenderId: "1020040382944",
-                        appId: "1:1020040382944:web:26d4eef3678528b57c8385",
-                        measurementId: "G-R6MG0F9M7Q"
-                    };
+                    console.error("Could not parse __firebase_config. Falling back to hardcoded config.", error);
                 }
-            } else {
-                console.warn("Firebase environment variables not found. Using fallback hardcoded config.");
+            }
+
+            if (!firebaseConfig) {
+                console.warn("Using hardcoded fallback Firebase config because environment config was missing or invalid.");
                 firebaseConfig = {
                     apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
                     authDomain: "news-6271f.firebaseapp.com",
@@ -385,8 +375,8 @@
             }
 
             if (!firebaseConfig || !firebaseConfig.projectId) {
-                showNotification("Firebase 설정이 비어있습니다.", false);
-                document.getElementById('news-grid').innerHTML = `<p class="col-span-full text-center text-red-500">오류: Firebase 설정이 비어있습니다.</p>`;
+                showNotification("Firebase 설정 정보가 유효하지 않습니다.", false);
+                document.getElementById('news-grid').innerHTML = `<p class="col-span-full text-center text-red-500">오류: Firebase 설정 정보가 유효하지 않습니다.</p>`;
                 return;
             }
 
@@ -397,11 +387,11 @@
 
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        console.log('Firebase 인증 상태 변경: 로그인됨. User UID:', user.uid);
+                        console.log('Firebase 인증 성공:', user.uid);
                         setupNewsListener();
                     } else {
-                        console.log('Firebase 인증 상태 변경: 로그아웃됨.');
-                        signIn(useTokenAuth); // Pass the flag to determine auth method
+                        console.log('사용자 로그아웃 상태. 로그인 시도 중...');
+                        signIn();
                     }
                 });
 
@@ -411,27 +401,24 @@
             }
         }
 
-        async function signIn(useTokenAuth) {
+        async function signIn() {
             try {
-                // Only attempt custom token sign-in if using the environment's config
-                if (useTokenAuth && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    console.log("Attempting sign in with custom token.");
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    console.log("Custom Token으로 로그인 시도 중...");
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
-                    console.log("Attempting sign in anonymously.");
+                    console.log("익명으로 로그인 시도 중...");
                     await signInAnonymously(auth);
                 }
             } catch (error) {
                 console.error('Firebase 로그인 실패:', error);
-                showNotification('Firebase 인증에 실패했습니다. 콘솔에서 오류를 확인하세요.', false);
-                // If custom token fails, it's a critical error with the environment.
-                // Fallback to anonymous sign-in to at least allow read access if rules permit.
-                if (error.code === 'auth/custom-token-mismatch') {
-                    console.log('Custom token failed, falling back to anonymous sign-in.');
+                showNotification('Firebase 인증에 실패했습니다. 익명으로 재시도합니다.', false);
+                if (error.code.startsWith('auth/')) {
                     try {
                         await signInAnonymously(auth);
                     } catch (anonError) {
-                        console.error('Anonymous sign-in fallback failed:', anonError);
+                        console.error('익명 로그인 재시도 실패:', anonError);
+                        showNotification('익명 로그인도 실패했습니다. 페이지를 새로고침 해주세요.', false);
                     }
                 }
             }
