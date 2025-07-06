@@ -72,7 +72,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         let db, auth;
@@ -93,7 +93,6 @@
             const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
             const imageUrl = article.imageUrl || `https://placehold.co/1200x600/e5e7eb/374151?text=${encodeURIComponent(article.title)}`;
             
-            // Replace the placeholder with a div that we can target.
             const contentHtml = article.content.replace(/\[INTERACTIVE_CHART\]/g, '<div id="chart-placeholder" class="not-prose my-12"></div>');
 
             container.innerHTML = `
@@ -108,7 +107,6 @@
                     </div>
                 </article>`;
                 
-            // If the placeholder was found and replaced, draw the charts.
             if (article.content.includes('[INTERACTIVE_CHART]')) {
                 drawCharts();
             }
@@ -138,7 +136,6 @@
                     </div>
                 </div>`;
 
-            // Chart 1: Bar Chart
             const data1 = {
                 '2023': [{ type: '교과', value: 20 }, { type: '종합', value: 20 }],
                 '2024': [{ type: '교과', value: 35 }, { type: '종합', value: 40 }],
@@ -181,7 +178,6 @@
             d3.selectAll('.year-button').on('click', function() { updateChart1(d3.select(this).attr('data-year')); });
             updateChart1('2023');
 
-            // Chart 2: Donut Chart
             const data2 = [{ label: '지역인재', value: 55, color: '#f59e0b' }, { label: '수도권 학생 가능', value: 45, color: '#d1d5db' }];
             const chart2Div = document.getElementById('chart2');
             const width2 = chart2Div.clientWidth;
@@ -200,28 +196,64 @@
         }
 
         async function initializeFirebase() {
-             if (typeof __firebase_config === 'undefined') {
-                console.error("Firebase config is missing.");
-                renderArticle(null);
+            const loadingEl = document.getElementById('loading');
+            if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                console.error("Firebase 설정이 로드되지 않았습니다. Canvas 환경 변수가 올바르게 주입되었는지 확인하세요.");
+                if(loadingEl) loadingEl.innerHTML = `<p class="text-red-500">오류: Firebase 설정을 불러올 수 없습니다. 앱 환경을 확인해주세요.</p>`;
                 return;
             }
+
+            let firebaseConfig;
             try {
-                const firebaseConfig = JSON.parse(__firebase_config);
+                firebaseConfig = JSON.parse(__firebase_config);
+            } catch (error) {
+                console.error("Firebase 설정 JSON 파싱 오류:", error);
+                if(loadingEl) loadingEl.innerHTML = `<p class="text-red-500">오류: Firebase 설정 포맷이 올바르지 않습니다.</p>`;
+                return;
+            }
+
+            try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
 
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        console.log('Firebase 인증 상태 변경: 로그인됨. User UID:', user.uid);
+                        loadArticle();
+                    } else {
+                        console.log('Firebase 인증 상태 변경: 로그아웃됨.');
+                        signIn();
+                    }
+                });
+            } catch (error) {
+                console.error("Firebase 초기화 실패:", error);
+                if(loadingEl) loadingEl.innerHTML = `<p class="text-red-500">오류: DB 연결에 실패했습니다.</p>`;
+            }
+        }
+
+        async function signIn() {
+            try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
                     await signInAnonymously(auth);
                 }
+            } catch (error) {
+                console.error('Firebase 로그인 실패:', error);
+                document.getElementById('loading').innerHTML = `<p class="text-red-500">오류: Firebase 인증에 실패했습니다.</p>`;
+            }
+        }
 
+        async function loadArticle() {
+            const loadingEl = document.getElementById('loading');
+            try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const articleId = urlParams.get('id');
-                if (!articleId) { 
-                    renderArticle(null); 
-                    return; 
+
+                if (!articleId) {
+                    renderArticle(null);
+                    return;
                 }
 
                 const docRef = doc(db, 'artifacts', appId, 'public/data/news', articleId);
@@ -232,19 +264,19 @@
                 } else {
                     renderArticle(null);
                 }
-
-            } catch (error) {
-                console.error("Firebase/Firestore Error:", error);
+            } catch (err) {
+                console.error("기사 로딩 오류:", err);
+                if(loadingEl) loadingEl.style.display = 'none';
                 renderArticle(null);
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeFirebase();
-            // Mobile menu handlers
             document.getElementById('mobile-menu-button')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('hidden'));
             document.getElementById('mobile-menu-close-button')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
         });
     </script>
+
 </body>
 </html>
