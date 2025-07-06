@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메타인지 사용 설명서: 당신의 뇌를 업그레이드하는 법</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: This SPA is designed as a narrative journey to understand and apply metacognition. It starts with a hook (The Myth), presents compelling evidence via an interactive chart (The Experiment), explains the core theory (The Two Keys), provides actionable steps (The Top Student's Toolkit), and concludes with the underlying success factors (The Hidden Engine). This structure was chosen to guide the user from debunking a common misconception to acquiring a new, effective learning framework, making the information both engaging and practical. -->
+    <!-- Visualization & Content Choices: 
+        1.  The Experiment (Rereading vs. Self-Test): Goal: Compare/Persuade. Method: An interactive bar chart showing both actual and predicted scores. Justification: This is the most powerful way to visually demonstrate the "Illusion of Knowing" and the efficacy of self-testing. The interactivity (toggling views) engages the user directly with the data. Library: Chart.js.
+        2.  The Two Keys (Monitoring & Control): Goal: Organize. Method: Side-by-side styled HTML cards with icons. Justification: Clearly and simply breaks down the two core components of metacognition. NO SVG.
+        3.  Top Student's Method: Goal: Instruct/Organize. Method: A step-by-step visual diagram using HTML/CSS. Justification: Provides a clear, actionable takeaway that users can immediately implement. NO SVG.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FDFBF8; /* A warm, very light off-white */
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto 0 auto;
+        }
+        .btn-toggle {
+            transition: all 0.2s ease;
+        }
+        .btn-toggle.active {
+            background-color: #A88B6A;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .gradient-underline {
+            background-image: linear-gradient(120deg, #FDE68A 0%, #FBCF6D 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 0.3em;
+            background-position: 0 88%;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <main class="container mx-auto px-4 py-12 md:py-20">
+
+        <header class="text-center mb-16 md:mb-24">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">
+                당신이 공부를 못하는<br>진짜 이유는 <span class="gradient-underline">'암기력'</span>이 아니다
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+                뇌과학은 말합니다. 성적의 차이는 '지능'이 아닌 '메타인지', 즉 내가 무엇을 알고 모르는지 아는 능력에서 온다고.
+            </p>
+        </header>
+
+        <section id="experiment" class="bg-white rounded-2xl shadow-xl p-6 md:p-12 mb-16 md:mb-24">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-black text-gray-900">당신의 공부법은 '진짜' 공부일까?</h2>
+                <p class="text-lg text-gray-600 mt-3 max-w-3xl mx-auto">
+                    인천하늘고 학생들을 대상으로 한 실험은 우리가 '효과적'이라고 믿는 공부법의 함정을 명확히 보여줍니다.
+                </p>
+            </div>
+            
+            <div class="flex justify-center mb-8 space-x-2 md:space-x-4">
+                <button id="btn-actual" class="btn-toggle active px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-bold rounded-full bg-gray-200">실제 점수 비교</button>
+                <button id="btn-predicted" class="btn-toggle px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-bold rounded-full bg-gray-200">학생들의 예상 점수</button>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="metacognitionChart"></canvas>
+            </div>
+
+            <div id="result-summary" class="mt-8 bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg max-w-3xl mx-auto">
+                <h3 class="font-bold text-xl text-amber-900">분석 결과: '앎의 착각'</h3>
+                <p class="text-amber-800 mt-2">
+                    '셀프 테스트'는 스트레스를 주지만, 정확한 자기 평가를 통해 실제 성적을 10점이나 높였습니다. 반면, 편안한 '다시 읽기'는 공부를 하고 있다는 착각을 일으켜, 학생들은 자신의 실제 점수보다 10점이나 높게 예상했습니다. <strong class="font-bold">효과적인 공부는 편안함이 아닌, '의도적인 불편함'에서 시작됩니다.</strong>
+                </p>
+            </div>
+        </section>
+
+        <section id="two-keys" class="text-center mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-black mb-10">메타인지를 깨우는 2가지 열쇠</h2>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-lg text-center">
+                    <div class="text-5xl mb-4">🧐</div>
+                    <h3 class="text-2xl font-bold mb-3">1. 자기 평가 (Monitoring)</h3>
+                    <p class="text-gray-600">"내가 이것을 아는가, 모르는가?"를 정확히 판단하는 능력. 아는 것과 안다고 착각하는 것을 구분하는 것입니다.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-lg text-center">
+                     <div class="text-5xl mb-4">⚙️</div>
+                    <h3 class="text-2xl font-bold mb-3">2. 자기 조절 (Control)</h3>
+                    <p class="text-gray-600">자신의 상태에 맞춰 가장 효과적인 학습 전략을 '선택'하고 '실행'하는 능력. 모르는 것에 시간을 집중하는 것입니다.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="toolkit" class="mb-16 md:mb-24">
+             <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-black text-gray-900">최상위권의 메타인지 툴킷</h2>
+                <p class="text-lg text-gray-600 mt-3 max-w-3xl mx-auto">
+                    전교 1등은 이 두 가지 열쇠를 어떻게 활용할까요? 그들의 공부법은 완벽한 메타인지 훈련 과정입니다.
+                </p>
+            </div>
+            <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+                <h3 class="font-bold text-xl text-center mb-6">전교 1등의 '셀프 테스트' 노트법</h3>
+                <div class="flex flex-col md:flex-row items-center justify-around space-y-4 md:space-y-0">
+                    <div class="text-center">
+                        <div class="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center text-4xl shadow-inner">📝</div>
+                        <p class="mt-2 font-bold">1. 수업 내용 필기</p>
+                    </div>
+                    <div class="text-3xl font-light text-gray-400">&rarr;</div>
+                     <div class="text-center">
+                        <div class="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center text-4xl shadow-inner">✏️</div>
+                        <p class="mt-2 font-bold">2. 필기 지우기</p>
+                    </div>
+                    <div class="text-3xl font-light text-gray-400">&rarr;</div>
+                     <div class="text-center">
+                        <div class="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center text-4xl shadow-inner">🗣️</div>
+                        <p class="mt-2 font-bold">3. 자기 언어로 재구성</p>
+                    </div>
+                </div>
+                <p class="mt-6 text-center text-gray-600">이 과정은 필기한 내용을 다시 수동적으로 읽는 것이 아니라, <strong>스스로에게 질문을 던지고 설명하는 가장 강력한 셀프 테스트</strong>입니다. 막히는 부분이 바로 내가 모르는 진짜 약점입니다.</p>
+            </div>
+        </section>
+
+        <section id="final" class="text-center">
+            <h2 class="text-3xl md:text-4xl font-black mb-4">공부는 '습관'과 '전략'이다</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                메타인지는 타고나는 재능이 아닌, 훈련으로 만드는 기술입니다. 자신의 생각을 끊임없이 의심하고, 더 나은 전략을 고민하며, 명확한 목표를 향해 나아갈 때 당신의 뇌는 비로소 최고의 효율을 발휘하기 시작할 것입니다.
+            </p>
+        </section>
+    </main>
+
+    <footer class="text-center p-8 bg-gray-900 text-gray-400 mt-12">
+        <p>&copy; 2025 메타인지 사용 설명서. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chartData = {
+                actual: {
+                    labels: ['다시 읽기 (재학습)', '셀프 테스트'],
+                    datasets: [{
+                        label: '실제 점수',
+                        data: [43, 53],
+                        backgroundColor: ['rgba(239, 68, 68, 0.7)', 'rgba(59, 130, 246, 0.7)'],
+                        borderColor: ['#EF4444', '#3B82F6'],
+                        borderWidth: 2,
+                    }]
+                },
+                predicted: {
+                    labels: ['다시 읽기 (재학습)', '셀프 테스트'],
+                    datasets: [{
+                        label: '학생 예상 점수',
+                        data: [53, 49.7],
+                        backgroundColor: ['rgba(239, 68, 68, 0.3)', 'rgba(59, 130, 246, 0.3)'],
+                         borderColor: ['#FCA5A5', '#93C5FD'],
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }]
+                }
+            };
+
+            const chartConfig = {
+                type: 'bar',
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 60,
+                            title: {
+                                display: true,
+                                text: '점수'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: '학습 방법별 실제 점수 비교',
+                            font: {
+                                size: 18
+                            },
+                            padding: {
+                                bottom: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    return tooltipItems[0].label;
+                                },
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw}점`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            const ctx = document.getElementById('metacognitionChart').getContext('2d');
+            let metacognitionChart = new Chart(ctx, {
+                ...chartConfig,
+                data: chartData.actual
+            });
+
+            const btnActual = document.getElementById('btn-actual');
+            const btnPredicted = document.getElementById('btn-predicted');
+            const resultSummary = document.getElementById('result-summary');
+
+            function updateChart(view) {
+                if (view === 'actual') {
+                    metacognitionChart.data = chartData.actual;
+                    metacognitionChart.options.plugins.title.text = '학습 방법별 실제 점수 비교';
+                    btnActual.classList.add('active');
+                    btnPredicted.classList.remove('active');
+                    resultSummary.classList.remove('hidden');
+                } else {
+                    metacognitionChart.data = chartData.predicted;
+                    metacognitionChart.options.plugins.title.text = '학생들의 예상 점수 비교 (앎의 착각)';
+                     btnPredicted.classList.add('active');
+                     btnActual.classList.remove('active');
+                     resultSummary.classList.remove('hidden');
+                }
+                metacognitionChart.update();
+            }
+
+            btnActual.addEventListener('click', () => updateChart('actual'));
+            btnPredicted.addEventListener('click', () => updateChart('predicted'));
+
+        });
+    </script>
+</body>
+</html>
