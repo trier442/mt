@@ -39,8 +39,8 @@
             border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
         }
-        .plan-card:hover {
-            transform: translateY(-5px) scale(1.02);
+        .plan-card-container:hover .plan-card, .plan-card-link:hover {
+            transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             border-color: #f59e0b;
         }
@@ -57,6 +57,15 @@
             background-color: #fef3c7; /* Amber 100 */
             color: #d97706; /* Amber 600 */
         }
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding-top 0.5s ease-in-out, padding-bottom 0.5s ease-in-out;
+            background-color: #f9fafb;
+            border-left: 1px solid #e5e7eb;
+            border-right: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -69,7 +78,7 @@
             </a>
             <div class="hidden md:flex items-center space-x-8">
                 <a href="index.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">홈으로</a>
-                <a href="jr.html" class="text-amber-600 font-bold transition text-sm">진로 내비게이터</a>
+                <a href="navigator.html" class="text-amber-600 font-bold transition text-sm">진로 내비게이터</a>
                 <a href="news.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">입학 뉴스</a>
                 <a href="#" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">공부법</a>
                 <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단</a>
@@ -118,43 +127,77 @@
 
         <!-- Main Content Section -->
         <section id="main-content" class="py-16 md:py-20">
-            <div class="container mx-auto max-w-5xl px-6">
-                 <div class="flex flex-col gap-8">
-                    <!-- Card 1: 2025 전사고 진학 플랜 -->
-                    <a href="tjn1.html" class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 100ms;">
-                        <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div class="container mx-auto max-w-6xl px-6">
+                 <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Card 1: 특목 자사고 진학 플랜 (Interactive) -->
+                    <div class="plan-card-container fade-in-up" style="transition-delay: 100ms;">
+                        <div class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left cursor-pointer">
+                            <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-.553-.894L15 2m-6 5l6-3m0 0l6 3m-6-3v10" /></svg>
+                            </div>
+                            <div>
+                                <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-2">고입</span>
+                                <h2 class="text-2xl font-bold text-gray-800 font-playfair">특목 자사고 진학 플랜</h2>
+                                <p class="mt-2 text-gray-600">학교별 최신 입시 요강 분석을 바탕으로, 학생에게 가장 유리한 고교 선택과 지원 전략을 제시합니다.</p>
+                            </div>
                         </div>
-                        <div>
-                            <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-2">고입</span>
-                            <h2 class="text-2xl font-bold text-gray-800 font-playfair">2025 전사고 진학 플랜</h2>
-                            <p class="mt-2 text-gray-600">전국 단위 자사고의 최신 입시 요강 분석, 학교별 인재상에 맞춘 서류 준비 및 면접 전략을 제공하여 합격 가능성을 높입니다.</p>
+                        <div class="submenu rounded-b-2xl">
+                            <div class="p-6">
+                                <div class="flex flex-col sm:flex-row justify-around gap-4">
+                                    <a href="tjn1.html" class="text-gray-600 hover:text-amber-600 font-semibold transition text-center p-2 rounded-md hover:bg-amber-50">2025 전사고 진학 플랜</a>
+                                    <a href="tjn2.html" class="text-gray-600 hover:text-amber-600 font-semibold transition text-center p-2 rounded-md hover:bg-amber-50">2025 특목고 진학 플랜</a>
+                                </div>
+                            </div>
                         </div>
-                    </a>
-                    <!-- Card 2: 2025 특목고 진학 플랜 -->
-                    <a href="tjn2.html" class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 200ms;">
-                        <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
-                           <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    </div>
+                    
+                    <!-- Card 2: 자소서/면접 대비 플랜 (Interactive) -->
+                    <div class="plan-card-container fade-in-up" style="transition-delay: 200ms;">
+                        <div class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left cursor-pointer">
+                            <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                            </div>
+                            <div>
+                                <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-2">고입</span>
+                                <h2 class="text-2xl font-bold text-gray-800 font-playfair">특목 자사고 자소서·면접 대비 플랜</h2>
+                                <p class="mt-2 text-gray-600">학생의 강점을 극대화하는 자기소개서 전략과 실전과 같은 모의 면접을 통해 최종 합격의 문을 엽니다.</p>
+                            </div>
                         </div>
-                        <div>
-                            <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-2">고입</span>
-                            <h2 class="text-2xl font-bold text-gray-800 font-playfair">2025 특목고 진학 플랜</h2>
-                            <p class="mt-2 text-gray-600">외고·국제고·과학고 등 계열별 특성에 맞춘 심층 탐구 활동 설계와 포트폴리오 구성 전략으로 차별화된 경쟁력을 만듭니다.</p>
+                        <div class="submenu rounded-b-2xl">
+                            <div class="p-6">
+                                <div class="flex flex-col sm:flex-row justify-around gap-4">
+                                    <a href="#" class="text-gray-600 hover:text-amber-600 font-semibold transition text-center p-2 rounded-md hover:bg-amber-50">자기소개서 대비</a>
+                                    <a href="#" class="text-gray-600 hover:text-amber-600 font-semibold transition text-center p-2 rounded-md hover:bg-amber-50">면접 대비</a>
+                                </div>
+                            </div>
                         </div>
-                    </a>
-                    <!-- Card 3: 대입 수시 진학 플랜 -->
-                    <a href="#" class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 300ms;">
-                        <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
-                           <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                    </div>
+                    
+                    <!-- Card 3: 대입 수시 진학 플랜 (Interactive) -->
+                    <div class="plan-card-container fade-in-up" style="transition-delay: 300ms;">
+                        <div class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left cursor-pointer">
+                            <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m-1 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3h3m-3 4h3m-3 4h3m-3 4h3" /></svg>
+                            </div>
+                            <div>
+                                <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-2">대입</span>
+                                <h2 class="text-2xl font-bold text-gray-800 font-playfair">대입 수시 진학 플랜</h2>
+                                <p class="mt-2 text-gray-600">학생부 교과 성적과 비교과 활동을 정밀 분석하여 가장 유리한 수시 전형을 추천하고 지원 전략을 수립합니다.</p>
+                            </div>
                         </div>
-                        <div>
-                            <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-2">대입</span>
-                            <h2 class="text-2xl font-bold text-gray-800 font-playfair">대입 수시 진학 플랜</h2>
-                            <p class="mt-2 text-gray-600">학생부 교과 성적과 비교과 활동을 정밀 분석하여 학생부종합, 교과, 논술 등 가장 유리한 수시 전형을 추천하고 지원 전략을 수립합니다.</p>
+                        <div class="submenu rounded-b-2xl">
+                            <div class="p-6">
+                                <h3 class="font-bold text-gray-700 mb-4 text-center">세부 전략 보기</h3>
+                                <div class="flex flex-col sm:flex-row justify-around gap-4">
+                                    <a href="#" class="text-gray-600 hover:text-amber-600 font-semibold transition text-center p-2 rounded-md hover:bg-amber-50">선택과목 전략</a>
+                                    <a href="#" class="text-gray-600 hover:text-amber-600 font-semibold transition text-center p-2 rounded-md hover:bg-amber-50">내신 전략</a>
+                                    <a href="#" class="text-gray-600 hover:text-amber-600 font-semibold transition text-center p-2 rounded-md hover:bg-amber-50">생기부 전략</a>
+                                </div>
+                            </div>
                         </div>
-                    </a>
+                    </div>
                     <!-- Card 4: 대입 정시 진학 플랜 -->
-                    <a href="#" class="plan-card flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 400ms;">
+                    <a href="#" class="plan-card plan-card-link flex flex-col md:flex-row items-center rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 400ms;">
                         <div class="icon-bg flex-shrink-0 w-20 h-20 rounded-full flex items-center justify-center mb-6 md:mb-0 md:mr-8">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                         </div>
@@ -201,6 +244,31 @@
                     mobileMenu.classList.toggle('hidden');
                 });
             }
+
+            // Interactive Plan Cards
+            const planContainers = document.querySelectorAll('.plan-card-container');
+            planContainers.forEach(container => {
+                const card = container.querySelector('.plan-card');
+                const submenu = container.querySelector('.submenu');
+
+                if(card && submenu) {
+                    container.addEventListener('mouseenter', () => {
+                        card.classList.remove('rounded-2xl');
+                        card.classList.add('rounded-t-2xl');
+                        submenu.style.maxHeight = submenu.scrollHeight + 'px';
+                        submenu.style.paddingTop = '1.5rem';
+                        submenu.style.paddingBottom = '1.5rem';
+                    });
+
+                    container.addEventListener('mouseleave', () => {
+                        card.classList.add('rounded-2xl');
+                        card.classList.remove('rounded-t-2xl');
+                        submenu.style.maxHeight = '0px';
+                        submenu.style.paddingTop = '0';
+                        submenu.style.paddingBottom = '0';
+                    });
+                }
+            });
 
 
             // Fade-in animation on scroll/load
