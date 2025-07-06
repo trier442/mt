@@ -92,7 +92,7 @@
 <body class="overflow-x-hidden">
 
     <!-- Header -->
-    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-md" id="header">
+    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm" id="header">
         <nav class="container mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold font-playfair text-gray-900">
                 SOPHIE'S WORLD
@@ -104,7 +104,7 @@
                 <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단평가</a>
             </div>
              <button id="mobile-menu-button" class="md:hidden text-gray-800">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
         </nav>
     </header>
@@ -158,21 +158,17 @@
         
         <!-- Admin Section: Add News Article (Hidden by default) -->
         <section id="admin-panel" class="hidden py-16 md:py-20 bg-gray-200">
-            <div class="container mx-auto max-w-2xl px-6">
+            <div class="container mx-auto max-w-4xl px-6">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">새 뉴스 기사 추가 (관리자)</h2>
                 <form id="add-news-form" class="space-y-4">
                     <input type="text" id="news-title" placeholder="뉴스 제목" class="w-full form-input" required>
-                    <textarea id="news-content" placeholder="뉴스 내용 (HTML 사용 가능)" rows="10" class="w-full form-input" required></textarea>
-                    <div class="text-xs text-gray-500 flex justify-start items-center gap-2">
-                        <span>💡 본문에 인터랙티브 차트를 추가하려면</span>
-                        <button type="button" id="insert-chart-tag" class="text-amber-600 font-bold bg-amber-100 px-2 py-1 rounded-md hover:bg-amber-200">[차트 삽입]</button>
-                         <span>버튼을 누르세요.</span>
-                    </div>
-                    <input type="file" id="news-image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200" accept="image/*">
+                    <textarea id="news-content" placeholder="기사 내용 전체를 HTML 형식으로 붙여넣으세요. (스타일, 차트 스크립트 포함)" rows="20" class="w-full form-input font-mono text-sm" required></textarea>
+                     <input type="file" id="news-image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200" accept="image/*">
+                    <p class="text-xs text-gray-500">💡 썸네일 이미지를 선택하세요. 미선택 시 제목으로 기본 이미지가 생성됩니다.</p>
                     <select id="news-category" class="w-full form-input" required>
                         <option value="middle">중등</option>
                         <option value="high">고입</option>
-                        <option value="college">대입</option>
+                        <option value="college" selected>대입</option>
                     </select>
                     <button type="submit" class="w-full bg-amber-500 text-white font-bold px-5 py-3 rounded-lg hover:bg-amber-600 transition">게시하기</button>
                 </form>
@@ -206,11 +202,11 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, orderBy as firestoreOrderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-
-        let allArticles = [], currentFilter = 'all', db;
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        let allArticles = [], currentFilter = 'all', db, auth;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         function renderNews(articles) {
             const newsGrid = document.getElementById('news-grid');
@@ -231,7 +227,11 @@
                 articleEl.dataset.category = article.category;
                 const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
                 const imageUrl = article.imageUrl || `https://placehold.co/600x400/e5e7eb/4b5563?text=${encodeURIComponent(article.title)}`;
-                const summary = article.content.replace(/<[^>]*>?/gm, '').replace('[INTERACTIVE_CHART]', '').substring(0, 80) + '...';
+                
+                // A simple way to get summary from HTML content
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = article.content;
+                const summary = tempDiv.textContent.trim().substring(0, 80) + '...';
 
                 articleEl.innerHTML = `
                     <a href="news-detail.html?id=${article.id}" class="block news-card rounded-2xl h-full">
@@ -250,7 +250,9 @@
         }
 
         function applyCurrentFilter() {
-            renderNews(currentFilter === 'all' ? allArticles : allArticles.filter(a => a.category === currentFilter));
+            // Sort articles by date descending before rendering
+            const sortedArticles = allArticles.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+            renderNews(currentFilter === 'all' ? sortedArticles : sortedArticles.filter(a => a.category === currentFilter));
         }
         
         function showNotification(message, isSuccess = true) {
@@ -271,9 +273,12 @@
             const adminLoginBtn = document.getElementById('admin-login-button');
             const passwordModal = document.getElementById('password-modal');
             const passwordInput = document.getElementById('password-input');
-            if (adminLoginBtn && passwordModal) {
+            const passwordSubmitBtn = document.getElementById('password-submit');
+
+            if (adminLoginBtn && passwordModal && passwordInput && passwordSubmitBtn) {
                 adminLoginBtn.addEventListener('click', () => { passwordModal.classList.remove('hidden'); passwordInput.focus(); });
                 document.getElementById('password-cancel').addEventListener('click', () => { passwordModal.classList.add('hidden'); passwordInput.value = ''; });
+                
                 const handleLogin = () => {
                     if (passwordInput.value === '524607') {
                         passwordModal.classList.add('hidden');
@@ -281,12 +286,13 @@
                         passwordInput.value = '';
                         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                     } else {
-                        passwordModal.querySelector('div > div').classList.add('shake');
-                        setTimeout(() => passwordModal.querySelector('div > div').classList.remove('shake'), 500);
+                        const modalContent = passwordModal.querySelector('div');
+                        modalContent.classList.add('shake');
+                        setTimeout(() => modalContent.classList.remove('shake'), 500);
                         passwordInput.value = '';
                     }
                 };
-                document.getElementById('password-submit').addEventListener('click', handleLogin);
+                passwordSubmitBtn.addEventListener('click', handleLogin);
                 passwordInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
             }
 
@@ -298,12 +304,28 @@
                 const imageFile = document.getElementById('news-image').files[0];
                 const category = document.getElementById('news-category').value;
                 let imageUrl = '';
-                if(imageFile) { try { imageUrl = await toBase64(imageFile); } catch (error) { showNotification('이미지 변환 실패.', false); return; } }
+
+                // Note: Storing images as base64 in Firestore is not recommended for production due to 1MB document size limit.
+                // Using Firebase Storage is a better approach.
+                if(imageFile) { 
+                    try { 
+                        imageUrl = await toBase64(imageFile); 
+                    } catch (error) { 
+                        console.error("Image to Base64 conversion failed:", error);
+                        showNotification('이미지 변환 실패.', false); 
+                        return; 
+                    } 
+                }
+                
                 try {
-                    await addDoc(collection(db, 'news'), { title, content, imageUrl, category, createdAt: serverTimestamp() });
+                    const newsCollection = collection(db, 'artifacts', appId, 'public/data/news');
+                    await addDoc(newsCollection, { title, content, imageUrl, category, createdAt: serverTimestamp() });
                     e.target.reset();
                     showNotification('뉴스가 성공적으로 게시되었습니다.');
-                } catch (error) { showNotification('뉴스 게시에 실패했습니다. 보안 규칙을 확인해주세요.', false); }
+                } catch (error) { 
+                    console.error("Error adding document: ", error);
+                    showNotification('뉴스 게시에 실패했습니다. Firestore 보안 규칙을 확인해주세요.', false); 
+                }
             });
 
             document.querySelectorAll('.tab-button').forEach(button => {
@@ -313,13 +335,6 @@
                     currentFilter = button.dataset.filter;
                     applyCurrentFilter();
                 });
-            });
-
-            document.getElementById('insert-chart-tag')?.addEventListener('click', () => {
-                const textarea = document.getElementById('news-content');
-                const chartTag = '\n<div class="my-8 h-96">[INTERACTIVE_CHART]</div>\n';
-                textarea.value += chartTag;
-                textarea.focus();
             });
         }
         
@@ -331,21 +346,25 @@
         });
 
         async function initializeFirebase() {
-            const firebaseConfig = {
-              apiKey: "AIzaSyCHFLSR3w9-tZ1tspuLkF49_ZoFQx7YsD4",
-              authDomain: "news-6271f.firebaseapp.com",
-              projectId: "news-6271f",
-              storageBucket: "news-6271f.appspot.com",
-              messagingSenderId: "1020040382944",
-              appId: "1:1020040382944:web:26d4eef3678528b57c8385",
-              measurementId: "G-R6MG0F9M7Q"
-            };
+            if (typeof __firebase_config === 'undefined') {
+                showNotification("Firebase 설정이 로드되지 않았습니다.", false);
+                console.error("Firebase config is missing.");
+                return;
+            }
             try {
+                const firebaseConfig = JSON.parse(__firebase_config);
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
-                getAnalytics(app);
-                await signInAnonymously(getAuth(app));
-                onSnapshot(query(collection(db, 'news'), firestoreOrderBy('createdAt', 'desc')), (snapshot) => {
+                auth = getAuth(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
+                const newsCollection = collection(db, 'artifacts', appId, 'public/data/news');
+                onSnapshot(query(newsCollection), (snapshot) => {
                     allArticles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     applyCurrentFilter();
                 }, (error) => {
