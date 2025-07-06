@@ -8,7 +8,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>대치 소피의 세계 - 입시 로드맵의 모든 것</title>
+    <title>입시 뉴스 - 대치 소피의 세계</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,8 +22,8 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
+            background-color: #f3f4f6; /* 옅은 회색 배경 */
+            color: #1f2937; /* 어두운 텍스트 색상 */
         }
         .font-playfair {
             font-family: 'Playfair Display', serif;
@@ -31,25 +31,22 @@
         .page-bg {
             background: #f3f4f6;
         }
-        .hero-bg {
-             background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%);
-        }
-        .navigator-card {
+        .news-card {
             background-color: #ffffff;
             border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
+            overflow: hidden;
         }
-        .navigator-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            border-color: #f59e0b;
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border-color: #f59e0b; 
         }
-        .glow-button {
-             transition: all 0.3s ease-in-out;
+        .news-card img {
+            transition: transform 0.4s ease;
         }
-        .glow-button:hover {
+        .news-card:hover img {
             transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2);
         }
         .fade-in-up {
             opacity: 0;
@@ -60,111 +57,329 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .tab-button {
+            transition: all 0.2s ease-in-out;
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+        .tab-button.active {
+            color: #ffffff;
+            background-color: #f59e0b;
+            font-weight: 700;
+        }
+        .form-input {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: #1f2937;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px #fef3c7;
+        }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+          20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .shake {
+          animation: shake 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
 
     <!-- Header -->
-    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-sm" id="header">
+    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm" id="header">
         <nav class="container mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold font-playfair text-gray-900">
                 SOPHIE'S WORLD
             </a>
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="index.html" class="text-amber-600 font-bold transition text-sm">홈으로</a>
+            <div id="desktop-menu" class="hidden md:flex items-center space-x-6">
+                <a href="index.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">홈으로</a>
                 <a href="navigator.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">진로 네비게이터</a>
-                <a href="news.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">입학 뉴스</a>
-                <a href="#" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">공부법</a>
-                <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단</a>
+                <a href="#" class="text-amber-600 hover:text-gray-900 transition text-sm font-bold">입시 뉴스</a>
+                <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단평가</a>
             </div>
-            <button class="md:hidden text-gray-800">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+             <button id="mobile-menu-button" class="md:hidden text-gray-800">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
         </nav>
     </header>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-white/95 z-50 p-6">
+        <div class="flex justify-end mb-8">
+            <button id="mobile-menu-close-button" class="text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="flex flex-col items-center space-y-6 text-xl">
+            <a href="index.html" class="text-gray-600 hover:text-gray-900 transition">홈으로</a>
+            <a href="navigator.html" class="text-gray-600 hover:text-gray-900 transition">진로 네비게이터</a>
+            <a href="#" class="text-amber-600 hover:text-gray-900 transition font-bold">입시 뉴스</a>
+            <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition">문해력 진단평가</a>
+        </div>
+    </div>
+
 
     <main class="page-bg">
-        <!-- Hero Section -->
-        <section class="hero-bg pt-40 pb-20 md:pt-48 md:pb-24">
-            <div class="container mx-auto max-w-6xl px-6 text-center">
-                 <div class="fade-in-up">
-                    <h1 class="text-4xl md:text-6xl font-bold text-gray-900 font-playfair leading-tight">
-                        당신의 가능성을<br>최고의 결과로
-                    </h1>
-                    <p class="mt-6 text-gray-600 max-w-2xl mx-auto text-lg">
-                        소피의 세계는 단순한 정보 제공을 넘어, 학생 개개인의 잠재력을 이끌어내는<br class="hidden sm:block"> 맞춤형 입시 로드맵을 설계합니다.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Main Content Section -->
-        <section id="main-content" class="py-16 md:py-24">
+        <!-- Title Section -->
+        <section class="pt-28 md:pt-32 pb-16 bg-white">
             <div class="container mx-auto max-w-7xl px-6">
-                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Card 1: 진로 네비게이터 -->
-                    <a href="navigator.html" class="navigator-card block rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 100ms;">
-                        <h2 class="text-2xl font-bold text-amber-600 font-playfair">진로 네비게이터</h2>
-                        <p class="mt-3 text-gray-600">특목·자사고부터 수시·정시까지, 복잡한 입시의 길을 명확하게 안내하는 나침반이 되어 드립니다.</p>
-                    </a>
-                    <!-- Card 2: 입학 뉴스 -->
-                    <a href="news.html" class="navigator-card block rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 200ms;">
-                        <h2 class="text-2xl font-bold text-amber-600 font-playfair">입학 뉴스</h2>
-                        <p class="mt-3 text-gray-600">빠르게 변화하는 입시 정책과 트렌드, 핵심만 모아 가장 정확하고 빠르게 전달합니다.</p>
-                    </a>
-                    <!-- Card 3: 공부법 -->
-                    <a href="#" class="navigator-card block rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 300ms;">
-                        <h2 class="text-2xl font-bold text-amber-600 font-playfair">공부법</h2>
-                        <p class="mt-3 text-gray-600">상위 1%의 학습 전략. 과목별, 시기별 최적의 공부법으로 성적 향상을 이끌어냅니다.</p>
-                    </a>
-                    <!-- Card 4: 문해력 진단 -->
-                    <a href="selection.html" class="navigator-card block rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 400ms;">
-                        <h2 class="text-2xl font-bold text-amber-600 font-playfair">문해력 진단</h2>
-                        <p class="mt-3 text-gray-600">모든 학습의 기초, 문해력. 정확한 진단을 통해 학습 능력의 근본적인 문제를 해결하세요.</p>
-                    </a>
+                <div class="fade-in-up">
+                    <h1 class="mt-4 text-4xl md:text-5xl font-bold text-gray-900 font-playfair">
+                        입시 <span class="text-amber-600">뉴스</span>
+                    </h1>
+                    <p class="mt-4 text-gray-600 max-w-2xl">빠르게 변화하는 입시 정보, 소피의 세계가 핵심만 모아 제공합니다.</p>
                 </div>
             </div>
         </section>
+
+        <!-- Main Content: News List Section -->
+        <section id="news-list" class="py-16 md:py-20">
+            <div class="container mx-auto max-w-7xl px-6">
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap justify-center gap-2 mb-12 fade-in-up">
+                    <button class="tab-button active px-5 py-2 rounded-full text-sm font-semibold" data-filter="all">전체</button>
+                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold" data-filter="middle">중등</button>
+                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold" data-filter="high">고입</button>
+                    <button class="tab-button px-5 py-2 rounded-full text-sm font-semibold" data-filter="college">대입</button>
+                </div>
+
+                <!-- News Grid -->
+                <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 뉴스 아이템이 여기에 동적으로 추가됩니다. -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Admin Section: Add News Article (Hidden by default) -->
+        <section id="admin-panel" class="hidden py-16 md:py-20 bg-gray-200">
+            <div class="container mx-auto max-w-4xl px-6">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">새 뉴스 기사 추가 (관리자)</h2>
+                <form id="add-news-form" class="space-y-4">
+                    <input type="text" id="news-title" placeholder="뉴스 제목" class="w-full form-input" required>
+                    <textarea id="news-content" placeholder="기사 내용 전체를 HTML 형식으로 붙여넣으세요. (스타일, 차트 스크립트 포함)" rows="20" class="w-full form-input font-mono text-sm" required></textarea>
+                     <input type="file" id="news-image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200" accept="image/*">
+                    <p class="text-xs text-gray-500">💡 썸네일 이미지를 선택하세요. 미선택 시 제목으로 기본 이미지가 생성됩니다.</p>
+                    <select id="news-category" class="w-full form-input" required>
+                        <option value="middle">중등</option>
+                        <option value="high">고입</option>
+                        <option value="college" selected>대입</option>
+                    </select>
+                    <button type="submit" class="w-full bg-amber-500 text-white font-bold px-5 py-3 rounded-lg hover:bg-amber-600 transition">게시하기</button>
+                </form>
+            </div>
+        </section>
+
     </main>
+    
+    <!-- Admin Login Button -->
+    <div class="fixed bottom-0 left-0 p-4 z-40">
+        <button id="admin-login-button" class="bg-white/50 text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-amber-500 hover:text-white transition backdrop-blur-sm shadow-md">
+            관리자
+        </button>
+    </div>
 
-    <footer class="bg-white border-t border-gray-200">
-        <div class="container mx-auto max-w-7xl px-6 py-8 text-center">
-             <p class="text-sm text-gray-500">&copy; 2025 Sophie's World. All Rights Reserved.</p>
+    <!-- Password Modal -->
+    <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[51]">
+        <div class="bg-white p-8 rounded-lg shadow-xl text-center w-80">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">관리자 비밀번호</h3>
+            <input type="password" id="password-input" class="form-input w-full mb-4" placeholder="비밀번호를 입력하세요">
+            <button id="password-submit" class="w-full bg-amber-500 text-white font-bold px-5 py-3 rounded-lg hover:bg-amber-600 transition">로그인</button>
+            <button id="password-cancel" class="mt-2 text-gray-500 text-sm hover:text-gray-800">취소</button>
         </div>
-    </footer>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Header background change on scroll
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('shadow-md');
-                } else {
-                    header.classList.remove('shadow-md');
+    <!-- Notification Modal -->
+    <div id="notification-modal" class="hidden fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl z-50 transition-transform duration-300 translate-x-[120%]">
+        <p id="notification-message"></p>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        let allArticles = [], currentFilter = 'all', db, auth;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        function renderNews(articles) {
+            const newsGrid = document.getElementById('news-grid');
+            if (!newsGrid) return;
+            newsGrid.innerHTML = '';
+            
+            if (articles.length === 0) {
+                newsGrid.innerHTML = `<p class="col-span-full text-center text-gray-500">게시된 뉴스가 없습니다.</p>`;
+                return;
+            }
+
+            const categoryColors = { college: 'bg-red-100 text-red-800', high: 'bg-blue-100 text-blue-800', middle: 'bg-green-100 text-green-800' };
+            const categoryNames = { college: '대입', high: '고입', middle: '중등' };
+
+            articles.forEach(article => {
+                const articleEl = document.createElement('div');
+                articleEl.className = 'news-item fade-in-up';
+                articleEl.dataset.category = article.category;
+                const date = article.createdAt ? article.createdAt.toDate().toLocaleDateString('ko-KR') : '날짜 없음';
+                const imageUrl = article.imageUrl || `https://placehold.co/600x400/e5e7eb/4b5563?text=${encodeURIComponent(article.title)}`;
+                
+                // A simple way to get summary from HTML content
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = article.content;
+                const summary = tempDiv.textContent.trim().substring(0, 80) + '...';
+
+                articleEl.innerHTML = `
+                    <a href="news-detail.html?id=${article.id}" class="block news-card rounded-2xl h-full">
+                        <div class="h-48 overflow-hidden"><img src="${imageUrl}" alt="${article.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e5e7eb/4b5563?text=Image+Error';"></div>
+                        <div class="p-6">
+                            <span class="inline-block ${categoryColors[article.category] || ''} text-xs font-semibold px-2 py-1 rounded-full mb-3">${categoryNames[article.category] || ''}</span>
+                            <h2 class="text-xl font-bold text-gray-900">${article.title}</h2>
+                            <p class="mt-3 text-gray-600 text-sm">${summary}</p>
+                            <p class="text-xs text-gray-500 mt-4">${date}</p>
+                        </div>
+                    </a>`;
+                newsGrid.appendChild(articleEl);
+            });
+            
+            document.querySelectorAll('.fade-in-up').forEach((fader, index) => setTimeout(() => fader.classList.add('visible'), index * 50));
+        }
+
+        function applyCurrentFilter() {
+            // Sort articles by date descending before rendering
+            const sortedArticles = allArticles.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+            renderNews(currentFilter === 'all' ? sortedArticles : sortedArticles.filter(a => a.category === currentFilter));
+        }
+        
+        function showNotification(message, isSuccess = true) {
+            const el = document.getElementById('notification-modal');
+            const msgEl = document.getElementById('notification-message');
+            if (!el || !msgEl) return;
+            msgEl.textContent = message;
+            el.className = `fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-xl z-50 transition-transform duration-300 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`;
+            setTimeout(() => el.classList.remove('translate-x-[120%]'), 10);
+            setTimeout(() => el.classList.add('translate-x-[120%]'), 3000);
+        }
+
+        function setupEventListeners() {
+            window.addEventListener('scroll', () => document.getElementById('header').classList.toggle('shadow-md', window.scrollY > 50));
+            document.getElementById('mobile-menu-button')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('hidden'));
+            document.getElementById('mobile-menu-close-button')?.addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
+
+            const adminLoginBtn = document.getElementById('admin-login-button');
+            const passwordModal = document.getElementById('password-modal');
+            const passwordInput = document.getElementById('password-input');
+            const passwordSubmitBtn = document.getElementById('password-submit');
+
+            if (adminLoginBtn && passwordModal && passwordInput && passwordSubmitBtn) {
+                adminLoginBtn.addEventListener('click', () => { passwordModal.classList.remove('hidden'); passwordInput.focus(); });
+                document.getElementById('password-cancel').addEventListener('click', () => { passwordModal.classList.add('hidden'); passwordInput.value = ''; });
+                
+                const handleLogin = () => {
+                    if (passwordInput.value === '524607') {
+                        passwordModal.classList.add('hidden');
+                        document.getElementById('admin-panel').classList.remove('hidden');
+                        passwordInput.value = '';
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    } else {
+                        const modalContent = passwordModal.querySelector('div');
+                        modalContent.classList.add('shake');
+                        setTimeout(() => modalContent.classList.remove('shake'), 500);
+                        passwordInput.value = '';
+                    }
+                };
+                passwordSubmitBtn.addEventListener('click', handleLogin);
+                passwordInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
+            }
+
+            document.getElementById('add-news-form')?.addEventListener('submit', async e => {
+                e.preventDefault();
+                if (!db) { showNotification('DB 연결 실패.', false); return; }
+                const title = document.getElementById('news-title').value;
+                const content = document.getElementById('news-content').value;
+                const imageFile = document.getElementById('news-image').files[0];
+                const category = document.getElementById('news-category').value;
+                let imageUrl = '';
+
+                // Note: Storing images as base64 in Firestore is not recommended for production due to 1MB document size limit.
+                // Using Firebase Storage is a better approach.
+                if(imageFile) { 
+                    try { 
+                        imageUrl = await toBase64(imageFile); 
+                    } catch (error) { 
+                        console.error("Image to Base64 conversion failed:", error);
+                        showNotification('이미지 변환 실패.', false); 
+                        return; 
+                    } 
+                }
+                
+                try {
+                    const newsCollection = collection(db, 'artifacts', appId, 'public/data/news');
+                    await addDoc(newsCollection, { title, content, imageUrl, category, createdAt: serverTimestamp() });
+                    e.target.reset();
+                    showNotification('뉴스가 성공적으로 게시되었습니다.');
+                } catch (error) { 
+                    console.error("Error adding document: ", error);
+                    showNotification('뉴스 게시에 실패했습니다. Firestore 보안 규칙을 확인해주세요.', false); 
                 }
             });
 
-            // Fade-in animation on scroll/load
-            const faders = document.querySelectorAll('.fade-in-up');
-            const appearOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    } else {
-                        entry.target.classList.add('visible');
-                        appearOnScroll.unobserve(entry.target);
-                    }
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentFilter = button.dataset.filter;
+                    applyCurrentFilter();
                 });
-            }, appearOptions);
-
-            faders.forEach(fader => {
-                appearOnScroll.observe(fader);
             });
+        }
+        
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function initializeFirebase() {
+            if (typeof __firebase_config === 'undefined') {
+                showNotification("Firebase 설정이 로드되지 않았습니다.", false);
+                console.error("Firebase config is missing.");
+                return;
+            }
+            try {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
+                const newsCollection = collection(db, 'artifacts', appId, 'public/data/news');
+                onSnapshot(query(newsCollection), (snapshot) => {
+                    allArticles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    applyCurrentFilter();
+                }, (error) => {
+                    console.error("뉴스 로딩 실패:", error);
+                    showNotification("뉴스 로딩 실패: Firestore 보안 규칙을 확인해주세요.", false);
+                });
+            } catch (error) {
+                console.error("Firebase 초기화 실패:", error);
+                showNotification("DB 연결 실패: Firebase 설정을 확인해주세요.", false);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            initializeFirebase();
         });
     </script>
 </body>
