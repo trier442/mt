@@ -1,171 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-    <!-- Google AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5341216668095254"
-     crossorigin="anonymous"></script>
-    <meta name="google-adsense-account" content="ca-pub-5341216668095254">
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>대치 소피의 세계 - 입시 로드맵의 모든 것</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    
-    <!-- Custom Styles -->
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-        }
-        .font-playfair {
-            font-family: 'Playfair Display', serif;
-        }
-        .page-bg {
-            background: #f3f4f6;
-        }
-        .hero-bg {
-             background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%);
-        }
-        .navigator-card {
-            background-color: #ffffff;
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s ease;
-        }
-        .navigator-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            border-color: #f59e0b;
-        }
-        .glow-button {
-             transition: all 0.3s ease-in-out;
-        }
-        .glow-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2);
-        }
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .fade-in-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5341216668095254" crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="로두스 문해력 테스트로 현재 읽기 역량을 확인하고, 맞춤 문해력 학습지로 매일의 읽기 힘을 키워 보세요.">
+  <title>로두스 | 문해력 테스트와 맞춤 학습지</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>body{font-family:'Noto Sans KR',sans-serif}.dot{background-image:radial-gradient(#d6e4ff 1px,transparent 1px);background-size:18px 18px}</style>
 </head>
-<body class="overflow-x-hidden">
-
-    <!-- Header -->
-    <header class="fixed w-full z-30 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-sm" id="header">
-        <nav class="container mx-auto max-w-7xl px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold font-playfair text-gray-900">
-                SOPHIE'S WORLD
-            </a>
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="index.html" class="text-amber-600 font-bold transition text-sm">홈으로</a>
-                <a href="jr.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">진로 내비게이터</a>
-                <a href="news.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">입학 뉴스</a>
-                <a href="study.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">공부법</a>
-                <a href="selection.html" class="text-gray-600 hover:text-gray-900 transition text-sm font-medium">문해력 진단</a>
-            </div>
-            <button class="md:hidden text-gray-800">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            </button>
-        </nav>
-    </header>
-
-    <main class="page-bg">
-        <!-- Hero Section -->
-        <section class="hero-bg pt-40 pb-20 md:pt-48 md:pb-24">
-            <div class="container mx-auto max-w-6xl px-6 text-center">
-                 <div class="fade-in-up">
-                    <h1 class="text-4xl md:text-6xl font-bold text-gray-900 font-playfair leading-tight">
-                        당신의 가능성을<br>최고의 결과로
-                    </h1>
-                    <p class="mt-6 text-gray-600 max-w-2xl mx-auto text-lg">
-                        소피의 세계는 단순한 정보 제공을 넘어, 학생 개개인의 잠재력을 이끌어내는<br class="hidden sm:block"> 맞춤형 입시 로드맵을 설계합니다.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Main Content Section -->
-        <section id="main-content" class="py-16 md:py-24">
-            <div class="container mx-auto max-w-7xl px-6">
-                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Card 1: 진로 내비게이터 -->
-                    <a href="jr.html" class="navigator-card block rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 100ms;">
-                        <h2 class="text-2xl font-bold text-amber-600 font-playfair">진로 네비게이터</h2>
-                        <p class="mt-3 text-gray-600">특목·자사고부터 수시·정시까지, 복잡한 입시의 길을 명확하게 안내하는 나침반이 되어 드립니다.</p>
-                    </a>
-                    <!-- Card 2: 입학 뉴스 -->
-                    <a href="news.html" class="navigator-card block rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 200ms;">
-                        <h2 class="text-2xl font-bold text-amber-600 font-playfair">입학 뉴스</h2>
-                        <p class="mt-3 text-gray-600">빠르게 변화하는 입시 정책과 트렌드, 핵심만 모아 가장 정확하고 빠르게 전달합니다.</p>
-                    </a>
-                    <!-- Card 3: 공부법 -->
-                    <a href="study.html" class="navigator-card block rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 300ms;">
-                        <h2 class="text-2xl font-bold text-amber-600 font-playfair">공부법</h2>
-                        <p class="mt-3 text-gray-600">상위 1%의 학습 전략. 과목별, 시기별 최적의 공부법으로 성적 향상을 이끌어냅니다.</p>
-                    </a>
-                    <!-- Card 4: 문해력 진단 -->
-                    <a href="selection.html" class="navigator-card block rounded-2xl p-8 text-left fade-in-up" style="transition-delay: 400ms;">
-                        <h2 class="text-2xl font-bold text-amber-600 font-playfair">문해력 진단</h2>
-                        <p class="mt-3 text-gray-600">모든 학습의 기초, 문해력. 정확한 진단을 통해 학습 능력의 근본적인 문제를 해결하세요.</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-white border-t border-gray-200">
-        <div class="container mx-auto max-w-7xl px-6 py-8 text-center">
-             <p class="text-sm text-gray-500">&copy; 2025 Sophie's World. All Rights Reserved.</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Header background change on scroll
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('shadow-md');
-                } else {
-                    header.classList.remove('shadow-md');
-                }
-            });
-
-            // Fade-in animation on scroll/load
-            const faders = document.querySelectorAll('.fade-in-up');
-            const appearOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    } else {
-                        entry.target.classList.add('visible');
-                        appearOnScroll.unobserve(entry.target);
-                    }
-                });
-            }, appearOptions);
-
-            faders.forEach(fader => {
-                appearOnScroll.observe(fader);
-            });
-        });
-    </script>
-</body>
-</html>
+<body class="bg-slate-50 text-slate-900">
+  <header class="sticky top-0 z-30 border-b border-slate-100 bg-white/95 backdrop-blur">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+      <a href="index.html" class="text-2xl font-black tracking-tight text-blue-700">로두스</a>
+      <div class="flex items-center gap-4 text-sm font-bold sm:gap-7"><a href="#about" class="hidden text-slate-600 hover:text-blue-700 sm:block">문해력이란</a><a href="selection.html" class="text-slate-600 hover:text-blue-700">테스트</a><a href="subscribe.html" class="rounded-full bg-blue-700 px-4 py-2 text-white hover:bg-blue-800">학습지 구독</a></div>
+    </nav>
+  </header>
+  <main>
+    <section class="dot overflow-hidden bg-gradient-to-b from-blue-50 to-white">
+      <div class="mx-auto grid max-w-6xl gap-10 px-5 py-20 md:grid-cols-[1.15fr_.85fr] md:py-28">
+        <div class="self-center"><p class="mb-5 inline-flex rounded-full bg-blue-100 px-4 py-2 text-sm font-bold text-blue-800">초등 3학년 ~ 중학교 3학년</p><h1 class="text-4xl font-black leading-tight tracking-tight sm:text-6xl">읽는 힘이<br><span class="text-blue-700">모든 배움</span>을 바꿉니다.</h1><p class="mt-6 max-w-xl text-lg leading-8 text-slate-600">짧은 문해력 테스트로 현재 위치를 확인하고, 필요한 읽기 훈련을 매일 차근차근 시작하세요.</p><div class="mt-9 flex flex-wrap gap-3"><a href="selection.html" class="rounded-xl bg-blue-700 px-7 py-4 font-bold text-white shadow-lg shadow-blue-200 hover:bg-blue-800">무료 테스트 시작하기</a><a href="subscribe.html" class="rounded-xl border border-slate-300 bg-white px-7 py-4 font-bold text-slate-700 hover:border-blue-600">학습지 살펴보기</a></div><p class="mt-5 text-sm text-slate-500">약 15문항 · 25분 · 결과 즉시 확인</p></div>
+        <div class="rounded-3xl bg-slate-900 p-7 text-white shadow-2xl shadow-blue-200"><p class="text-sm font-bold text-blue-300">RODUS LITERACY CHECK</p><h2 class="mt-3 text-2xl font-extrabold">문해력은 세 가지 힘입니다.</h2><div class="mt-7 space-y-4"><div class="rounded-2xl bg-white/10 p-4"><b class="text-blue-300">01 정보 파악</b><p class="mt-1 text-sm text-slate-300">글에 드러난 핵심 정보를 정확히 찾습니다.</p></div><div class="rounded-2xl bg-white/10 p-4"><b class="text-blue-300">02 추론</b><p class="mt-1 text-sm text-slate-300">글에 직접 쓰이지 않은 의미와 관계를 읽어 냅니다.</p></div><div class="rounded-2xl bg-white/10 p-4"><b class="text-blue-300">03 어휘</b><p class="mt-1 text-sm text-slate-300">문맥 속 낱말의 뜻을 이해하고 활용합니다.</p></div></div></div>
+      </div>
+    </section>
+    <section id="about" class="mx-auto max-w-6xl px-5 py-20"><div class="max-w-2xl"><p class="font-bold text-blue-700">왜 문해력일까요?</p><h2 class="mt-3 text-3xl font-black">문제를 푸는 기술보다 먼저,<br>글을 정확히 읽는 힘이 필요합니다.</h2></div><div class="mt-10 grid gap-5 md:grid-cols-3"><article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100"><h3 class="font-extrabold">교과 학습의 기초</h3><p class="mt-3 leading-7 text-slate-600">국어뿐 아니라 수학, 과학, 사회의 문제를 이해하는 출발점입니다.</p></article><article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100"><h3 class="font-extrabold">생각을 표현하는 힘</h3><p class="mt-3 leading-7 text-slate-600">읽고 이해한 내용을 자기 말과 글로 정리하는 힘으로 이어집니다.</p></article><article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-100"><h3 class="font-extrabold">매일 쌓이는 실력</h3><p class="mt-3 leading-7 text-slate-600">짧지만 꾸준한 훈련으로 읽기의 정확도와 깊이를 함께 키웁니다.</p></article></div></section>
+    <section class="bg-blue-700"><div class="mx-auto max-w-6xl px-5 py-16 text-center text-white"><p class="text-blue-100">지금 내 아이에게 필요한 학습을 확인하세요.</p><h2 class="mt-2 text-3xl font-black">문해력 테스트, 오늘 바로 시작할 수 있습니다.</h2><a href="selection.html" class="mt-7 inline-block rounded-xl bg-white px-7 py-4 font-bold text-blue-800 hover:bg-blue-50">학년 선택하고 테스트 시작하기</a></div></section>
+  </main>
+  <footer class="bg-slate-950 py-10 text-center text-sm text-slate-400"><a href="index.html" class="font-black text-white">로두스</a><p class="mt-3">문해력 테스트와 맞춤 학습지</p><p class="mt-5">© 2026 RODUS. All Rights Reserved.</p></footer>
+</body></html>
