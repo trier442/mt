@@ -1,0 +1,74 @@
+name: Site quality check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.html'
+      - '*.js'
+      - '*.css'
+      - '*.xml'
+      - 'content/**'
+      - 'scripts/**'
+      - '.github/workflows/site-quality-check.yml'
+  pull_request:
+    paths:
+      - '*.html'
+      - '*.js'
+      - '*.css'
+      - '*.xml'
+      - 'content/**'
+      - 'scripts/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Python and JavaScript syntax
+        run: |
+          python3 -m py_compile scripts/build_public_literacy.py
+          node --check quiz-enhancements.js
+      - name: Rebuild generated literacy pages
+        run: python3 scripts/build_public_literacy.py
+      - name: Validate required learning depth and test trust text
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          articles = sorted(Path('.').glob('literacy-grade*.html'))
+          assert len(articles) == 28, f'Expected 28 articles, found {len(articles)}'
+          for article in articles:
+              text = article.read_text(encoding='utf-8')
+              count = text.count('<div class="question')
+              assert count >= 9, f'{article}: only {count} questions'
+              assert '학습 문항 구성' in text, f'{article}: missing learning map'
+              assert 'answer-note' in text, f'{article}: missing evidence notes'
+              assert 'dateModified":"2026-07-20"' in text, f'{article}: stale schema date'
+
+          selection = Path('selection.html').read_text(encoding='utf-8')
+          expected = {
+              3: ('15문항', '25분'), 4: ('15문항', '25분'),
+              5: ('20문항', '30분'), 6: ('20문항', '30분'),
+              7: ('25문항', '40분'), 8: ('25문항', '45분'),
+              9: ('25문항', '50분'),
+          }
+          for grade, labels in expected.items():
+              assert f'href="grade{grade}.html"' in selection
+              for label in labels:
+                  assert label in selection
+
+          for grade in range(3, 10):
+              text = Path(f'grade{grade}.html').read_text(encoding='utf-8')
+              assert 'quiz-enhancements.js' in text, f'grade{grade}: enhancement script missing'
+              assert '평균 점수입니다' not in text, f'grade{grade}: misleading average wording remains'
+              assert "replace(/^\\d+\\.\\s*/, '')" in text, f'grade{grade}: duplicate-number fix missing'
+
+          sitemap = Path('sitemap.xml').read_text(encoding='utf-8')
+          assert '<lastmod>2026-07-20</lastmod>' in sitemap
+          assert sitemap.count('<url>') >= 45
+          PY
