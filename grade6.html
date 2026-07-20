@@ -121,7 +121,7 @@
                         <div id="vocabulary-score-bar" class="bg-amber-500 h-6 rounded-full skill-bar-fill" style="width: 0%"></div>
                         <div id="vocabulary-avg-marker" class="avg-marker" style="left: 50%;"></div>
                     </div>
-                     <p class="text-xs text-gray-500 text-right mt-1">*흰색 막대는 평균 점수입니다.</p>
+                     <p class="text-xs text-gray-500 text-right mt-1">*흰색 막대는 실제 응시자 평균이 아닌 학습 권장 기준 50%입니다.</p>
                 </div>
             </div>
 
@@ -232,7 +232,7 @@
                         <p>${q.passage.replace(/<u>(.*?)<\/u>/g, '<u class="text-amber-400 no-underline font-semibold">$1</u>')}</p>
                     </div>
                     <div>
-                        <p class="font-bold text-lg mb-4 text-gray-200">${q.questionNumber}. ${q.q.replace(/<u>(.*?)<\/u>/g, '<u class="text-amber-400 no-underline font-semibold">$1</u>')}</p>
+                        <p class="font-bold text-lg mb-4 text-gray-200">${q.questionNumber}. ${q.q.replace(/^\d+\.\s*/, '').replace(/<u>(.*?)<\/u>/g, '<u class="text-amber-400 no-underline font-semibold">$1</u>')}</p>
                         <div class="space-y-3">
                             ${q.choices.map((choice, index) => `
                                 <div class="choice-item p-4 rounded-lg hover:border-amber-500 cursor-pointer border-2 border-gray-700" data-answer-index="${index}">
@@ -350,5 +350,5 @@
         updateProgress();
         startTimer(quizData.timeLimit);
     </script>
-</body>
+<script src="quiz-enhancements.js"></script></body>
 </html>
